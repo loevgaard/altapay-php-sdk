@@ -135,9 +135,17 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      */
     private $config;
 
-    public function __construct()
+    protected function __construct($terminal, $shopOrderId, $amount, $currency)
     {
         $this->orderLines = [];
+        $this->setTerminal($terminal);
+        $this->setShopOrderId($shopOrderId);
+        $this->setAmount($amount);
+        $this->setCurrency($currency);
+    }
+
+    public static function create($terminal, $shopOrderId, $amount, $currency) {
+        return new static($terminal, $shopOrderId, $amount, $currency);
     }
 
     /**
@@ -146,24 +154,24 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     public function getPayload()
     {
         $payload = [
-            'terminal' => $this->terminal,
-            'shop_order_id' => $this->shopOrderId,
-            'amount' => $this->amount,
-            'currency' => $this->currency,
-            'language' => $this->language,
-            'transaction_info' => $this->transactionInfo,
-            'type' => $this->type,
-            'ccToken' => $this->ccToken,
-            'sale_reconciliation_identifier' => $this->saleReconciliationIdentifier,
-            'sale_invoice_number' => $this->saleInvoiceNumber,
-            'sales_tax' => $this->salesTax,
-            'cookie' => $this->cookie,
-            'payment_source' => $this->paymentSource,
-            'fraud_service' => $this->fraudService,
-            'shipping_method' => $this->shippingMethod,
-            'customer_created_date' => $this->customerCreatedDate,
-            'organisation_number' => $this->organisationNumber,
-            'account_offer' => $this->accountOffer,
+            'terminal' => $this->getTerminal(),
+            'shop_orderid' => $this->getShopOrderId(),
+            'amount' => $this->getAmount(),
+            'currency' => $this->getCurrency(),
+            'language' => $this->getLanguage(),
+            'transaction_info' => $this->getTransactionInfo(),
+            'type' => $this->getType(),
+            'ccToken' => $this->getCcToken(),
+            'sale_reconciliation_identifier' => $this->getSaleReconciliationIdentifier(),
+            'sale_invoice_number' => $this->getSaleInvoiceNumber(),
+            'sales_tax' => $this->getSalesTax(),
+            'cookie' => $this->getCookie(),
+            'payment_source' => $this->getPaymentSource(),
+            'fraud_service' => $this->getFraudService(),
+            'shipping_method' => $this->getShippingMethod(),
+            'customer_created_date' => $this->getCustomerCreatedDate(),
+            'organisation_number' => $this->getOrganisationNumber(),
+            'account_offer' => $this->getAccountOffer(),
         ];
 
         // set config payload if any
@@ -180,7 +188,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
 
         // create order lines array
         $orderLines = [];
-        foreach ($this->orderLines as $orderLine) {
+        foreach ($this->getOrderLines() as $orderLine) {
             $orderLines[] = $orderLine->getPayload();
         }
 

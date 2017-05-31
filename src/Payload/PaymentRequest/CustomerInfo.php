@@ -6,7 +6,9 @@ use Loevgaard\AltaPay\Payload\Payload;
 class CustomerInfo extends Payload implements CustomerInfoInterface
 {
     CONST GENDER_MALE = 'male';
+    CONST GENDER_MALE_2 = 'm';
     CONST GENDER_FEMALE = 'female';
+    CONST GENDER_FEMALE_2 = 'f';
 
     /**
      * @var string
@@ -54,7 +56,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     private $billingRegion;
 
     /**
-     * @var string
+     * @var \DateTimeInterface
      */
     private $birthDate;
 
@@ -113,33 +115,91 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     private $username;
 
+    /**
+     * @param string $bankName
+     * @param string $bankPhone
+     * @param string $billingAddress
+     * @param string $billingCity
+     * @param string $billingCountry
+     * @param string $billingFirstName
+     * @param string $billingLastName
+     * @param string $billingPostal
+     * @param string $billingRegion
+     * @param \DateTimeInterface $birthDate
+     * @param string $customerPhone
+     * @param string $email
+     * @param string $gender
+     * @param string $shippingAddress
+     * @param string $shippingCity
+     * @param string $shippingCountry
+     * @param string $shippingFirstName
+     * @param string $shippingLastName
+     * @param string $shippingPostal
+     * @param string $shippingRegion
+     * @param string $username
+     */
+    public function __construct($bankName = null, $bankPhone = null, $billingAddress = null, $billingCity = null, $billingCountry = null, $billingFirstName = null, $billingLastName = null, $billingPostal = null, $billingRegion = null, $birthDate = null, $customerPhone = null, $email = null, $gender = null, $shippingAddress = null, $shippingCity = null, $shippingCountry = null, $shippingFirstName = null, $shippingLastName = null, $shippingPostal = null, $shippingRegion = null, $username = null)
+    {
+        $this->setBankName($bankName);
+        $this->setBankPhone($bankPhone);
+        $this->setBillingAddress($billingAddress);
+        $this->setBillingCity($billingCity);
+        $this->setBillingCountry($billingCountry);
+        $this->setBillingFirstName($billingFirstName);
+        $this->setBillingLastName($billingLastName);
+        $this->setBillingPostal($billingPostal);
+        $this->setBillingRegion($billingRegion);
+        $this->setBirthDate($birthDate);
+        $this->setCustomerPhone($customerPhone);
+        $this->setEmail($email);
+        $this->setGender($gender);
+        $this->setShippingAddress($shippingAddress);
+        $this->setShippingCity($shippingCity);
+        $this->setShippingCountry($shippingCountry);
+        $this->setShippingFirstName($shippingFirstName);
+        $this->setShippingLastName($shippingLastName);
+        $this->setShippingPostal($shippingPostal);
+        $this->setShippingRegion($shippingRegion);
+        $this->setUsername($username);
+    }
+
+
     public function getPayload()
     {
         $payload = [
-            'bank_name' => $this->bankName,
-            'bank_phone' => $this->bankPhone,
-            'billing_address' => $this->billingAddress,
-            'billing_city' => $this->billingCity,
-            'billing_country' => $this->billingCountry,
-            'billing_firstname' => $this->billingFirstName,
-            'billing_lastname' => $this->billingLastName,
-            'billing_postal' => $this->billingPostal,
-            'billing_region' => $this->billingRegion,
-            'birthdate' => $this->birthDate,
-            'customer_phone' => $this->customerPhone,
-            'email' => $this->email,
-            'gender' => $this->gender,
-            'shipping_address' => $this->shippingAddress,
-            'shipping_city' => $this->shippingCity,
-            'shipping_country' => $this->shippingCountry,
-            'shipping_firstname' => $this->shippingFirstName,
-            'shipping_lastname' => $this->shippingLastName,
-            'shipping_postal' => $this->shippingPostal,
-            'shipping_region' => $this->shippingRegion,
-            'username' => $this->username,
+            'bank_name' => $this->getBankName(),
+            'bank_phone' => $this->getBankPhone(),
+            'billing_address' => $this->getBillingAddress(),
+            'billing_city' => $this->getBillingCity(),
+            'billing_country' => $this->getBillingCountry(),
+            'billing_firstname' => $this->getBillingFirstName(),
+            'billing_lastname' => $this->getBillingLastName(),
+            'billing_postal' => $this->getBillingPostal(),
+            'billing_region' => $this->getBillingRegion(),
+            'birthdate' => $this->getBirthDate() ? $this->getBirthDate()->format('Y-m-d') : null,
+            'customer_phone' => $this->getCustomerPhone(),
+            'email' => $this->getEmail(),
+            'gender' => $this->getGender(),
+            'shipping_address' => $this->getShippingAddress(),
+            'shipping_city' => $this->getShippingCity(),
+            'shipping_country' => $this->getShippingCountry(),
+            'shipping_firstname' => $this->getShippingFirstName(),
+            'shipping_lastname' => $this->getShippingLastName(),
+            'shipping_postal' => $this->getShippingPostal(),
+            'shipping_region' => $this->getShippingRegion(),
+            'username' => $this->getUsername(),
         ];
 
         return $this->cleanPayload($payload);
+    }
+
+    public static function getGenders() {
+        return [
+            self::GENDER_MALE,
+            self::GENDER_MALE_2,
+            self::GENDER_FEMALE,
+            self::GENDER_FEMALE_2,
+        ];
     }
 
     /**
@@ -156,6 +216,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setBankName($bankName)
     {
+        $this->assertStringOrNull($bankName);
         $this->bankName = $bankName;
         return $this;
     }
@@ -174,6 +235,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setBankPhone($bankPhone)
     {
+        $this->assertStringOrNull($bankPhone);
         $this->bankPhone = $bankPhone;
         return $this;
     }
@@ -192,6 +254,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setBillingAddress($billingAddress)
     {
+        $this->assertStringOrNull($billingAddress);
         $this->billingAddress = $billingAddress;
         return $this;
     }
@@ -210,6 +273,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setBillingCity($billingCity)
     {
+        $this->assertStringOrNull($billingCity);
         $this->billingCity = $billingCity;
         return $this;
     }
@@ -228,6 +292,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setBillingCountry($billingCountry)
     {
+        $this->assertStringOrNull($billingCountry);
         $this->billingCountry = $billingCountry;
         return $this;
     }
@@ -246,6 +311,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setBillingFirstName($billingFirstName)
     {
+        $this->assertStringOrNull($billingFirstName);
         $this->billingFirstName = $billingFirstName;
         return $this;
     }
@@ -264,6 +330,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setBillingLastName($billingLastName)
     {
+        $this->assertStringOrNull($billingLastName);
         $this->billingLastName = $billingLastName;
         return $this;
     }
@@ -282,6 +349,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setBillingPostal($billingPostal)
     {
+        $this->assertStringOrNull($billingPostal);
         $this->billingPostal = $billingPostal;
         return $this;
     }
@@ -300,12 +368,13 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setBillingRegion($billingRegion)
     {
+        $this->assertStringOrNull($billingRegion);
         $this->billingRegion = $billingRegion;
         return $this;
     }
 
     /**
-     * @return string
+     * @return \DateTimeInterface
      */
     public function getBirthDate()
     {
@@ -313,11 +382,12 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     }
 
     /**
-     * @param string $birthDate
+     * @param \DateTimeInterface $birthDate
      * @return CustomerInfo
      */
     public function setBirthDate($birthDate)
     {
+        $this->assertDateTimeOrNull($birthDate);
         $this->birthDate = $birthDate;
         return $this;
     }
@@ -336,6 +406,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setCustomerPhone($customerPhone)
     {
+        $this->assertStringOrNull($customerPhone);
         $this->customerPhone = $customerPhone;
         return $this;
     }
@@ -354,6 +425,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setEmail($email)
     {
+        $this->assertStringOrNull($email);
         $this->email = $email;
         return $this;
     }
@@ -372,6 +444,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setGender($gender)
     {
+        $this->assertInArrayOrNull($gender, self::getGenders());
         $this->gender = $gender;
         return $this;
     }
@@ -390,6 +463,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setShippingAddress($shippingAddress)
     {
+        $this->assertStringOrNull($shippingAddress);
         $this->shippingAddress = $shippingAddress;
         return $this;
     }
@@ -408,6 +482,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setShippingCity($shippingCity)
     {
+        $this->assertStringOrNull($shippingCity);
         $this->shippingCity = $shippingCity;
         return $this;
     }
@@ -426,6 +501,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setShippingCountry($shippingCountry)
     {
+        $this->assertStringOrNull($shippingCountry);
         $this->shippingCountry = $shippingCountry;
         return $this;
     }
@@ -444,6 +520,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setShippingFirstName($shippingFirstName)
     {
+        $this->assertStringOrNull($shippingFirstName);
         $this->shippingFirstName = $shippingFirstName;
         return $this;
     }
@@ -462,6 +539,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setShippingLastName($shippingLastName)
     {
+        $this->assertStringOrNull($shippingLastName);
         $this->shippingLastName = $shippingLastName;
         return $this;
     }
@@ -480,6 +558,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setShippingPostal($shippingPostal)
     {
+        $this->assertStringOrNull($shippingPostal);
         $this->shippingPostal = $shippingPostal;
         return $this;
     }
@@ -498,6 +577,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setShippingRegion($shippingRegion)
     {
+        $this->assertStringOrNull($shippingRegion);
         $this->shippingRegion = $shippingRegion;
         return $this;
     }
@@ -516,6 +596,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      */
     public function setUsername($username)
     {
+        $this->assertStringOrNull($username);
         $this->username = $username;
         return $this;
     }

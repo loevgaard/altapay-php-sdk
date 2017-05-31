@@ -1,56 +1,40 @@
 <?php
 namespace Loevgaard\AltaPay\Response;
 
-use Psr\Http\Message\ResponseInterface;
-
-class PaymentRequest
+class PaymentRequest extends Response
 {
-    /** @var ResponseInterface */
-    private $response;
-
-    /** @var string */
-    private $result;
-
-    /** @var string */
-    private $paymentRequestId;
-
-    /** @var string */
-    private $url;
-
-    /** @var string */
-    private $dynamicJavascriptUrl;
-
-    public function __construct(ResponseInterface $response)
-    {
-        $this->response = $response;
-        $this->parseXml();
-    }
-
-    private function parseXml() {
-        $xml                        = (string)$this->response->getBody();
-        $xmlDoc                     = new \SimpleXMLElement($xml);
-        $this->result               = $xmlDoc->Body->Result;
-        $this->paymentRequestId     = $xmlDoc->Body->PaymentRequestId;
-        $this->url                  = $xmlDoc->Body->Url;
-        $this->dynamicJavascriptUrl = $xmlDoc->Body->DynamicJavascriptUrl;
-    }
+    const RESULT_SUCCESS = 'Success';
 
     /**
-     * @return ResponseInterface
+     * @var string
      */
-    public function getResponse()
-    {
-        return $this->response;
-    }
+    protected $result;
 
     /**
-     * @param ResponseInterface $response
-     * @return PaymentRequest
+     * @var string
      */
-    public function setResponse($response)
+    protected $paymentRequestId;
+
+    /**
+     * @var string
+     */
+    protected $url;
+
+    /**
+     * @var string
+     */
+    protected $dynamicJavascriptUrl;
+
+    protected function init() {
+        $this->result               = (string)$this->xmlDoc->Body->Result;
+        $this->paymentRequestId     = (string)$this->xmlDoc->Body->PaymentRequestId;
+        $this->url                  = (string)$this->xmlDoc->Body->Url;
+        $this->dynamicJavascriptUrl = (string)$this->xmlDoc->Body->DynamicJavascriptUrl;
+    }
+
+    public function isSuccessful()
     {
-        $this->response = $response;
-        return $this;
+        return parent::isSuccessful() && $this->result === self::RESULT_SUCCESS;
     }
 
     /**
@@ -62,31 +46,11 @@ class PaymentRequest
     }
 
     /**
-     * @param string $result
-     * @return PaymentRequest
-     */
-    public function setResult($result)
-    {
-        $this->result = $result;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getPaymentRequestId()
     {
         return $this->paymentRequestId;
-    }
-
-    /**
-     * @param string $paymentRequestId
-     * @return PaymentRequest
-     */
-    public function setPaymentRequestId($paymentRequestId)
-    {
-        $this->paymentRequestId = $paymentRequestId;
-        return $this;
     }
 
     /**
@@ -98,30 +62,10 @@ class PaymentRequest
     }
 
     /**
-     * @param string $url
-     * @return PaymentRequest
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getDynamicJavascriptUrl()
     {
         return $this->dynamicJavascriptUrl;
-    }
-
-    /**
-     * @param string $dynamicJavascriptUrl
-     * @return PaymentRequest
-     */
-    public function setDynamicJavascriptUrl($dynamicJavascriptUrl)
-    {
-        $this->dynamicJavascriptUrl = $dynamicJavascriptUrl;
-        return $this;
     }
 }

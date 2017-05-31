@@ -3,7 +3,6 @@ namespace Loevgaard\AltaPay;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
-use Loevgaard\AltaPay\Payload\PayloadInterface;
 use Loevgaard\AltaPay\Payload\PaymentRequestInterface;
 use Loevgaard\AltaPay\Response\PaymentRequest as PaymentRequestResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -41,6 +40,10 @@ class Client
     {
         $this->username = $username;
         $this->password = $password;
+
+        $parsedBaseUrl = parse_url($baseUrl);
+        $baseUrl = $parsedBaseUrl['scheme'].'://'.rawurlencode($this->username).':'.rawurlencode($this->password).'@'.$parsedBaseUrl['host'];
+
         $this->baseUrl  = $baseUrl;
     }
 
@@ -61,13 +64,13 @@ class Client
      * @return ResponseInterface
      */
     public function doRequest($method = 'get', $uri, array $options = null) {
+
         $url = $this->baseUrl.$uri;
         $options = $options ? : [];
-        $defaultOptions = [
-            'auth' => [$this->username, $this->password]
-        ];
+        $defaultOptions = [];
         $options = array_merge($defaultOptions, $options);
-        return $this->client->request($method, $url, $options);
+        $client = $this->getClient();
+        return $client->request($method, $url, $options);
     }
 
     /**
