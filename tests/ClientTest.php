@@ -14,7 +14,8 @@ final class ClientTest extends TestCase
      */
     private $client;
 
-    public function testCreatePaymentRequest() {
+    public function testCreatePaymentRequest()
+    {
         $response = $this->createPaymentRequest();
 
         $this->assertInstanceOf(PaymentRequestResponse::class, $response);
@@ -22,7 +23,8 @@ final class ClientTest extends TestCase
     }
 
     // @todo figure out how to make a live capture to test properly
-    public function testCaptureReservation() {
+    public function testCaptureReservation()
+    {
         $client = $this->getClient();
         //$response = $client->captureReservation(new CaptureReservationPayload());
     }
@@ -34,7 +36,8 @@ final class ClientTest extends TestCase
     /**
      * @return PaymentRequestResponse
      */
-    private function createPaymentRequest() {
+    private function createPaymentRequest()
+    {
         $client = $this->getClient();
         $payload = new PaymentRequestPayload(getenv('ALTAPAY_TERMINAL'), time(), 100.5, 'DKK');
         return $client->createPaymentRequest($payload);
@@ -43,8 +46,9 @@ final class ClientTest extends TestCase
     /**
      * @return Client
      */
-    private function getClient() {
-        if(!$this->client) {
+    private function getClient()
+    {
+        if (!$this->client) {
             $this->client = new Client(getenv('ALTAPAY_USERNAME'), getenv('ALTAPAY_PASSWORD'));
         }
         return $this->client;

@@ -25,7 +25,8 @@ class PaymentRequest extends Response
      */
     protected $dynamicJavascriptUrl;
 
-    protected function init() {
+    protected function init()
+    {
         $this->result               = (string)$this->xmlDoc->Body->Result;
         $this->paymentRequestId     = (string)$this->xmlDoc->Body->PaymentRequestId;
         $this->url                  = (string)$this->xmlDoc->Body->Url;

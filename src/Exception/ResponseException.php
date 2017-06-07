@@ -3,7 +3,8 @@ namespace Loevgaard\AltaPay\Exception;
 
 use Psr\Http\Message\ResponseInterface;
 
-class ResponseException extends Exception {
+class ResponseException extends Exception
+{
     /**
      * @var ResponseInterface
      */

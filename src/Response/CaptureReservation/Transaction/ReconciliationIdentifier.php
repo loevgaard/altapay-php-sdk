@@ -31,14 +31,15 @@ class ReconciliationIdentifier extends PartialResponse
      */
     private $date;
 
-    protected function init() {
+    protected function init()
+    {
         $this->id = (string)$this->xmlDoc->Id;
         $this->amount = (float)$this->xmlDoc->Amount;
         $this->amountCurrency = (int)$this->xmlDoc->Amount['currency'];
         $this->type = (string)$this->xmlDoc->Type;
 
         $this->date = \DateTimeImmutable::createFromFormat(DATE_RFC3339, (string)$this->xmlDoc->Date);
-        if($this->date === false) {
+        if ($this->date === false) {
             $exception = new ResponseException('The date format is wrong');
             $exception->setResponse($this->getOriginalResponse());
             throw $exception;

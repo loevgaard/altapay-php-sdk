@@ -53,23 +53,27 @@ class Client
      * @param PaymentRequestInterface $paymentRequest
      * @return PaymentRequestResponse
      */
-    public function createPaymentRequest(PaymentRequestInterface $paymentRequest) {
+    public function createPaymentRequest(PaymentRequestInterface $paymentRequest)
+    {
         return new PaymentRequestResponse($this->doRequest('post', '/merchant/API/createPaymentRequest', [
             'form_params' => $paymentRequest->getPayload()
         ]));
     }
 
-    public function testConnection() {
+    public function testConnection()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function login() {
+    public function login()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function payments() {
+    public function payments()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
@@ -78,88 +82,105 @@ class Client
      * @param CaptureReservationInterface $captureReservation
      * @return CaptureReservationResponse
      */
-    public function captureReservation(CaptureReservationInterface $captureReservation) {
+    public function captureReservation(CaptureReservationInterface $captureReservation)
+    {
         return new CaptureReservationResponse($this->doRequest('get', '/merchant/API/captureReservation', [
             'query' => $captureReservation->getPayload()
         ]));
     }
 
-    public function releaseReservation() {
+    public function releaseReservation()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function refundCapturedReservation() {
+    public function refundCapturedReservation()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function setupSubscription() {
+    public function setupSubscription()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function chargeSubscription() {
+    public function chargeSubscription()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function reserveSubscriptionCharge() {
+    public function reserveSubscriptionCharge()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function updateOrder() {
+    public function updateOrder()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function fundingList() {
+    public function fundingList()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function fundingDownload() {
+    public function fundingDownload()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function getCustomReport() {
+    public function getCustomReport()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function reservationOfFixedAmount() {
+    public function reservationOfFixedAmount()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function credit() {
+    public function credit()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function getTerminals() {
+    public function getTerminals()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function getInvoiceText() {
+    public function getInvoiceText()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function createInvoiceReservation() {
+    public function createInvoiceReservation()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function calculateSurcharge() {
+    public function calculateSurcharge()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function queryGiftCard() {
+    public function queryGiftCard()
+    {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
@@ -170,7 +191,8 @@ class Client
      * @param array|null $options
      * @return ResponseInterface
      */
-    public function doRequest($method = 'get', $uri, array $options = null) {
+    public function doRequest($method = 'get', $uri, array $options = null)
+    {
 
         $url = $this->baseUrl.$uri;
         $options = $options ? : [];
@@ -185,7 +207,7 @@ class Client
      */
     public function getClient()
     {
-        if(!$this->client) {
+        if (!$this->client) {
             $this->client = new GuzzleClient([
                 'allow_redirects' => false,
                 'cookies' => false,

@@ -30,7 +30,8 @@ class PaymentNatureService extends PartialResponse
      */
     private $supportsMultipleRefunds;
 
-    protected function init() {
+    protected function init()
+    {
         $this->name = (string)$this->xmlDoc['name'];
         $this->supportsRefunds = (string)$this->xmlDoc->SupportsRefunds === 'true';
         $this->supportsRelease = (string)$this->xmlDoc->SupportsRelease === 'true';

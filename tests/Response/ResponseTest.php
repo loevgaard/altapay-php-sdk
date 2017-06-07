@@ -8,7 +8,8 @@ use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
 final class ResponseTest extends TestCase
 {
-    public function testGetters() {
+    public function testGetters()
+    {
         $response = new \GuzzleHttp\Psr7\Response(200, [], '<APIResponse version="20110831"><Header><Date>2011-08-29T23:48:32+02:00</Date><Path>API/xxx</Path><ErrorCode>0</ErrorCode><ErrorMessage/></Header><Body></Body></APIResponse>');
         $responseConcrete = new ResponseConcrete($response);
 
@@ -22,7 +23,8 @@ final class ResponseTest extends TestCase
         $this->assertInstanceOf(\SimpleXMLElement::class, $responseConcrete->getXmlDoc());
     }
 
-    public function testWrongDate() {
+    public function testWrongDate()
+    {
         $response = new \GuzzleHttp\Psr7\Response(200, [], '<APIResponse version="20110831"><Header><Date>wrong date</Date><Path>API/xxx</Path><ErrorCode>0</ErrorCode><ErrorMessage/></Header><Body></Body></APIResponse>');
 
         $this->expectException(ResponseException::class);
@@ -30,5 +32,6 @@ final class ResponseTest extends TestCase
     }
 }
 
-class ResponseConcrete extends Response {
+class ResponseConcrete extends Response
+{
 }

@@ -5,10 +5,10 @@ use Loevgaard\AltaPay\Payload\Payload;
 
 class CustomerInfo extends Payload implements CustomerInfoInterface
 {
-    CONST GENDER_MALE = 'male';
-    CONST GENDER_MALE_2 = 'm';
-    CONST GENDER_FEMALE = 'female';
-    CONST GENDER_FEMALE_2 = 'f';
+    const GENDER_MALE = 'male';
+    const GENDER_MALE_2 = 'm';
+    const GENDER_FEMALE = 'female';
+    const GENDER_FEMALE_2 = 'f';
 
     /**
      * @var string
@@ -193,7 +193,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
         return $this->cleanPayload($payload);
     }
 
-    public static function getGenders() {
+    public static function getGenders()
+    {
         return [
             self::GENDER_MALE,
             self::GENDER_MALE_2,

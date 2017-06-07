@@ -20,8 +20,8 @@ abstract class Response implements ResponseInterface
      *   <Header>
      *     <Date>2011-08-29T23:48:32+02:00</Date>
      *     <Path>API/xxx</Path>
-     * 	   <ErrorCode>0</ErrorCode>
-     * 	   <ErrorMessage/>
+     *     <ErrorCode>0</ErrorCode>
+     *     <ErrorMessage/>
      *   </Header>
      *   <Body>
      *     [.....]
@@ -75,7 +75,7 @@ abstract class Response implements ResponseInterface
         $this->xmlDoc = new \SimpleXMLElement($this->xml);
         $this->version = (string)$this->xmlDoc['version'];
         $this->date = \DateTimeImmutable::createFromFormat(DATE_RFC3339, (string)$this->xmlDoc->Header->Date);
-        if($this->date === false) {
+        if ($this->date === false) {
             $exception = new ResponseException('The date format is wrong in xml header');
             $exception->setResponse($this->response);
             throw $exception;
@@ -86,11 +86,12 @@ abstract class Response implements ResponseInterface
         $this->init();
     }
 
-    protected function init() {
-
+    protected function init()
+    {
     }
 
-    public function isSuccessful() {
+    public function isSuccessful()
+    {
         return $this->errorCode === 0;
     }
 

@@ -57,7 +57,8 @@ class CustomerInfo extends PartialResponse
      */
     private $registeredAddress;
 
-    protected function init() {
+    protected function init()
+    {
         $this->userAgent = (string)$this->xmlDoc->UserAgent;
         $this->ipAddress = (string)$this->xmlDoc->IpAddress;
         $this->email = (string)$this->xmlDoc->Email;

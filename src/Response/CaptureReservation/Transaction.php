@@ -160,7 +160,8 @@ class Transaction extends PartialResponse
      */
     private $reconciliationIdentifiers;
 
-    protected function init() {
+    protected function init()
+    {
         $this->transactionId = (int)$this->xmlDoc->TransactionId;
         $this->paymentId = (string)$this->xmlDoc->PaymentId;
         $this->cardStatus = (string)$this->xmlDoc->CardStatus;
@@ -187,14 +188,14 @@ class Transaction extends PartialResponse
         $this->fraudExplanation = (string)$this->xmlDoc->FraudExplanation;
 
         $this->createdDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$this->xmlDoc->CreatedDate);
-        if($this->createdDate === false) {
+        if ($this->createdDate === false) {
             $exception = new ResponseException('The created date format is wrong');
             $exception->setResponse($this->getOriginalResponse());
             throw $exception;
         }
 
         $this->updatedDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$this->xmlDoc->UpdatedDate);
-        if($this->updatedDate === false) {
+        if ($this->updatedDate === false) {
             $exception = new ResponseException('The updated date format is wrong');
             $exception->setResponse($this->getOriginalResponse());
             throw $exception;
@@ -205,7 +206,7 @@ class Transaction extends PartialResponse
 
         // populating payment info objects
         $this->paymentInfos = [];
-        if(isset($this->xmlDoc->PaymentInfos) && isset($this->xmlDoc->PaymentInfos->PaymentInfo) && !empty($this->xmlDoc->PaymentInfos->PaymentInfo)) {
+        if (isset($this->xmlDoc->PaymentInfos) && isset($this->xmlDoc->PaymentInfos->PaymentInfo) && !empty($this->xmlDoc->PaymentInfos->PaymentInfo)) {
             foreach ($this->xmlDoc->PaymentInfos->PaymentInfo as $paymentInfo) {
                 $this->paymentInfos[] = new PaymentInfo($this->getOriginalResponse(), $paymentInfo);
             }
@@ -216,7 +217,7 @@ class Transaction extends PartialResponse
 
         // populating reconciliation identifiers
         $this->reconciliationIdentifiers = [];
-        if(isset($this->xmlDoc->ReconciliationIdentifiers) && isset($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier) && !empty($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier)) {
+        if (isset($this->xmlDoc->ReconciliationIdentifiers) && isset($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier) && !empty($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier)) {
             foreach ($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier as $reconciliationIdentifier) {
                 $this->reconciliationIdentifiers[] = new ReconciliationIdentifier($this->getOriginalResponse(), $reconciliationIdentifier);
             }

@@ -65,7 +65,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
             $orderLines[] = $orderLine->getPayload();
         }
 
-        if(!empty($orderLines)) {
+        if (!empty($orderLines)) {
             $payload['orderLines'] = $orderLines;
         }
 
@@ -76,7 +76,8 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
      * @param OrderLineInterface $orderLine
      * @return CaptureReservation
      */
-    public function addOrderLine(OrderLineInterface $orderLine) {
+    public function addOrderLine(OrderLineInterface $orderLine)
+    {
         $this->orderLines[] = $orderLine;
         return $this;
     }

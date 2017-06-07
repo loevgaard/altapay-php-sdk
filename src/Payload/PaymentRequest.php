@@ -174,13 +174,13 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
 
         // set config payload if any
         $config = $this->getConfig()->getPayload();
-        if(!empty($config)) {
+        if (!empty($config)) {
             $payload['config'] = $config;
         }
 
         // set customer info payload if any
         $customerInfo = $this->getCustomerInfo()->getPayload();
-        if(!empty($customerInfo)) {
+        if (!empty($customerInfo)) {
             $payload['customer_info'] = $customerInfo;
         }
 
@@ -190,7 +190,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
             $orderLines[] = $orderLine->getPayload();
         }
 
-        if(!empty($orderLines)) {
+        if (!empty($orderLines)) {
             $payload['orderLines'] = $orderLines;
         }
 
@@ -201,7 +201,8 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param OrderLineInterface $orderLine
      * @return PaymentRequest
      */
-    public function addOrderLine(OrderLineInterface $orderLine) {
+    public function addOrderLine(OrderLineInterface $orderLine)
+    {
         $this->orderLines[] = $orderLine;
         return $this;
     }
@@ -553,7 +554,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      */
     public function getCustomerInfo()
     {
-        if(!$this->customerInfo) {
+        if (!$this->customerInfo) {
             $this->customerInfo = new CustomerInfo();
         }
         return $this->customerInfo;
@@ -574,7 +575,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      */
     public function getConfig()
     {
-        if(!$this->config) {
+        if (!$this->config) {
             $this->config = new Config();
         }
         return $this->config;

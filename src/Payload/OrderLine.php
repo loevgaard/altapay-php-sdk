@@ -93,7 +93,8 @@ class OrderLine extends Payload implements OrderLineInterface
     /**
      * @return array
      */
-    public static function getGoodsTypes() {
+    public static function getGoodsTypes()
+    {
         return [
             self::GOODS_TYPE_HANDLING,
             self::GOODS_TYPE_ITEM,

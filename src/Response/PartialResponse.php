@@ -30,8 +30,8 @@ abstract class PartialResponse implements PartialResponseInterface
         $this->init();
     }
 
-    protected function init() {
-
+    protected function init()
+    {
     }
 
     /**

@@ -7,7 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 final class PaymentRequestTest extends TestCase
 {
-    public function testGetPayload() {
+    public function testGetPayload()
+    {
         $birthDate = \DateTime::createFromFormat('Y-m-d', '1972-05-22');
         $expected = [
             'shop_orderid' => time(),

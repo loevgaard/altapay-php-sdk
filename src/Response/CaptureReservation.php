@@ -30,14 +30,15 @@ class CaptureReservation extends Response
      */
     protected $transactions;
 
-    protected function init() {
+    protected function init()
+    {
         $this->transactions     = [];
         $this->captureAmount    = (float)$this->xmlDoc->Body->CaptureAmount;
         $this->captureCurrency  = (int)$this->xmlDoc->Body->CaptureCurrency;
         $this->result           = (string)$this->xmlDoc->Body->Result;
         $this->captureResult    = (string)$this->xmlDoc->Body->CaptureResult;
 
-        if(isset($this->xmlDoc->Body->Transactions) && isset($this->xmlDoc->Body->Transactions->Transaction) && !empty($this->xmlDoc->Body->Transactions->Transaction)) {
+        if (isset($this->xmlDoc->Body->Transactions) && isset($this->xmlDoc->Body->Transactions->Transaction) && !empty($this->xmlDoc->Body->Transactions->Transaction)) {
             foreach ($this->xmlDoc->Body->Transactions->Transaction as $transactionXml) {
                 $transaction = new Transaction($this->getResponse(), $transactionXml);
                 $this->transactions[] = $transaction;

@@ -15,7 +15,8 @@ class PaymentInfo extends PartialResponse
      */
     private $value;
 
-    protected function init() {
+    protected function init()
+    {
         $this->name = (string)$this->xmlDoc['name'];
         $this->value = (string)$this->xmlDoc;
     }

@@ -7,7 +7,8 @@ use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
 final class PaymentRequestTest extends TestCase
 {
-    public function testGetters() {
+    public function testGetters()
+    {
         $xml = <<<XML
 <APIResponse version="20170228">
 <Header>

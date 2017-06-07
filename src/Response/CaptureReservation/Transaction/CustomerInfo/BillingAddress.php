@@ -35,7 +35,8 @@ class BillingAddress extends PartialResponse
      */
     private $country;
 
-    protected function init() {
+    protected function init()
+    {
         $this->firstName = (string)$this->xmlDoc->Firstname;
         $this->lastName = (string)$this->xmlDoc->Lastname;
         $this->address = (string)$this->xmlDoc->Address;

@@ -1,4 +1,7 @@
 <?php
 namespace Loevgaard\AltaPay\Exception;
 
-class PayloadException extends Exception {}
+class PayloadException extends Exception
+{
+
+}

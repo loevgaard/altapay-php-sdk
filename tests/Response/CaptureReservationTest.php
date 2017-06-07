@@ -7,7 +7,8 @@ use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
 final class CaptureReservationTest extends TestCase
 {
-    public function testGetters() {
+    public function testGetters()
+    {
         // this xml is taken from the example found here: https://testgateway.altapaysecure.com/merchant/help/Merchant_API#API_captureReservation
         $xml = <<<XML
 <APIResponse version="20170228">
