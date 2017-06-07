@@ -119,7 +119,7 @@ final class PaymentRequestTest extends TestCase
             ->setShippingRegion($expected['customer_info']['shipping_region'])
         ;
 
-        $payload = PaymentRequestPayload::create($expected['terminal'], $expected['shop_orderid'], $expected['amount'], $expected['currency']);
+        $payload = new PaymentRequestPayload($expected['terminal'], $expected['shop_orderid'], $expected['amount'], $expected['currency']);
         $payload
             ->setAccountOffer($expected['account_offer'])
             ->setCcToken($expected['ccToken'])
@@ -142,7 +142,7 @@ final class PaymentRequestTest extends TestCase
         ;
 
         foreach ($expected['orderLines'] as $orderLine) {
-            $ol = new PaymentRequestPayload\OrderLine(
+            $ol = new OrderLine(
                 $orderLine['description'],
                 $orderLine['itemId'],
                 $orderLine['quantity'],

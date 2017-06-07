@@ -1,7 +1,5 @@
 <?php
-namespace Loevgaard\AltaPay\Payload\PaymentRequest;
-
-use Loevgaard\AltaPay\Payload\Payload;
+namespace Loevgaard\AltaPay\Payload;
 
 class OrderLine extends Payload implements OrderLineInterface
 {

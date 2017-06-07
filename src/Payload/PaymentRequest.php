@@ -5,8 +5,10 @@ use Loevgaard\AltaPay\Payload\PaymentRequest\Config;
 use Loevgaard\AltaPay\Payload\PaymentRequest\ConfigInterface;
 use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfo;
 use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfoInterface;
-use Loevgaard\AltaPay\Payload\PaymentRequest\OrderLineInterface;
 
+/**
+ * @todo create assertions
+ */
 class PaymentRequest extends Payload implements PaymentRequestInterface
 {
     const ACCOUNT_OFFER_REQUIRED = 'required';
@@ -135,17 +137,13 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      */
     private $config;
 
-    protected function __construct($terminal, $shopOrderId, $amount, $currency)
+    public function __construct($terminal, $shopOrderId, $amount, $currency)
     {
         $this->orderLines = [];
         $this->setTerminal($terminal);
         $this->setShopOrderId($shopOrderId);
         $this->setAmount($amount);
         $this->setCurrency($currency);
-    }
-
-    public static function create($terminal, $shopOrderId, $amount, $currency) {
-        return new static($terminal, $shopOrderId, $amount, $currency);
     }
 
     /**
