@@ -55,9 +55,10 @@ class Client
      */
     public function createPaymentRequest(PaymentRequestInterface $paymentRequest)
     {
-        return new PaymentRequestResponse($this->doRequest('post', '/merchant/API/createPaymentRequest', [
+        $response = new PaymentRequestResponse($this->doRequest('post', '/merchant/API/createPaymentRequest', [
             'form_params' => $paymentRequest->getPayload()
         ]));
+        return $response;
     }
 
     public function testConnection()

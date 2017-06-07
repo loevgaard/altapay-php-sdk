@@ -9,11 +9,6 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false">
-    <php>
-        <env name="ALTAPAY_USERNAME" value="INSERT ALTAPAY USERNAME"/>
-        <env name="ALTAPAY_PASSWORD" value="INSERT ALTAPAY PASSWORD"/>
-        <env name="ALTAPAY_TERMINAL" value="INSERT ALTAPAY TERMINAL"/>
-    </php>
     <testsuites>
         <testsuite name="Loevgaard Test Suite">
             <directory>tests</directory>

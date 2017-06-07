@@ -2,27 +2,50 @@
 
 namespace Loevgaard\AltaPay;
 
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
 use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
-use Loevgaard\AltaPay\Payload\CaptureReservation as CaptureReservationPayload;
 use Loevgaard\AltaPay\Response\PaymentRequest as PaymentRequestResponse;
 use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Client as GuzzleClient;
 
 final class ClientTest extends TestCase
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
     public function testCreatePaymentRequest()
     {
-        $response = $this->createPaymentRequest();
+        $xml = <<<XML
+<APIResponse version="20170228">
+    <Header>
+        <Date>2017-06-07T14:09:57+02:00</Date>
+        <Path>API/createPaymentRequest</Path>
+        <ErrorCode>0</ErrorCode>
+        <ErrorMessage/>
+        </Header>
+    <Body>
+        <Result>Success</Result>
+        <PaymentRequestId>64c9117a-71e5-4e0f-91bd-db28b9add23e</PaymentRequestId>
+        <Url>https://testgateway.altapaysecure.com/eCommerce/API/requestForm?pid=64c9117a-71e5-4e0f-91bd-db28b9add23e</Url>
+        <DynamicJavascriptUrl>https://testgateway.altapaysecure.com/eCommerce/API/embeddedPaymentWindow?pid=64c9117a-71e5-4e0f-91bd-db28b9add23e</DynamicJavascriptUrl>
+    </Body>
+</APIResponse>
+XML;
+        $mock = new MockHandler([
+            new Response(200, [], $xml)
+        ]);
+
+        $handler = HandlerStack::create($mock);
+
+        $client = $this->getClient($handler);
+        $payload = new PaymentRequestPayload('Terminal', time(), 100.5, 'DKK');
+        $response = $client->createPaymentRequest($payload);
 
         $this->assertInstanceOf(PaymentRequestResponse::class, $response);
         $this->assertTrue($response->isSuccessful());
+
+        // @todo create more assertions
     }
 
-    // @todo figure out how to make a live capture to test properly
     public function testCaptureReservation()
     {
         $client = $this->getClient();
@@ -34,23 +57,18 @@ final class ClientTest extends TestCase
      *****************/
 
     /**
-     * @return PaymentRequestResponse
-     */
-    private function createPaymentRequest()
-    {
-        $client = $this->getClient();
-        $payload = new PaymentRequestPayload(getenv('ALTAPAY_TERMINAL'), time(), 100.5, 'DKK');
-        return $client->createPaymentRequest($payload);
-    }
-
-    /**
+     * @param HandlerStack|null $handler
      * @return Client
      */
-    private function getClient()
+    private function getClient(HandlerStack $handler = null)
     {
-        if (!$this->client) {
-            $this->client = new Client(getenv('ALTAPAY_USERNAME'), getenv('ALTAPAY_PASSWORD'));
+        $client =  new Client('Username', 'Password');
+        if ($handler) {
+            $guzzleClient = new GuzzleClient([
+                'handler' => $handler
+            ]);
+            $client->setClient($guzzleClient);
         }
-        return $this->client;
+        return $client;
     }
 }
