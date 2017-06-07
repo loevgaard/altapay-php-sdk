@@ -110,6 +110,16 @@ abstract class Payload implements PayloadInterface
     protected function createAssertionException($val, $expected)
     {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
-        return new PayloadException(trim($expected, '.').'. Value given ('.gettype($val).') '.$val.'. Called in '.$backtrace[1]['file'].' on line '.$backtrace[1]['line'].' with arguments: ['.json_encode($backtrace[1]['args']).']');
+
+        return new PayloadException(trim($expected, '.'));
+
+        /*
+         * @todo make it better for debugging. Remember to check if indices are set in $backtrace
+        return new PayloadException(
+            trim($expected, '.').
+            '. Value given ('.gettype($val).') '.$val.'. Called in '.$backtrace[1]['file'].
+            ' on line '.$backtrace[1]['line'].' with arguments: ['.json_encode($backtrace[1]['args']).']'
+        );
+        */
     }
 }

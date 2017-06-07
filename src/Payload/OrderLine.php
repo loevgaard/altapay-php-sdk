@@ -58,8 +58,19 @@ class OrderLine extends Payload implements OrderLineInterface
      */
     protected $imageUrl;
 
-    public function __construct($description, $itemId, $quantity, $unitPrice, $taxPercent = null, $taxAmount = null, $unitCode = null, $discount = null, $goodsType = null, $imageUrl = null)
-    {
+    public function __construct(
+        $description,
+        $itemId,
+        $quantity,
+        $unitPrice,
+        $taxPercent = null,
+        $taxAmount = null,
+        $unitCode = null,
+        $discount = null,
+        $goodsType = null,
+        $imageUrl = null
+    ) {
+    
         $this->setDescription($description);
         $this->setItemId($itemId);
         $this->setQuantity($quantity);

@@ -38,7 +38,9 @@ class CaptureReservation extends Response
         $this->result           = (string)$this->xmlDoc->Body->Result;
         $this->captureResult    = (string)$this->xmlDoc->Body->CaptureResult;
 
-        if (isset($this->xmlDoc->Body->Transactions) && isset($this->xmlDoc->Body->Transactions->Transaction) && !empty($this->xmlDoc->Body->Transactions->Transaction)) {
+        if (isset($this->xmlDoc->Body->Transactions) &&
+            isset($this->xmlDoc->Body->Transactions->Transaction) &&
+            !empty($this->xmlDoc->Body->Transactions->Transaction)) {
             foreach ($this->xmlDoc->Body->Transactions->Transaction as $transactionXml) {
                 $transaction = new Transaction($this->getResponse(), $transactionXml);
                 $this->transactions[] = $transaction;
@@ -71,7 +73,8 @@ class CaptureReservation extends Response
     }
 
     /**
-     * @deprecated According to AltaPay documentation this is deprecated, see https://testgateway.altapaysecure.com/merchant/help/Merchant_API#API_captureReservation
+     * @deprecated According to AltaPay documentation this is deprecated,
+     * @see https://testgateway.altapaysecure.com/merchant/help/Merchant_API#API_captureReservation
      * @return string
      */
     public function getCaptureResult()

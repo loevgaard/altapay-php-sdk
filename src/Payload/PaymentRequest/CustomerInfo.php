@@ -138,8 +138,29 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $shippingRegion
      * @param string $username
      */
-    public function __construct($bankName = null, $bankPhone = null, $billingAddress = null, $billingCity = null, $billingCountry = null, $billingFirstName = null, $billingLastName = null, $billingPostal = null, $billingRegion = null, $birthDate = null, $customerPhone = null, $email = null, $gender = null, $shippingAddress = null, $shippingCity = null, $shippingCountry = null, $shippingFirstName = null, $shippingLastName = null, $shippingPostal = null, $shippingRegion = null, $username = null)
-    {
+    public function __construct(
+        $bankName = null,
+        $bankPhone = null,
+        $billingAddress = null,
+        $billingCity = null,
+        $billingCountry = null,
+        $billingFirstName = null,
+        $billingLastName = null,
+        $billingPostal = null,
+        $billingRegion = null,
+        $birthDate = null,
+        $customerPhone = null,
+        $email = null,
+        $gender = null,
+        $shippingAddress = null,
+        $shippingCity = null,
+        $shippingCountry = null,
+        $shippingFirstName = null,
+        $shippingLastName = null,
+        $shippingPostal = null,
+        $shippingRegion = null,
+        $username = null
+    ) {
         $this->setBankName($bankName);
         $this->setBankPhone($bankPhone);
         $this->setBillingAddress($billingAddress);

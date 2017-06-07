@@ -202,11 +202,16 @@ class Transaction extends PartialResponse
         }
 
         // populating payment nature service object
-        $this->paymentNatureService = new PaymentNatureService($this->getOriginalResponse(), $this->xmlDoc->PaymentNatureService);
+        $this->paymentNatureService = new PaymentNatureService(
+            $this->getOriginalResponse(),
+            $this->xmlDoc->PaymentNatureService
+        );
 
         // populating payment info objects
         $this->paymentInfos = [];
-        if (isset($this->xmlDoc->PaymentInfos) && isset($this->xmlDoc->PaymentInfos->PaymentInfo) && !empty($this->xmlDoc->PaymentInfos->PaymentInfo)) {
+        if (isset($this->xmlDoc->PaymentInfos) &&
+            isset($this->xmlDoc->PaymentInfos->PaymentInfo) &&
+            !empty($this->xmlDoc->PaymentInfos->PaymentInfo)) {
             foreach ($this->xmlDoc->PaymentInfos->PaymentInfo as $paymentInfo) {
                 $this->paymentInfos[] = new PaymentInfo($this->getOriginalResponse(), $paymentInfo);
             }
@@ -217,9 +222,14 @@ class Transaction extends PartialResponse
 
         // populating reconciliation identifiers
         $this->reconciliationIdentifiers = [];
-        if (isset($this->xmlDoc->ReconciliationIdentifiers) && isset($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier) && !empty($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier)) {
+        if (isset($this->xmlDoc->ReconciliationIdentifiers) &&
+            isset($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier) &&
+            !empty($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier)) {
             foreach ($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier as $reconciliationIdentifier) {
-                $this->reconciliationIdentifiers[] = new ReconciliationIdentifier($this->getOriginalResponse(), $reconciliationIdentifier);
+                $this->reconciliationIdentifiers[] = new ReconciliationIdentifier(
+                    $this->getOriginalResponse(),
+                    $reconciliationIdentifier
+                );
             }
         }
     }

@@ -9,173 +9,143 @@ final class PayloadTest extends TestCase
 {
     public function testGetPayload()
     {
-        $payload = new PayloadConcrete();
-        $this->assertTrue(is_array($payload->getPayload()));
+        $stub = $this->getPayloadStub();
+        $this->assertTrue(is_array($stub->getPayload()));
     }
 
     public function testAssertString()
     {
-        new PayloadAssertString('string');
+        $stub = $this->getPayloadStub();
+        $this->invokeMethod($stub, 'assertString', ['string']);
         $this->assertTrue(true);
 
         $this->expectException(PayloadException::class);
 
-        new PayloadAssertString(0);
+        $this->invokeMethod($stub, 'assertString', [0]);
     }
 
     public function testAssertStringOrNull()
     {
-        new PayloadAssertStringOrNull(null);
+        $stub = $this->getPayloadStub();
+        $this->invokeMethod($stub, 'assertStringOrNull', [null]);
         $this->assertTrue(true);
 
-        new PayloadAssertStringOrNull('string');
+        $this->invokeMethod($stub, 'assertStringOrNull', ['string']);
         $this->assertTrue(true);
 
         $this->expectException(PayloadException::class);
 
-        new PayloadAssertStringOrNull(0);
+        $this->invokeMethod($stub, 'assertStringOrNull', [0]);
     }
 
     public function testAssertNumeric()
     {
-        new PayloadAssertNumeric(100);
+        $stub = $this->getPayloadStub();
+        $this->invokeMethod($stub, 'assertNumeric', [100]);
         $this->assertTrue(true);
 
-        new PayloadAssertNumeric(100.5);
+        $this->invokeMethod($stub, 'assertNumeric', [100.5]);
         $this->assertTrue(true);
 
         $this->expectException(PayloadException::class);
 
-        new PayloadAssertNumeric('string');
+        $this->invokeMethod($stub, 'assertNumeric', ['string']);
     }
 
     public function testAssertNumericOrNull()
     {
-        new PayloadAssertNumericOrNull(null);
+        $stub = $this->getPayloadStub();
+        $this->invokeMethod($stub, 'assertNumericOrNull', [null]);
         $this->assertTrue(true);
 
-        new PayloadAssertNumericOrNull(100);
+        $this->invokeMethod($stub, 'assertNumericOrNull', [100]);
         $this->assertTrue(true);
 
-        new PayloadAssertNumericOrNull(100.5);
+        $this->invokeMethod($stub, 'assertNumericOrNull', [100.5]);
         $this->assertTrue(true);
 
         $this->expectException(PayloadException::class);
 
-        new PayloadAssertNumericOrNull('string');
+        $this->invokeMethod($stub, 'assertNumericOrNull', ['string']);
     }
 
     public function testAssertDateTime()
     {
-        new PayloadAssertDateTime(new \DateTime());
+        $stub = $this->getPayloadStub();
+        $this->invokeMethod($stub, 'assertDateTime', [new \DateTime()]);
         $this->assertTrue(true);
 
         $this->expectException(PayloadException::class);
 
-        new PayloadAssertDateTime(0);
+        $this->invokeMethod($stub, 'assertDateTime', [0]);
     }
 
     public function testAssertDateTimeOrNull()
     {
-        new PayloadAssertDateTimeOrNull(null);
+        $stub = $this->getPayloadStub();
+        $this->invokeMethod($stub, 'assertDateTimeOrNull', [null]);
         $this->assertTrue(true);
 
-        new PayloadAssertDateTimeOrNull(new \DateTime());
+        $this->invokeMethod($stub, 'assertDateTimeOrNull', [new \DateTime()]);
         $this->assertTrue(true);
 
         $this->expectException(PayloadException::class);
 
-        new PayloadAssertDateTimeOrNull(0);
+        $this->invokeMethod($stub, 'assertDateTimeOrNull', [0]);
     }
 
     public function testAssertInArray()
     {
-        new PayloadAssertInArray('val1', ['val1', 'val2']);
+        $stub = $this->getPayloadStub();
+        $this->invokeMethod($stub, 'assertInArray', ['val1', ['val1', 'val2']]);
         $this->assertTrue(true);
 
         $this->expectException(PayloadException::class);
 
-        new PayloadAssertInArray('val', ['val1', 'val2']);
+        $this->invokeMethod($stub, 'assertInArray', ['val', ['val1', 'val2']]);
     }
 
     public function testAssertInArrayOrNull()
     {
-        new PayloadAssertInArrayOrNull(null, ['val1', 'val2']);
+        $stub = $this->getPayloadStub();
+        $this->invokeMethod($stub, 'assertInArrayOrNull', [null, ['val1', 'val2']]);
         $this->assertTrue(true);
 
-        new PayloadAssertInArrayOrNull('val1', ['val1', 'val2']);
+        $this->invokeMethod($stub, 'assertInArrayOrNull', ['val1', ['val1', 'val2']]);
         $this->assertTrue(true);
 
         $this->expectException(PayloadException::class);
 
-        new PayloadAssertInArrayOrNull('val', ['val1', 'val2']);
+        $this->invokeMethod($stub, 'assertInArrayOrNull', ['val', ['val1', 'val2']]);
     }
-}
 
-class PayloadConcrete extends Payload
-{
-}
+    /**
+     * Helper methods
+     */
 
-class PayloadAssertString extends Payload
-{
-    public function __construct($val)
+    /**
+     * Call protected/private method of a class.
+     *
+     * @param object &$object    Instantiated object that we will run method on.
+     * @param string $methodName Method name to call
+     * @param array  $parameters Array of parameters to pass into method.
+     *
+     * @return mixed Method return.
+     */
+    private function invokeMethod(&$object, $methodName, array $parameters = array())
     {
-        $this->assertString($val);
+        $reflection = new \ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($object, $parameters);
     }
-}
 
-class PayloadAssertStringOrNull extends Payload
-{
-    public function __construct($val)
+    /**
+     * @return Payload
+     */
+    private function getPayloadStub()
     {
-        $this->assertStringOrNull($val);
-    }
-}
-
-class PayloadAssertNumeric extends Payload
-{
-    public function __construct($val)
-    {
-        $this->assertNumeric($val);
-    }
-}
-
-class PayloadAssertNumericOrNull extends Payload
-{
-    public function __construct($val)
-    {
-        $this->assertNumericOrNull($val);
-    }
-}
-
-class PayloadAssertDateTime extends Payload
-{
-    public function __construct($val)
-    {
-        $this->assertDateTime($val);
-    }
-}
-
-class PayloadAssertDateTimeOrNull extends Payload
-{
-    public function __construct($val)
-    {
-        $this->assertDateTimeOrNull($val);
-    }
-}
-
-class PayloadAssertInArray extends Payload
-{
-    public function __construct($val, $arr)
-    {
-        $this->assertInArray($val, $arr);
-    }
-}
-
-class PayloadAssertInArrayOrNull extends Payload
-{
-    public function __construct($val, $arr)
-    {
-        $this->assertInArrayOrNull($val, $arr);
+        return $this->getMockForAbstractClass(Payload::class);
     }
 }

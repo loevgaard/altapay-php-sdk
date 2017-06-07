@@ -5,26 +5,15 @@ namespace Loevgaard\AltaPay\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
+/**
+ * @todo move assertions to ClientTest.php
+ * @deprecated
+ */
 final class PaymentRequestTest extends TestCase
 {
     public function testGetters()
     {
-        $xml = <<<XML
-<APIResponse version="20170228">
-<Header>
-<Date>2017-05-31T16:00:25+02:00</Date>
-<Path>API/createPaymentRequest</Path>
-<ErrorCode>0</ErrorCode>
-<ErrorMessage/>
-</Header>
-<Body>
-<Result>Success</Result>
-<PaymentRequestId>ed420d12-7b17-4fac-973b-c3e0ec9361ea</PaymentRequestId>
-<Url>https://testgateway.altapaysecure.com/eCommerce/API/requestForm?pid=ed420d12-7b17-4fac-973b-c3e0ec9361ea</Url>
-<DynamicJavascriptUrl>https://testgateway.altapaysecure.com/eCommerce/API/embeddedPaymentWindow?pid=ed420d12-7b17-4fac-973b-c3e0ec9361ea</DynamicJavascriptUrl>
-</Body>
-</APIResponse>
-XML;
+        $xml = file_get_contents(__DIR__.'/../data/PaymentRequestResponse.xml');
 
         $response = new \GuzzleHttp\Psr7\Response(200, [], $xml);
         $paymentRequestResponse = new PaymentRequest($response);

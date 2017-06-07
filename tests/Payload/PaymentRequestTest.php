@@ -120,7 +120,12 @@ final class PaymentRequestTest extends TestCase
             ->setShippingRegion($expected['customer_info']['shipping_region'])
         ;
 
-        $payload = new PaymentRequestPayload($expected['terminal'], $expected['shop_orderid'], $expected['amount'], $expected['currency']);
+        $payload = new PaymentRequestPayload(
+            $expected['terminal'],
+            $expected['shop_orderid'],
+            $expected['amount'],
+            $expected['currency']
+        );
         $payload
             ->setAccountOffer($expected['account_offer'])
             ->setCcToken($expected['ccToken'])

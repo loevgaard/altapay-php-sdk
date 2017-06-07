@@ -66,8 +66,10 @@ class CustomerInfo extends PartialResponse
         $this->customerPhone = (string)$this->xmlDoc->CustomerPhone;
         $this->organisationNumber = (string)$this->xmlDoc->OrganisationNumber;
 
-        // @todo these two properties should probably have their own objects, but I am awaiting a response from Altapay regarding the possible contents of these
-        // since the documentation does not say anything about it: https://testgateway.altapaysecure.com/merchant/help/Merchant_API#API_captureReservation
+        // @todo these two properties should probably have their own objects,
+        // but I am awaiting a response from Altapay regarding the possible contents of these
+        // since the documentation does not say anything about it:
+        // https://testgateway.altapaysecure.com/merchant/help/Merchant_API#API_captureReservation
         $this->shippingAddress = (string)$this->xmlDoc->ShippingAddress;
         $this->registeredAddress = (string)$this->xmlDoc->RegisteredAddress;
 

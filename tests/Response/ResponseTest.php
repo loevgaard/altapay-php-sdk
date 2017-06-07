@@ -10,8 +10,23 @@ final class ResponseTest extends TestCase
 {
     public function testGetters()
     {
-        $response = new \GuzzleHttp\Psr7\Response(200, [], '<APIResponse version="20110831"><Header><Date>2011-08-29T23:48:32+02:00</Date><Path>API/xxx</Path><ErrorCode>0</ErrorCode><ErrorMessage/></Header><Body></Body></APIResponse>');
-        $responseConcrete = new ResponseConcrete($response);
+        $xml = <<<XML
+<APIResponse version="20110831">
+    <Header>
+        <Date>2011-08-29T23:48:32+02:00</Date>
+        <Path>API/xxx</Path>
+        <ErrorCode>0</ErrorCode>
+        <ErrorMessage/>
+    </Header>
+    <Body>
+    
+    </Body>
+</APIResponse>
+XML;
+
+        $response = new \GuzzleHttp\Psr7\Response(200, [], $xml);
+        /** @var Response $responseConcrete */
+        $responseConcrete = $this->getMockForAbstractClass(Response::class, [$response]);
 
         $this->assertInstanceOf(PsrResponseInterface::class, $responseConcrete->getResponse());
         $this->assertTrue(is_string($responseConcrete->getXml()));
@@ -25,13 +40,21 @@ final class ResponseTest extends TestCase
 
     public function testWrongDate()
     {
-        $response = new \GuzzleHttp\Psr7\Response(200, [], '<APIResponse version="20110831"><Header><Date>wrong date</Date><Path>API/xxx</Path><ErrorCode>0</ErrorCode><ErrorMessage/></Header><Body></Body></APIResponse>');
+        $xml = <<<XML
+<APIResponse version="20110831">
+    <Header>
+        <Date>wrong date</Date>
+        <Path>API/xxx</Path>
+        <ErrorCode>0</ErrorCode>
+        <ErrorMessage/>
+    </Header>
+    <Body></Body>
+</APIResponse>
+XML;
 
+        $response = new \GuzzleHttp\Psr7\Response(200, [], $xml);
         $this->expectException(ResponseException::class);
-        new ResponseConcrete($response);
-    }
-}
 
-class ResponseConcrete extends Response
-{
+        $this->getMockForAbstractClass(Response::class, [$response]);
+    }
 }

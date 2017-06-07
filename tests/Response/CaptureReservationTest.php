@@ -2,6 +2,10 @@
 
 namespace Loevgaard\AltaPay\Response;
 
+use Loevgaard\AltaPay\Response\CaptureReservation\Transaction\CustomerInfo;
+use Loevgaard\AltaPay\Response\CaptureReservation\Transaction\PaymentInfo;
+use Loevgaard\AltaPay\Response\CaptureReservation\Transaction\PaymentNatureService;
+use Loevgaard\AltaPay\Response\CaptureReservation\Transaction\ReconciliationIdentifier;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
@@ -9,94 +13,9 @@ final class CaptureReservationTest extends TestCase
 {
     public function testGetters()
     {
-        // this xml is taken from the example found here: https://testgateway.altapaysecure.com/merchant/help/Merchant_API#API_captureReservation
-        $xml = <<<XML
-<APIResponse version="20170228">
-   <Header>
-      <Date>2010-09-29T12:34:56+02:00</Date>
-      <Path>API/captureReservation</Path>
-      <ErrorCode>0</ErrorCode>
-      <ErrorMessage></ErrorMessage>
-   </Header>
-   <Body>
-      <CaptureAmount>0.20</CaptureAmount>
-      <CaptureCurrency>978</CaptureCurrency>
-      <Result>Success</Result>
-      <CaptureResult>Success</CaptureResult> <!-- deprecated -->
-      <Transactions>
-         <Transaction>
-            <TransactionId>1</TransactionId>
-            <PaymentId>ccc1479c-37f9-4962-8d2c-662d75117e9d</PaymentId>
-            <CardStatus>Valid</CardStatus>
-            <CreditCardToken>93f534a2f5d66d6ab3f16c8a7bb7e852656d4bb2</CreditCardToken>
-            <CreditCardMaskedPan>411111******1111</CreditCardMaskedPan>
-            <ThreeDSecureResult>Not_Applicable</ThreeDSecureResult>
-            <LiableForChargeback>Merchant</LiableForChargeback>
-            <BlacklistToken>4f244dec4907eba0f6432e53b17a60ebcf51365e</BlacklistToken>
-            <ShopOrderId>myorderid</ShopOrderId>
-            <Shop>AltaPay Shop</Shop>
-            <Terminal>AltaPay Test Terminal</Terminal>
-            <TransactionStatus>captured</TransactionStatus>
-            <ReasonCode>NONE</ReasonCode>
-            <MerchantCurrency>978</MerchantCurrency>
-            <MerchantCurrencyAlpha>EUR</MerchantCurrencyAlpha>
-            <CardHolderCurrency>978</CardHolderCurrency>
-            <CardHolderCurrencyAlpha>EUR</CardHolderCurrencyAlpha>
-            <ReservedAmount>1.00</ReservedAmount>
-            <CapturedAmount>1.00</CapturedAmount>
-            <RefundedAmount>0</RefundedAmount>
-            <RecurringDefaultAmount>0</RecurringDefaultAmount>
-            <CreatedDate>2010-09-28 12:34:56</CreatedDate>
-            <UpdatedDate>2010-09-28 12:34:57</UpdatedDate>
-            <PaymentNature>CreditCard</PaymentNature>
-            <PaymentNatureService name="TestAcquirer">
-               <SupportsRefunds>true</SupportsRefunds>
-               <SupportsRelease>true</SupportsRelease>
-               <SupportsMultipleCaptures>true</SupportsMultipleCaptures>
-               <SupportsMultipleRefunds>false</SupportsMultipleRefunds>
-            </PaymentNatureService>
-            <FraudRiskScore>13.37</FraudRiskScore>
-            <FraudExplanation>Fraud detection explanation</FraudExplanation>
-            <PaymentInfos>
-               <PaymentInfo name="Form_Created_At">2010-09-28 12:34:56</PaymentInfo>
-               <PaymentInfo name="Form_Provider">AltaPay Test Form</PaymentInfo>
-               <PaymentInfo name="Merchant_Provided_Info">Some info by merchant</PaymentInfo>
-            </PaymentInfos>
-            <CustomerInfo>
-               <UserAgent>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.41 Safari/535.7</UserAgent>
-               <IpAddress>127.127.127.127</IpAddress>
-               <Email>support@altapay.com</Email>
-               <Username>support</Username>
-               <CustomerPhone>+45 7020 0056</CustomerPhone>
-               <OrganisationNumber>12345678</OrganisationNumber>
-               <CountryOfOrigin>
-                  <Country>DK</Country>
-                  <Source>BillingAddress</Source>
-               </CountryOfOrigin>
-               <BillingAddress>
-                  <Firstname>Palle</Firstname>
-                  <Lastname>Simonsen</Lastname>
-                  <Address>Rosenkæret 13</Address>
-                  <City>Søborg</City>
-                  <PostalCode>2860</PostalCode>
-                  <Country>DK</Country>
-               </BillingAddress>
-               <ShippingAddress />
-               <RegisteredAddress />
-            </CustomerInfo>
-            <ReconciliationIdentifiers>
-               <ReconciliationIdentifier>
-                  <Id>f4e2533e-c578-4383-b075-bc8a6866784a</Id>
-                  <Amount currency="978">1.00</Amount>
-                  <Type>captured</Type>
-                  <Date>2010-09-28T12:00:00+02:00</Date>
-               </ReconciliationIdentifier>
-            </ReconciliationIdentifiers>
-         </Transaction>
-      </Transactions>
-   </Body>
-</APIResponse>
-XML;
+        // this xml is taken from the example found here:
+        // https://testgateway.altapaysecure.com/merchant/help/Merchant_API#API_captureReservation
+        $xml = file_get_contents(__DIR__.'/../data/CaptureReservationResponse.xml');
 
         $response = new \GuzzleHttp\Psr7\Response(200, [], $xml);
         $captureReservationResponse = new CaptureReservation($response);
@@ -160,8 +79,11 @@ XML;
         $this->assertEquals('Fraud detection explanation', $transactionResponse->getFraudExplanation());
 
         // test payment nature
-        $this->assertInstanceOf('Loevgaard\AltaPay\Response\CaptureReservation\Transaction\PaymentNatureService', $transactionResponse->getPaymentNatureService());
-        $this->assertEquals($captureReservationResponse->getResponse(), $transactionResponse->getPaymentNatureService()->getOriginalResponse());
+        $this->assertInstanceOf(PaymentNatureService::class, $transactionResponse->getPaymentNatureService());
+        $this->assertEquals(
+            $captureReservationResponse->getResponse(),
+            $transactionResponse->getPaymentNatureService()->getOriginalResponse()
+        );
         $this->assertTrue(is_string($transactionResponse->getPaymentNatureService()->getName()));
         $this->assertTrue(is_bool($transactionResponse->getPaymentNatureService()->getSupportsRefunds()));
         $this->assertTrue($transactionResponse->getPaymentNatureService()->getSupportsRefunds());
@@ -178,27 +100,42 @@ XML;
         // test payment infos
         $this->assertTrue(is_array($transactionResponse->getPaymentInfos()));
         $paymentInfoResponse = $transactionResponse->getPaymentInfos()[0];
-        $this->assertInstanceOf('Loevgaard\AltaPay\Response\CaptureReservation\Transaction\PaymentInfo', $paymentInfoResponse);
+        $this->assertInstanceOf(PaymentInfo::class, $paymentInfoResponse);
         $this->assertEquals('Form_Created_At', $paymentInfoResponse->getName());
         $this->assertEquals('2010-09-28 12:34:56', $paymentInfoResponse->getValue());
 
         // test customer info
-        $this->assertInstanceOf('Loevgaard\AltaPay\Response\CaptureReservation\Transaction\CustomerInfo', $transactionResponse->getCustomerInfo());
-        $this->assertEquals('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.41 Safari/535.7', $transactionResponse->getCustomerInfo()->getUserAgent());
+        $this->assertInstanceOf(CustomerInfo::class, $transactionResponse->getCustomerInfo());
+        $this->assertEquals(
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.41 Safari/535.7',
+            $transactionResponse->getCustomerInfo()->getUserAgent()
+        );
         $this->assertEquals('127.127.127.127', $transactionResponse->getCustomerInfo()->getIpAddress());
         $this->assertEquals('support@altapay.com', $transactionResponse->getCustomerInfo()->getEmail());
         $this->assertEquals('support', $transactionResponse->getCustomerInfo()->getUsername());
         $this->assertEquals('+45 7020 0056', $transactionResponse->getCustomerInfo()->getCustomerPhone());
         $this->assertEquals('12345678', $transactionResponse->getCustomerInfo()->getOrganisationNumber());
 
-        $this->assertInstanceOf('Loevgaard\AltaPay\Response\CaptureReservation\Transaction\CustomerInfo\CountryOfOrigin', $transactionResponse->getCustomerInfo()->getCountryOfOrigin());
+        $this->assertInstanceOf(
+            CustomerInfo\CountryOfOrigin::class,
+            $transactionResponse->getCustomerInfo()->getCountryOfOrigin()
+        );
         $this->assertEquals('DK', $transactionResponse->getCustomerInfo()->getCountryOfOrigin()->getCountry());
-        $this->assertEquals('BillingAddress', $transactionResponse->getCustomerInfo()->getCountryOfOrigin()->getSource());
+        $this->assertEquals(
+            'BillingAddress',
+            $transactionResponse->getCustomerInfo()->getCountryOfOrigin()->getSource()
+        );
 
-        $this->assertInstanceOf('Loevgaard\AltaPay\Response\CaptureReservation\Transaction\CustomerInfo\BillingAddress', $transactionResponse->getCustomerInfo()->getBillingAddress());
+        $this->assertInstanceOf(
+            CustomerInfo\BillingAddress::class,
+            $transactionResponse->getCustomerInfo()->getBillingAddress()
+        );
         $this->assertEquals('Palle', $transactionResponse->getCustomerInfo()->getBillingAddress()->getFirstName());
         $this->assertEquals('Simonsen', $transactionResponse->getCustomerInfo()->getBillingAddress()->getLastName());
-        $this->assertEquals('Rosenkæret 13', $transactionResponse->getCustomerInfo()->getBillingAddress()->getAddress());
+        $this->assertEquals(
+            'Rosenkæret 13',
+            $transactionResponse->getCustomerInfo()->getBillingAddress()->getAddress()
+        );
         $this->assertEquals('Søborg', $transactionResponse->getCustomerInfo()->getBillingAddress()->getCity());
         $this->assertEquals('2860', $transactionResponse->getCustomerInfo()->getBillingAddress()->getPostalCode());
         $this->assertEquals('DK', $transactionResponse->getCustomerInfo()->getBillingAddress()->getCountry());
@@ -207,7 +144,7 @@ XML;
         $this->assertTrue(is_array($transactionResponse->getReconciliationIdentifiers()));
         $this->assertEquals(1, count($transactionResponse->getReconciliationIdentifiers()));
         $reconciliationIdentifier = $transactionResponse->getReconciliationIdentifiers()[0];
-        $this->assertInstanceOf('Loevgaard\AltaPay\Response\CaptureReservation\Transaction\ReconciliationIdentifier', $reconciliationIdentifier);
+        $this->assertInstanceOf(ReconciliationIdentifier::class, $reconciliationIdentifier);
         $this->assertEquals('f4e2533e-c578-4383-b075-bc8a6866784a', $reconciliationIdentifier->getId());
         $this->assertTrue(is_float($reconciliationIdentifier->getAmount()));
         $this->assertEquals(1.00, $reconciliationIdentifier->getAmount());

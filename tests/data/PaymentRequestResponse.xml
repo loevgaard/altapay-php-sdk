@@ -1,0 +1,14 @@
+<APIResponse version="20170228">
+    <Header>
+        <Date>2017-06-07T14:09:57+02:00</Date>
+        <Path>API/createPaymentRequest</Path>
+        <ErrorCode>0</ErrorCode>
+        <ErrorMessage/>
+    </Header>
+    <Body>
+        <Result>Success</Result>
+        <PaymentRequestId>64c9117a-71e5-4e0f-91bd-db28b9add23e</PaymentRequestId>
+        <Url>https://testgateway.altapaysecure.com/eCommerce/API/requestForm?pid=64c9117a-71e5-4e0f-91bd-db28b9add23e</Url>
+        <DynamicJavascriptUrl>https://testgateway.altapaysecure.com/eCommerce/API/embeddedPaymentWindow?pid=64c9117a-71e5-4e0f-91bd-db28b9add23e</DynamicJavascriptUrl>
+    </Body>
+</APIResponse>

@@ -36,8 +36,15 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
      */
     private $orderLines;
 
-    public function __construct($transactionId, $amount = null, $reconciliationIdentifier = null, $invoiceNumber = null, $salesTax = null, array $orderLines = [])
-    {
+    public function __construct(
+        $transactionId,
+        $amount = null,
+        $reconciliationIdentifier = null,
+        $invoiceNumber = null,
+        $salesTax = null,
+        array
+        $orderLines = []
+    ) {
         $this->setTransactionId($transactionId);
         $this->setAmount($amount);
         $this->setReconciliationIdentifier($reconciliationIdentifier);

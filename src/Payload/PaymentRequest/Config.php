@@ -40,8 +40,16 @@ class Config extends Payload implements ConfigInterface
      */
     protected $callbackVerifyOrder;
 
-    public function __construct($callbackForm = null, $callbackOk = null, $callbackFail = null, $callbackRedirect = null, $callbackOpen = null, $callbackNotification = null, $callbackVerifyOrder = null)
-    {
+    public function __construct(
+        $callbackForm = null,
+        $callbackOk = null,
+        $callbackFail = null,
+        $callbackRedirect = null,
+        $callbackOpen = null,
+        $callbackNotification = null,
+        $callbackVerifyOrder = null
+    ) {
+    
         $this->setCallbackForm($callbackForm);
         $this->setCallbackOk($callbackOk);
         $this->setCallbackFail($callbackFail);

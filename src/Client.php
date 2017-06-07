@@ -44,7 +44,8 @@ class Client
         $this->password = $password;
 
         $parsedBaseUrl = parse_url($baseUrl);
-        $baseUrl = $parsedBaseUrl['scheme'].'://'.rawurlencode($this->username).':'.rawurlencode($this->password).'@'.$parsedBaseUrl['host'];
+        $baseUrl = $parsedBaseUrl['scheme'].
+            '://'.rawurlencode($this->username).':'.rawurlencode($this->password).'@'.$parsedBaseUrl['host'];
 
         $this->baseUrl  = $baseUrl;
     }
@@ -192,7 +193,7 @@ class Client
      * @param array|null $options
      * @return ResponseInterface
      */
-    public function doRequest($method = 'get', $uri, array $options = null)
+    public function doRequest($method, $uri, array $options = null)
     {
 
         $url = $this->baseUrl.$uri;
