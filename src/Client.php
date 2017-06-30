@@ -7,6 +7,7 @@ use Loevgaard\AltaPay\Payload\CaptureReservationInterface;
 use Loevgaard\AltaPay\Payload\PaymentRequestInterface;
 use Loevgaard\AltaPay\Response\PaymentRequest as PaymentRequestResponse;
 use Loevgaard\AltaPay\Response\CaptureReservation as CaptureReservationResponse;
+use Loevgaard\AltaPay\Response\GetTerminals as GetTerminalsResponse;
 use Psr\Http\Message\ResponseInterface;
 
 class Client
@@ -54,7 +55,7 @@ class Client
      * @param PaymentRequestInterface $paymentRequest
      * @return PaymentRequestResponse
      */
-    public function createPaymentRequest(PaymentRequestInterface $paymentRequest)
+    public function createPaymentRequest(PaymentRequestInterface $paymentRequest) : PaymentRequestResponse
     {
         $response = new PaymentRequestResponse($this->doRequest('post', '/merchant/API/createPaymentRequest', [
             'form_params' => $paymentRequest->getPayload()
@@ -84,7 +85,7 @@ class Client
      * @param CaptureReservationInterface $captureReservation
      * @return CaptureReservationResponse
      */
-    public function captureReservation(CaptureReservationInterface $captureReservation)
+    public function captureReservation(CaptureReservationInterface $captureReservation) : CaptureReservationResponse
     {
         return new CaptureReservationResponse($this->doRequest('get', '/merchant/API/captureReservation', [
             'query' => $captureReservation->getPayload()
@@ -157,10 +158,12 @@ class Client
         throw new \RuntimeException('Method is not implemented');
     }
 
-    public function getTerminals()
+    /**
+     * @return GetTerminalsResponse
+     */
+    public function getTerminals() : GetTerminalsResponse
     {
-        // @todo Implement method
-        throw new \RuntimeException('Method is not implemented');
+        return new GetTerminalsResponse($this->doRequest('get', '/merchant/API/getTerminals'));
     }
 
     public function getInvoiceText()

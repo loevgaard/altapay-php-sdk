@@ -603,6 +603,4 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
         $this->username = $username;
         return $this;
     }
-
-
 }

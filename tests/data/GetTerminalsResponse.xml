@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<APIResponse version="20170228">
+    <Header>
+        <Date>2016-01-07T23:43:20+01:00</Date>
+        <Path>API/getTerminals</Path>
+        <ErrorCode>0</ErrorCode>
+        <ErrorMessage></ErrorMessage>
+    </Header>
+    <Body>
+        <Result>Success</Result>
+        <Terminals>
+            <Terminal>
+                <Title>AltaPay Multi-Nature Terminal</Title>
+                <Country>DK</Country>
+                <Natures>
+                    <Nature>CreditCard</Nature>
+                    <Nature>EPayment</Nature>
+                    <Nature>IdealPayment</Nature>
+                    <Nature>Invoice</Nature>
+                </Natures>
+                <Currencies>
+                    <Currency>DKK</Currency>
+                    <Currency>EUR</Currency>
+                </Currencies>
+            </Terminal>
+            <Terminal>
+                <Title>AltaPay BankPayment Terminal</Title>
+                <Country></Country>
+                <Natures>
+                    <Nature>BankPayment</Nature>
+                </Natures>
+                <Currencies>
+                    <Currency>EUR</Currency>
+                </Currencies>
+            </Terminal>
+        </Terminals>
+    </Body>
+</APIResponse>
