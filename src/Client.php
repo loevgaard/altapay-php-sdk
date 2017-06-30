@@ -63,18 +63,27 @@ class Client
         return $response;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function testConnection()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function login()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function payments()
     {
         // @todo Implement method
@@ -92,66 +101,99 @@ class Client
         ]));
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function releaseReservation()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function refundCapturedReservation()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function setupSubscription()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function chargeSubscription()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function reserveSubscriptionCharge()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function updateOrder()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function fundingList()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function fundingDownload()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getCustomReport()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function reservationOfFixedAmount()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function credit()
     {
         // @todo Implement method
@@ -166,24 +208,36 @@ class Client
         return new GetTerminalsResponse($this->doRequest('get', '/merchant/API/getTerminals'));
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getInvoiceText()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function createInvoiceReservation()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function calculateSurcharge()
     {
         // @todo Implement method
         throw new \RuntimeException('Method is not implemented');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function queryGiftCard()
     {
         // @todo Implement method

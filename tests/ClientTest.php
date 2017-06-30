@@ -5,9 +5,11 @@ namespace Loevgaard\AltaPay;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use Loevgaard\AltaPay\Payload\CaptureReservation;
 use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
 use Loevgaard\AltaPay\Response\PaymentRequest as PaymentRequestResponse;
 use Loevgaard\AltaPay\Response\GetTerminals as GetTerminalsResponse;
+use Loevgaard\AltaPay\Response\CaptureReservation as CaptureReservationResponse;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client as GuzzleClient;
 
@@ -31,6 +33,25 @@ final class ClientTest extends TestCase
         $this->assertTrue($response->isSuccessful());
 
         // @todo create more assertions
+    }
+
+    public function testCaptureReservation() {
+        $xml = file_get_contents(__DIR__.'/data/CaptureReservationResponse.xml');
+
+        $mock = new MockHandler([
+            new Response(200, [], $xml)
+        ]);
+
+        $handler = HandlerStack::create($mock);
+
+        $client = $this->getClient($handler);
+
+        $payload = new CaptureReservation('transaction_id');
+        $response = $client->captureReservation($payload);
+        $this->assertInstanceOf(CaptureReservationResponse::class, $response);
+        $this->assertTrue($response->isSuccessful());
+
+        // @todo move assertions from Response\CaptureReservationTest.php to here
     }
 
     public function testGetTerminals()
@@ -84,6 +105,12 @@ final class ClientTest extends TestCase
         /** @var GetTerminalsResponse\Terminal\Currency $currency */
         $currency = $currencies[0];
         $this->assertEquals('DKK', $currency->getCurrency());
+    }
+
+    public function testGetClient() {
+        $client = $this->getClient();
+
+        $this->assertInstanceOf(GuzzleClient::class, $client->getClient());
     }
 
     /******************
