@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": "~7.0",
+        "php": "~7.1",
         "beberlei/assert": "^2.7",
         "guzzlehttp/guzzle": "^6.2"
     },
