@@ -1,6 +1,7 @@
 <?php
 namespace Loevgaard\AltaPay\Payload\PaymentRequest;
 
+use Assert\Assert;
 use Loevgaard\AltaPay\Payload\Payload;
 
 class CustomerInfo extends Payload implements CustomerInfoInterface
@@ -139,27 +140,27 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $username
      */
     public function __construct(
-        $bankName = null,
-        $bankPhone = null,
-        $billingAddress = null,
-        $billingCity = null,
-        $billingCountry = null,
-        $billingFirstName = null,
-        $billingLastName = null,
-        $billingPostal = null,
-        $billingRegion = null,
-        $birthDate = null,
-        $customerPhone = null,
-        $email = null,
-        $gender = null,
-        $shippingAddress = null,
-        $shippingCity = null,
-        $shippingCountry = null,
-        $shippingFirstName = null,
-        $shippingLastName = null,
-        $shippingPostal = null,
-        $shippingRegion = null,
-        $username = null
+        ?string $bankName = null,
+        ?string $bankPhone = null,
+        ?string $billingAddress = null,
+        ?string $billingCity = null,
+        ?string $billingCountry = null,
+        ?string $billingFirstName = null,
+        ?string $billingLastName = null,
+        ?string $billingPostal = null,
+        ?string $billingRegion = null,
+        ?\DateTimeInterface $birthDate = null,
+        ?string $customerPhone = null,
+        ?string $email = null,
+        ?string $gender = null,
+        ?string $shippingAddress = null,
+        ?string $shippingCity = null,
+        ?string $shippingCountry = null,
+        ?string $shippingFirstName = null,
+        ?string $shippingLastName = null,
+        ?string $shippingPostal = null,
+        ?string $shippingRegion = null,
+        ?string $username = null
     ) {
         $this->setBankName($bankName);
         $this->setBankPhone($bankPhone);
@@ -185,7 +186,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     }
 
 
-    public function getPayload()
+    public function getPayload() : array
     {
         $payload = [
             'bank_name' => $this->getBankName(),
@@ -214,7 +215,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
         return $this->cleanPayload($payload);
     }
 
-    public static function getGenders()
+    public static function getGenders() : array
     {
         return [
             self::GENDER_MALE,
@@ -227,7 +228,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getBankName()
+    public function getBankName() : ?string
     {
         return $this->bankName;
     }
@@ -236,9 +237,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $bankName
      * @return CustomerInfo
      */
-    public function setBankName($bankName)
+    public function setBankName(?string $bankName) : self
     {
-        $this->assertStringOrNull($bankName);
         $this->bankName = $bankName;
         return $this;
     }
@@ -246,7 +246,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getBankPhone()
+    public function getBankPhone() : ?string
     {
         return $this->bankPhone;
     }
@@ -255,9 +255,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $bankPhone
      * @return CustomerInfo
      */
-    public function setBankPhone($bankPhone)
+    public function setBankPhone(?string $bankPhone) : self
     {
-        $this->assertStringOrNull($bankPhone);
         $this->bankPhone = $bankPhone;
         return $this;
     }
@@ -265,7 +264,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getBillingAddress()
+    public function getBillingAddress() : ?string
     {
         return $this->billingAddress;
     }
@@ -274,9 +273,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $billingAddress
      * @return CustomerInfo
      */
-    public function setBillingAddress($billingAddress)
+    public function setBillingAddress(?string $billingAddress) : self
     {
-        $this->assertStringOrNull($billingAddress);
         $this->billingAddress = $billingAddress;
         return $this;
     }
@@ -284,7 +282,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getBillingCity()
+    public function getBillingCity() : ?string
     {
         return $this->billingCity;
     }
@@ -293,9 +291,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $billingCity
      * @return CustomerInfo
      */
-    public function setBillingCity($billingCity)
+    public function setBillingCity(?string $billingCity) : self
     {
-        $this->assertStringOrNull($billingCity);
         $this->billingCity = $billingCity;
         return $this;
     }
@@ -303,7 +300,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getBillingCountry()
+    public function getBillingCountry() : ?string
     {
         return $this->billingCountry;
     }
@@ -312,9 +309,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $billingCountry
      * @return CustomerInfo
      */
-    public function setBillingCountry($billingCountry)
+    public function setBillingCountry(?string $billingCountry) : self
     {
-        $this->assertStringOrNull($billingCountry);
         $this->billingCountry = $billingCountry;
         return $this;
     }
@@ -322,7 +318,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getBillingFirstName()
+    public function getBillingFirstName() : ?string
     {
         return $this->billingFirstName;
     }
@@ -331,9 +327,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $billingFirstName
      * @return CustomerInfo
      */
-    public function setBillingFirstName($billingFirstName)
+    public function setBillingFirstName(?string $billingFirstName) : self
     {
-        $this->assertStringOrNull($billingFirstName);
         $this->billingFirstName = $billingFirstName;
         return $this;
     }
@@ -341,7 +336,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getBillingLastName()
+    public function getBillingLastName() : ?string
     {
         return $this->billingLastName;
     }
@@ -350,9 +345,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $billingLastName
      * @return CustomerInfo
      */
-    public function setBillingLastName($billingLastName)
+    public function setBillingLastName(?string $billingLastName) : self
     {
-        $this->assertStringOrNull($billingLastName);
         $this->billingLastName = $billingLastName;
         return $this;
     }
@@ -360,7 +354,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getBillingPostal()
+    public function getBillingPostal() : ?string
     {
         return $this->billingPostal;
     }
@@ -369,9 +363,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $billingPostal
      * @return CustomerInfo
      */
-    public function setBillingPostal($billingPostal)
+    public function setBillingPostal(?string $billingPostal) : self
     {
-        $this->assertStringOrNull($billingPostal);
         $this->billingPostal = $billingPostal;
         return $this;
     }
@@ -379,7 +372,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getBillingRegion()
+    public function getBillingRegion() : ?string
     {
         return $this->billingRegion;
     }
@@ -388,9 +381,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $billingRegion
      * @return CustomerInfo
      */
-    public function setBillingRegion($billingRegion)
+    public function setBillingRegion(?string $billingRegion) : self
     {
-        $this->assertStringOrNull($billingRegion);
         $this->billingRegion = $billingRegion;
         return $this;
     }
@@ -407,9 +399,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param \DateTimeInterface $birthDate
      * @return CustomerInfo
      */
-    public function setBirthDate($birthDate)
+    public function setBirthDate(?\DateTimeInterface $birthDate) : self
     {
-        $this->assertDateTimeOrNull($birthDate);
         $this->birthDate = $birthDate;
         return $this;
     }
@@ -417,7 +408,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getCustomerPhone()
+    public function getCustomerPhone() : ?string
     {
         return $this->customerPhone;
     }
@@ -426,9 +417,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $customerPhone
      * @return CustomerInfo
      */
-    public function setCustomerPhone($customerPhone)
+    public function setCustomerPhone(?string $customerPhone) : self
     {
-        $this->assertStringOrNull($customerPhone);
         $this->customerPhone = $customerPhone;
         return $this;
     }
@@ -436,7 +426,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getEmail()
+    public function getEmail() : ?string
     {
         return $this->email;
     }
@@ -445,9 +435,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $email
      * @return CustomerInfo
      */
-    public function setEmail($email)
+    public function setEmail(?string $email) : self
     {
-        $this->assertStringOrNull($email);
         $this->email = $email;
         return $this;
     }
@@ -455,7 +444,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getGender()
+    public function getGender() : ?string
     {
         return $this->gender;
     }
@@ -464,9 +453,9 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $gender
      * @return CustomerInfo
      */
-    public function setGender($gender)
+    public function setGender(?string $gender) : self
     {
-        $this->assertInArrayOrNull($gender, self::getGenders());
+        Assert::that($gender)->nullOr()->inArray(static::getGenders());
         $this->gender = $gender;
         return $this;
     }
@@ -474,7 +463,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getShippingAddress()
+    public function getShippingAddress() : ?string
     {
         return $this->shippingAddress;
     }
@@ -483,9 +472,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $shippingAddress
      * @return CustomerInfo
      */
-    public function setShippingAddress($shippingAddress)
+    public function setShippingAddress(?string $shippingAddress) : self
     {
-        $this->assertStringOrNull($shippingAddress);
         $this->shippingAddress = $shippingAddress;
         return $this;
     }
@@ -493,7 +481,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getShippingCity()
+    public function getShippingCity() : ?string
     {
         return $this->shippingCity;
     }
@@ -502,9 +490,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $shippingCity
      * @return CustomerInfo
      */
-    public function setShippingCity($shippingCity)
+    public function setShippingCity(?string $shippingCity) : self
     {
-        $this->assertStringOrNull($shippingCity);
         $this->shippingCity = $shippingCity;
         return $this;
     }
@@ -512,7 +499,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getShippingCountry()
+    public function getShippingCountry() : ?string
     {
         return $this->shippingCountry;
     }
@@ -521,9 +508,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $shippingCountry
      * @return CustomerInfo
      */
-    public function setShippingCountry($shippingCountry)
+    public function setShippingCountry(?string $shippingCountry) : self
     {
-        $this->assertStringOrNull($shippingCountry);
         $this->shippingCountry = $shippingCountry;
         return $this;
     }
@@ -531,7 +517,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getShippingFirstName()
+    public function getShippingFirstName() : ?string
     {
         return $this->shippingFirstName;
     }
@@ -540,9 +526,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $shippingFirstName
      * @return CustomerInfo
      */
-    public function setShippingFirstName($shippingFirstName)
+    public function setShippingFirstName(?string $shippingFirstName) : self
     {
-        $this->assertStringOrNull($shippingFirstName);
         $this->shippingFirstName = $shippingFirstName;
         return $this;
     }
@@ -550,7 +535,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getShippingLastName()
+    public function getShippingLastName() : ?string
     {
         return $this->shippingLastName;
     }
@@ -559,9 +544,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $shippingLastName
      * @return CustomerInfo
      */
-    public function setShippingLastName($shippingLastName)
+    public function setShippingLastName(?string $shippingLastName) : self
     {
-        $this->assertStringOrNull($shippingLastName);
         $this->shippingLastName = $shippingLastName;
         return $this;
     }
@@ -569,7 +553,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getShippingPostal()
+    public function getShippingPostal() : ?string
     {
         return $this->shippingPostal;
     }
@@ -578,9 +562,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $shippingPostal
      * @return CustomerInfo
      */
-    public function setShippingPostal($shippingPostal)
+    public function setShippingPostal(?string $shippingPostal) : self
     {
-        $this->assertStringOrNull($shippingPostal);
         $this->shippingPostal = $shippingPostal;
         return $this;
     }
@@ -588,7 +571,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getShippingRegion()
+    public function getShippingRegion() : ?string
     {
         return $this->shippingRegion;
     }
@@ -597,9 +580,8 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $shippingRegion
      * @return CustomerInfo
      */
-    public function setShippingRegion($shippingRegion)
+    public function setShippingRegion(?string $shippingRegion) : self
     {
-        $this->assertStringOrNull($shippingRegion);
         $this->shippingRegion = $shippingRegion;
         return $this;
     }
@@ -607,7 +589,7 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
     /**
      * @return string
      */
-    public function getUsername()
+    public function getUsername() : ?string
     {
         return $this->username;
     }
@@ -616,10 +598,11 @@ class CustomerInfo extends Payload implements CustomerInfoInterface
      * @param string $username
      * @return CustomerInfo
      */
-    public function setUsername($username)
+    public function setUsername(?string $username) : self
     {
-        $this->assertStringOrNull($username);
         $this->username = $username;
         return $this;
     }
+
+
 }

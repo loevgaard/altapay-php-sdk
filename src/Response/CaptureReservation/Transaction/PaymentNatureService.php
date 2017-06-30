@@ -42,7 +42,7 @@ class PaymentNatureService extends PartialResponse
     /**
      * @return string
      */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
@@ -50,7 +50,7 @@ class PaymentNatureService extends PartialResponse
     /**
      * @return bool
      */
-    public function getSupportsRefunds()
+    public function getSupportsRefunds() : bool
     {
         return $this->supportsRefunds;
     }
@@ -58,7 +58,7 @@ class PaymentNatureService extends PartialResponse
     /**
      * @return bool
      */
-    public function getSupportsRelease()
+    public function getSupportsRelease() : bool
     {
         return $this->supportsRelease;
     }
@@ -66,7 +66,7 @@ class PaymentNatureService extends PartialResponse
     /**
      * @return bool
      */
-    public function getSupportsMultipleCaptures()
+    public function getSupportsMultipleCaptures() : bool
     {
         return $this->supportsMultipleCaptures;
     }
@@ -74,7 +74,7 @@ class PaymentNatureService extends PartialResponse
     /**
      * @return bool
      */
-    public function getSupportsMultipleRefunds()
+    public function getSupportsMultipleRefunds() : bool
     {
         return $this->supportsMultipleRefunds;
     }

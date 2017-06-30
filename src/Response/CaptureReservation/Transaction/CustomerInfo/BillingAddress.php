@@ -48,7 +48,7 @@ class BillingAddress extends PartialResponse
     /**
      * @return string
      */
-    public function getFirstName()
+    public function getFirstName() : string
     {
         return $this->firstName;
     }
@@ -56,7 +56,7 @@ class BillingAddress extends PartialResponse
     /**
      * @return string
      */
-    public function getLastName()
+    public function getLastName() : string
     {
         return $this->lastName;
     }
@@ -64,7 +64,7 @@ class BillingAddress extends PartialResponse
     /**
      * @return string
      */
-    public function getAddress()
+    public function getAddress() : string
     {
         return $this->address;
     }
@@ -72,7 +72,7 @@ class BillingAddress extends PartialResponse
     /**
      * @return string
      */
-    public function getCity()
+    public function getCity() : string
     {
         return $this->city;
     }
@@ -80,7 +80,7 @@ class BillingAddress extends PartialResponse
     /**
      * @return string
      */
-    public function getPostalCode()
+    public function getPostalCode() : string
     {
         return $this->postalCode;
     }
@@ -88,7 +88,7 @@ class BillingAddress extends PartialResponse
     /**
      * @return string
      */
-    public function getCountry()
+    public function getCountry() : string
     {
         return $this->country;
     }

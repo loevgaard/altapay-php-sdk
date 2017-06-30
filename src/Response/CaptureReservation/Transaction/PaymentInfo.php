@@ -24,7 +24,7 @@ class PaymentInfo extends PartialResponse
     /**
      * @return string
      */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
@@ -32,7 +32,7 @@ class PaymentInfo extends PartialResponse
     /**
      * @return string
      */
-    public function getValue()
+    public function getValue() : string
     {
         return $this->value;
     }

@@ -30,6 +30,10 @@ abstract class PartialResponse implements PartialResponseInterface
         $this->init();
     }
 
+    /**
+     * Is called after the contructor has initialized the properties
+     * Use this to do any initialization you need
+     */
     protected function init()
     {
     }
@@ -37,7 +41,7 @@ abstract class PartialResponse implements PartialResponseInterface
     /**
      * @return PsrResponseInterface
      */
-    public function getOriginalResponse()
+    public function getOriginalResponse() : PsrResponseInterface
     {
         return $this->originalResponse;
     }
@@ -45,7 +49,7 @@ abstract class PartialResponse implements PartialResponseInterface
     /**
      * @return \SimpleXMLElement
      */
-    public function getXmlDoc()
+    public function getXmlDoc() : \SimpleXMLElement
     {
         return $this->xmlDoc;
     }

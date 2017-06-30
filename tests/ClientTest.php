@@ -32,12 +32,6 @@ final class ClientTest extends TestCase
         // @todo create more assertions
     }
 
-    public function testCaptureReservation()
-    {
-        $client = $this->getClient();
-        //$response = $client->captureReservation(new CaptureReservationPayload());
-    }
-
     /******************
      * HELPER METHODS *
      *****************/

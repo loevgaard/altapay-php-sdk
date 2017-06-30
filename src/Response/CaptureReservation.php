@@ -42,8 +42,7 @@ class CaptureReservation extends Response
             isset($this->xmlDoc->Body->Transactions->Transaction) &&
             !empty($this->xmlDoc->Body->Transactions->Transaction)) {
             foreach ($this->xmlDoc->Body->Transactions->Transaction as $transactionXml) {
-                $transaction = new Transaction($this->getResponse(), $transactionXml);
-                $this->transactions[] = $transaction;
+                $this->transactions[] = new Transaction($this->getResponse(), $transactionXml);
             }
         }
     }
@@ -51,7 +50,7 @@ class CaptureReservation extends Response
     /**
      * @return float
      */
-    public function getCaptureAmount()
+    public function getCaptureAmount() : float
     {
         return $this->captureAmount;
     }
@@ -59,7 +58,7 @@ class CaptureReservation extends Response
     /**
      * @return int
      */
-    public function getCaptureCurrency()
+    public function getCaptureCurrency() : int
     {
         return $this->captureCurrency;
     }
@@ -67,7 +66,7 @@ class CaptureReservation extends Response
     /**
      * @return string
      */
-    public function getResult()
+    public function getResult() : string
     {
         return $this->result;
     }
@@ -77,7 +76,7 @@ class CaptureReservation extends Response
      * @see https://testgateway.altapaysecure.com/merchant/help/Merchant_API#API_captureReservation
      * @return string
      */
-    public function getCaptureResult()
+    public function getCaptureResult() : string
     {
         return $this->captureResult;
     }
@@ -85,7 +84,7 @@ class CaptureReservation extends Response
     /**
      * @return Transaction[]
      */
-    public function getTransactions()
+    public function getTransactions() : array
     {
         return $this->transactions;
     }

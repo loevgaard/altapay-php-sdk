@@ -56,7 +56,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     /**
      * @return array
      */
-    public function getPayload()
+    public function getPayload() : array
     {
         $payload = [
             'transaction_id' => $this->getTransactionId(),
@@ -83,7 +83,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
      * @param OrderLineInterface $orderLine
      * @return CaptureReservation
      */
-    public function addOrderLine(OrderLineInterface $orderLine)
+    public function addOrderLine(OrderLineInterface $orderLine) : self
     {
         $this->orderLines[] = $orderLine;
         return $this;
@@ -92,7 +92,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     /**
      * @return string
      */
-    public function getTransactionId()
+    public function getTransactionId() : string
     {
         return $this->transactionId;
     }
@@ -101,7 +101,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
      * @param string $transactionId
      * @return CaptureReservation
      */
-    public function setTransactionId($transactionId)
+    public function setTransactionId(string $transactionId) : self
     {
         $this->transactionId = $transactionId;
         return $this;
@@ -110,7 +110,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     /**
      * @return float
      */
-    public function getAmount()
+    public function getAmount() : float
     {
         return $this->amount;
     }
@@ -119,7 +119,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
      * @param float $amount
      * @return CaptureReservation
      */
-    public function setAmount($amount)
+    public function setAmount(float $amount) : self
     {
         $this->amount = $amount;
         return $this;
@@ -128,7 +128,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     /**
      * @return string
      */
-    public function getReconciliationIdentifier()
+    public function getReconciliationIdentifier() : string
     {
         return $this->reconciliationIdentifier;
     }
@@ -137,7 +137,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
      * @param string $reconciliationIdentifier
      * @return CaptureReservation
      */
-    public function setReconciliationIdentifier($reconciliationIdentifier)
+    public function setReconciliationIdentifier(string $reconciliationIdentifier) : self
     {
         $this->reconciliationIdentifier = $reconciliationIdentifier;
         return $this;
@@ -146,7 +146,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     /**
      * @return string
      */
-    public function getInvoiceNumber()
+    public function getInvoiceNumber() : string
     {
         return $this->invoiceNumber;
     }
@@ -155,7 +155,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
      * @param string $invoiceNumber
      * @return CaptureReservation
      */
-    public function setInvoiceNumber($invoiceNumber)
+    public function setInvoiceNumber(string $invoiceNumber) : self
     {
         $this->invoiceNumber = $invoiceNumber;
         return $this;
@@ -164,7 +164,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     /**
      * @return string
      */
-    public function getSalesTax()
+    public function getSalesTax() : string
     {
         return $this->salesTax;
     }
@@ -173,7 +173,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
      * @param string $salesTax
      * @return CaptureReservation
      */
-    public function setSalesTax($salesTax)
+    public function setSalesTax(string $salesTax) : self
     {
         $this->salesTax = $salesTax;
         return $this;
@@ -182,7 +182,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     /**
      * @return OrderLineInterface[]
      */
-    public function getOrderLines()
+    public function getOrderLines() : array
     {
         return $this->orderLines;
     }
@@ -191,7 +191,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
      * @param OrderLineInterface[] $orderLines
      * @return CaptureReservation
      */
-    public function setOrderLines($orderLines)
+    public function setOrderLines(array $orderLines) : self
     {
         $this->orderLines = $orderLines;
         return $this;

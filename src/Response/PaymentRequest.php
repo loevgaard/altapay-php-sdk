@@ -33,7 +33,7 @@ class PaymentRequest extends Response
         $this->dynamicJavascriptUrl = (string)$this->xmlDoc->Body->DynamicJavascriptUrl;
     }
 
-    public function isSuccessful()
+    public function isSuccessful() : bool
     {
         return parent::isSuccessful() && $this->result === self::RESULT_SUCCESS;
     }
@@ -41,7 +41,7 @@ class PaymentRequest extends Response
     /**
      * @return string
      */
-    public function getResult()
+    public function getResult() : string
     {
         return $this->result;
     }
@@ -49,7 +49,7 @@ class PaymentRequest extends Response
     /**
      * @return string
      */
-    public function getPaymentRequestId()
+    public function getPaymentRequestId() : string
     {
         return $this->paymentRequestId;
     }
@@ -57,7 +57,7 @@ class PaymentRequest extends Response
     /**
      * @return string
      */
-    public function getUrl()
+    public function getUrl() : string
     {
         return $this->url;
     }
@@ -65,7 +65,7 @@ class PaymentRequest extends Response
     /**
      * @return string
      */
-    public function getDynamicJavascriptUrl()
+    public function getDynamicJavascriptUrl() : string
     {
         return $this->dynamicJavascriptUrl;
     }

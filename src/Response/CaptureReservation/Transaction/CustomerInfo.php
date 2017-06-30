@@ -83,7 +83,7 @@ class CustomerInfo extends PartialResponse
     /**
      * @return string
      */
-    public function getUserAgent()
+    public function getUserAgent() : string
     {
         return $this->userAgent;
     }
@@ -91,7 +91,7 @@ class CustomerInfo extends PartialResponse
     /**
      * @return string
      */
-    public function getIpAddress()
+    public function getIpAddress() : string
     {
         return $this->ipAddress;
     }
@@ -99,7 +99,7 @@ class CustomerInfo extends PartialResponse
     /**
      * @return string
      */
-    public function getEmail()
+    public function getEmail() : string
     {
         return $this->email;
     }
@@ -107,7 +107,7 @@ class CustomerInfo extends PartialResponse
     /**
      * @return string
      */
-    public function getUsername()
+    public function getUsername() : string
     {
         return $this->username;
     }
@@ -115,7 +115,7 @@ class CustomerInfo extends PartialResponse
     /**
      * @return string
      */
-    public function getCustomerPhone()
+    public function getCustomerPhone() : string
     {
         return $this->customerPhone;
     }
@@ -123,7 +123,7 @@ class CustomerInfo extends PartialResponse
     /**
      * @return string
      */
-    public function getOrganisationNumber()
+    public function getOrganisationNumber() : string
     {
         return $this->organisationNumber;
     }
@@ -131,7 +131,7 @@ class CustomerInfo extends PartialResponse
     /**
      * @return CountryOfOrigin
      */
-    public function getCountryOfOrigin()
+    public function getCountryOfOrigin() : CountryOfOrigin
     {
         return $this->countryOfOrigin;
     }
@@ -139,7 +139,7 @@ class CustomerInfo extends PartialResponse
     /**
      * @return BillingAddress
      */
-    public function getBillingAddress()
+    public function getBillingAddress() : BillingAddress
     {
         return $this->billingAddress;
     }
@@ -147,7 +147,7 @@ class CustomerInfo extends PartialResponse
     /**
      * @return string
      */
-    public function getShippingAddress()
+    public function getShippingAddress() : string
     {
         return $this->shippingAddress;
     }
@@ -155,7 +155,7 @@ class CustomerInfo extends PartialResponse
     /**
      * @return string
      */
-    public function getRegisteredAddress()
+    public function getRegisteredAddress() : string
     {
         return $this->registeredAddress;
     }

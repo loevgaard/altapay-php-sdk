@@ -86,11 +86,18 @@ abstract class Response implements ResponseInterface
         $this->init();
     }
 
+    /**
+     * Is called after the contructor has initialized the properties
+     * Use this to do any initialization you need
+     */
     protected function init()
     {
     }
 
-    public function isSuccessful()
+    /**
+     * @return bool
+     */
+    public function isSuccessful() : bool
     {
         return $this->errorCode === 0;
     }
@@ -98,7 +105,7 @@ abstract class Response implements ResponseInterface
     /**
      * @return PsrResponseInterface
      */
-    public function getResponse()
+    public function getResponse() : PsrResponseInterface
     {
         return $this->response;
     }
@@ -106,7 +113,7 @@ abstract class Response implements ResponseInterface
     /**
      * @return string
      */
-    public function getXml()
+    public function getXml() : string
     {
         return $this->xml;
     }
@@ -114,7 +121,7 @@ abstract class Response implements ResponseInterface
     /**
      * @return \SimpleXMLElement
      */
-    public function getXmlDoc()
+    public function getXmlDoc() : \SimpleXMLElement
     {
         return $this->xmlDoc;
     }
@@ -122,7 +129,7 @@ abstract class Response implements ResponseInterface
     /**
      * @return string
      */
-    public function getVersion()
+    public function getVersion() : string
     {
         return $this->version;
     }
@@ -130,7 +137,7 @@ abstract class Response implements ResponseInterface
     /**
      * @return \DateTimeImmutable
      */
-    public function getDate()
+    public function getDate() : \DateTimeImmutable
     {
         return $this->date;
     }
@@ -138,7 +145,7 @@ abstract class Response implements ResponseInterface
     /**
      * @return string
      */
-    public function getPath()
+    public function getPath() : string
     {
         return $this->path;
     }
@@ -146,7 +153,7 @@ abstract class Response implements ResponseInterface
     /**
      * @return int
      */
-    public function getErrorCode()
+    public function getErrorCode() : int
     {
         return $this->errorCode;
     }
@@ -154,7 +161,7 @@ abstract class Response implements ResponseInterface
     /**
      * @return string
      */
-    public function getErrorMessage()
+    public function getErrorMessage() : string
     {
         return $this->errorMessage;
     }

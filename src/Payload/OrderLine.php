@@ -63,12 +63,12 @@ class OrderLine extends Payload implements OrderLineInterface
         $itemId,
         $quantity,
         $unitPrice,
-        $taxPercent = null,
-        $taxAmount = null,
-        $unitCode = null,
-        $discount = null,
-        $goodsType = null,
-        $imageUrl = null
+        ?float $taxPercent = null,
+        ?float $taxAmount = null,
+        ?string $unitCode = null,
+        ?float $discount = null,
+        ?string $goodsType = null,
+        ?string $imageUrl = null
     ) {
     
         $this->setDescription($description);
@@ -83,7 +83,7 @@ class OrderLine extends Payload implements OrderLineInterface
         $this->setImageUrl($imageUrl);
     }
 
-    public function getPayload()
+    public function getPayload() : array
     {
         $payload = [
             'description' => $this->getDescription(),
@@ -104,7 +104,7 @@ class OrderLine extends Payload implements OrderLineInterface
     /**
      * @return array
      */
-    public static function getGoodsTypes()
+    public static function getGoodsTypes() : array
     {
         return [
             self::GOODS_TYPE_HANDLING,
@@ -117,7 +117,7 @@ class OrderLine extends Payload implements OrderLineInterface
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription() : string
     {
         return $this->description;
     }
@@ -126,9 +126,8 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param string $description
      * @return OrderLine
      */
-    public function setDescription($description)
+    public function setDescription(string $description) : self
     {
-        $this->assertString($description);
         $this->description = $description;
         return $this;
     }
@@ -136,7 +135,7 @@ class OrderLine extends Payload implements OrderLineInterface
     /**
      * @return string
      */
-    public function getItemId()
+    public function getItemId() : string
     {
         return $this->itemId;
     }
@@ -145,9 +144,8 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param string $itemId
      * @return OrderLine
      */
-    public function setItemId($itemId)
+    public function setItemId(string $itemId) : self
     {
-        $this->assertString($itemId);
         $this->itemId = $itemId;
         return $this;
     }
@@ -155,7 +153,7 @@ class OrderLine extends Payload implements OrderLineInterface
     /**
      * @return float
      */
-    public function getQuantity()
+    public function getQuantity() : float
     {
         return $this->quantity;
     }
@@ -164,9 +162,8 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param float $quantity
      * @return OrderLine
      */
-    public function setQuantity($quantity)
+    public function setQuantity(float $quantity) : self
     {
-        $this->assertNumeric($quantity);
         $this->quantity = $quantity;
         return $this;
     }
@@ -174,7 +171,7 @@ class OrderLine extends Payload implements OrderLineInterface
     /**
      * @return float
      */
-    public function getUnitPrice()
+    public function getUnitPrice() : float
     {
         return $this->unitPrice;
     }
@@ -183,9 +180,8 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param float $unitPrice
      * @return OrderLine
      */
-    public function setUnitPrice($unitPrice)
+    public function setUnitPrice(float $unitPrice) : self
     {
-        $this->assertNumeric($unitPrice);
         $this->unitPrice = $unitPrice;
         return $this;
     }
@@ -193,7 +189,7 @@ class OrderLine extends Payload implements OrderLineInterface
     /**
      * @return float
      */
-    public function getTaxPercent()
+    public function getTaxPercent() : ?float
     {
         return $this->taxPercent;
     }
@@ -202,9 +198,8 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param float $taxPercent
      * @return OrderLine
      */
-    public function setTaxPercent($taxPercent)
+    public function setTaxPercent(?float $taxPercent) : self
     {
-        $this->assertNumericOrNull($taxPercent);
         $this->taxPercent = $taxPercent;
         return $this;
     }
@@ -212,7 +207,7 @@ class OrderLine extends Payload implements OrderLineInterface
     /**
      * @return float
      */
-    public function getTaxAmount()
+    public function getTaxAmount() : ?float
     {
         return $this->taxAmount;
     }
@@ -221,9 +216,8 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param float $taxAmount
      * @return OrderLine
      */
-    public function setTaxAmount($taxAmount)
+    public function setTaxAmount(?float $taxAmount) : self
     {
-        $this->assertNumericOrNull($taxAmount);
         $this->taxAmount = $taxAmount;
         return $this;
     }
@@ -231,7 +225,7 @@ class OrderLine extends Payload implements OrderLineInterface
     /**
      * @return string
      */
-    public function getUnitCode()
+    public function getUnitCode() : ?string
     {
         return $this->unitCode;
     }
@@ -240,9 +234,8 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param string $unitCode
      * @return OrderLine
      */
-    public function setUnitCode($unitCode)
+    public function setUnitCode(?string $unitCode) : self
     {
-        $this->assertStringOrNull($unitCode);
         $this->unitCode = $unitCode;
         return $this;
     }
@@ -250,7 +243,7 @@ class OrderLine extends Payload implements OrderLineInterface
     /**
      * @return float
      */
-    public function getDiscount()
+    public function getDiscount() : ?float
     {
         return $this->discount;
     }
@@ -259,9 +252,8 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param float $discount
      * @return OrderLine
      */
-    public function setDiscount($discount)
+    public function setDiscount(?float $discount) : self
     {
-        $this->assertNumericOrNull($discount);
         $this->discount = $discount;
         return $this;
     }
@@ -269,7 +261,7 @@ class OrderLine extends Payload implements OrderLineInterface
     /**
      * @return string
      */
-    public function getGoodsType()
+    public function getGoodsType() : ?string
     {
         return $this->goodsType;
     }
@@ -278,9 +270,8 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param string $goodsType
      * @return OrderLine
      */
-    public function setGoodsType($goodsType)
+    public function setGoodsType(?string $goodsType) : self
     {
-        $this->assertInArrayOrNull($goodsType, self::getGoodsTypes());
         $this->goodsType = $goodsType;
         return $this;
     }
@@ -288,7 +279,7 @@ class OrderLine extends Payload implements OrderLineInterface
     /**
      * @return string
      */
-    public function getImageUrl()
+    public function getImageUrl() : ?string
     {
         return $this->imageUrl;
     }
@@ -297,9 +288,8 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param string $imageUrl
      * @return OrderLine
      */
-    public function setImageUrl($imageUrl)
+    public function setImageUrl(?string $imageUrl) : self
     {
-        $this->assertStringOrNull($imageUrl);
         $this->imageUrl = $imageUrl;
         return $this;
     }

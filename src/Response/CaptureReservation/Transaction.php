@@ -237,7 +237,7 @@ class Transaction extends PartialResponse
     /**
      * @return int
      */
-    public function getTransactionId()
+    public function getTransactionId() : int
     {
         return $this->transactionId;
     }
@@ -245,7 +245,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getPaymentId()
+    public function getPaymentId() : string
     {
         return $this->paymentId;
     }
@@ -253,7 +253,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getCardStatus()
+    public function getCardStatus() : string
     {
         return $this->cardStatus;
     }
@@ -261,7 +261,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getCreditCardToken()
+    public function getCreditCardToken() : string
     {
         return $this->creditCardToken;
     }
@@ -269,7 +269,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getCreditCardMaskedPan()
+    public function getCreditCardMaskedPan() : string
     {
         return $this->creditCardMaskedPan;
     }
@@ -277,7 +277,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getThreeDSecureResult()
+    public function getThreeDSecureResult() : string
     {
         return $this->threeDSecureResult;
     }
@@ -285,7 +285,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getLiableForChargeback()
+    public function getLiableForChargeback() : string
     {
         return $this->liableForChargeback;
     }
@@ -293,7 +293,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getBlacklistToken()
+    public function getBlacklistToken() : string
     {
         return $this->blacklistToken;
     }
@@ -301,7 +301,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getShopOrderId()
+    public function getShopOrderId() : string
     {
         return $this->shopOrderId;
     }
@@ -309,7 +309,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getShop()
+    public function getShop() : string
     {
         return $this->shop;
     }
@@ -317,7 +317,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getTerminal()
+    public function getTerminal() : string
     {
         return $this->terminal;
     }
@@ -325,7 +325,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getTransactionStatus()
+    public function getTransactionStatus() : string
     {
         return $this->transactionStatus;
     }
@@ -333,7 +333,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getReasonCode()
+    public function getReasonCode() : string
     {
         return $this->reasonCode;
     }
@@ -341,7 +341,7 @@ class Transaction extends PartialResponse
     /**
      * @return int
      */
-    public function getMerchantCurrency()
+    public function getMerchantCurrency() : int
     {
         return $this->merchantCurrency;
     }
@@ -349,7 +349,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getMerchantCurrencyAlpha()
+    public function getMerchantCurrencyAlpha() : string
     {
         return $this->merchantCurrencyAlpha;
     }
@@ -357,7 +357,7 @@ class Transaction extends PartialResponse
     /**
      * @return int
      */
-    public function getCardHolderCurrency()
+    public function getCardHolderCurrency() : int
     {
         return $this->cardHolderCurrency;
     }
@@ -365,7 +365,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getCardHolderCurrencyAlpha()
+    public function getCardHolderCurrencyAlpha() : string
     {
         return $this->cardHolderCurrencyAlpha;
     }
@@ -373,7 +373,7 @@ class Transaction extends PartialResponse
     /**
      * @return float
      */
-    public function getReservedAmount()
+    public function getReservedAmount() : float
     {
         return $this->reservedAmount;
     }
@@ -381,7 +381,7 @@ class Transaction extends PartialResponse
     /**
      * @return float
      */
-    public function getCapturedAmount()
+    public function getCapturedAmount() : float
     {
         return $this->capturedAmount;
     }
@@ -389,7 +389,7 @@ class Transaction extends PartialResponse
     /**
      * @return float
      */
-    public function getRefundedAmount()
+    public function getRefundedAmount() : float
     {
         return $this->refundedAmount;
     }
@@ -397,7 +397,7 @@ class Transaction extends PartialResponse
     /**
      * @return float
      */
-    public function getRecurringDefaultAmount()
+    public function getRecurringDefaultAmount() : float
     {
         return $this->recurringDefaultAmount;
     }
@@ -405,7 +405,7 @@ class Transaction extends PartialResponse
     /**
      * @return \DateTimeImmutable
      */
-    public function getCreatedDate()
+    public function getCreatedDate() : \DateTimeImmutable
     {
         return $this->createdDate;
     }
@@ -413,7 +413,7 @@ class Transaction extends PartialResponse
     /**
      * @return \DateTimeImmutable
      */
-    public function getUpdatedDate()
+    public function getUpdatedDate() : \DateTimeImmutable
     {
         return $this->updatedDate;
     }
@@ -421,7 +421,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getPaymentNature()
+    public function getPaymentNature() : string
     {
         return $this->paymentNature;
     }
@@ -437,7 +437,7 @@ class Transaction extends PartialResponse
     /**
      * @return float
      */
-    public function getFraudRiskScore()
+    public function getFraudRiskScore() : float
     {
         return $this->fraudRiskScore;
     }
@@ -445,7 +445,7 @@ class Transaction extends PartialResponse
     /**
      * @return string
      */
-    public function getFraudExplanation()
+    public function getFraudExplanation() : string
     {
         return $this->fraudExplanation;
     }
@@ -453,7 +453,7 @@ class Transaction extends PartialResponse
     /**
      * @return PaymentInfo[]
      */
-    public function getPaymentInfos()
+    public function getPaymentInfos() : array
     {
         return $this->paymentInfos;
     }
@@ -461,7 +461,7 @@ class Transaction extends PartialResponse
     /**
      * @return CustomerInfo
      */
-    public function getCustomerInfo()
+    public function getCustomerInfo() : CustomerInfo
     {
         return $this->customerInfo;
     }
@@ -469,7 +469,7 @@ class Transaction extends PartialResponse
     /**
      * @return ReconciliationIdentifier[]
      */
-    public function getReconciliationIdentifiers()
+    public function getReconciliationIdentifiers() : array
     {
         return $this->reconciliationIdentifiers;
     }

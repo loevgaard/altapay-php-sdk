@@ -6,5 +6,5 @@ interface ResponseInterface
     /**
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function getResponse();
+    public function getResponse() : \Psr\Http\Message\ResponseInterface;
 }

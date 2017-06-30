@@ -24,7 +24,7 @@ class CountryOfOrigin extends PartialResponse
     /**
      * @return string
      */
-    public function getCountry()
+    public function getCountry() : string
     {
         return $this->country;
     }
@@ -32,7 +32,7 @@ class CountryOfOrigin extends PartialResponse
     /**
      * @return string
      */
-    public function getSource()
+    public function getSource() : string
     {
         return $this->source;
     }

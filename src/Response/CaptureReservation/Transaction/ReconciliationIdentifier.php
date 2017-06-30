@@ -49,7 +49,7 @@ class ReconciliationIdentifier extends PartialResponse
     /**
      * @return string
      */
-    public function getId()
+    public function getId() : string
     {
         return $this->id;
     }
@@ -57,7 +57,7 @@ class ReconciliationIdentifier extends PartialResponse
     /**
      * @return float
      */
-    public function getAmount()
+    public function getAmount() : float
     {
         return $this->amount;
     }
@@ -65,7 +65,7 @@ class ReconciliationIdentifier extends PartialResponse
     /**
      * @return int
      */
-    public function getAmountCurrency()
+    public function getAmountCurrency() : int
     {
         return $this->amountCurrency;
     }
@@ -73,7 +73,7 @@ class ReconciliationIdentifier extends PartialResponse
     /**
      * @return string
      */
-    public function getType()
+    public function getType() : string
     {
         return $this->type;
     }
@@ -81,7 +81,7 @@ class ReconciliationIdentifier extends PartialResponse
     /**
      * @return \DateTimeImmutable
      */
-    public function getDate()
+    public function getDate(): \DateTimeImmutable
     {
         return $this->date;
     }

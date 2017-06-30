@@ -137,7 +137,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      */
     private $config;
 
-    public function __construct($terminal, $shopOrderId, $amount, $currency)
+    public function __construct(string $terminal, string $shopOrderId, float $amount, string $currency)
     {
         $this->orderLines = [];
         $this->setTerminal($terminal);
@@ -149,7 +149,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return array
      */
-    public function getPayload()
+    public function getPayload() : array
     {
         $payload = [
             'terminal' => $this->getTerminal(),
@@ -201,7 +201,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param OrderLineInterface $orderLine
      * @return PaymentRequest
      */
-    public function addOrderLine(OrderLineInterface $orderLine)
+    public function addOrderLine(OrderLineInterface $orderLine) : self
     {
         $this->orderLines[] = $orderLine;
         return $this;
@@ -210,7 +210,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getTerminal()
+    public function getTerminal() : string
     {
         return $this->terminal;
     }
@@ -219,7 +219,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $terminal
      * @return PaymentRequest
      */
-    public function setTerminal($terminal)
+    public function setTerminal(string $terminal) : self
     {
         $this->terminal = $terminal;
         return $this;
@@ -228,7 +228,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getShopOrderId()
+    public function getShopOrderId() : string
     {
         return $this->shopOrderId;
     }
@@ -237,7 +237,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $shopOrderId
      * @return PaymentRequest
      */
-    public function setShopOrderId($shopOrderId)
+    public function setShopOrderId(string $shopOrderId) : self
     {
         $this->shopOrderId = $shopOrderId;
         return $this;
@@ -246,7 +246,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return float
      */
-    public function getAmount()
+    public function getAmount() : float
     {
         return $this->amount;
     }
@@ -255,7 +255,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param float $amount
      * @return PaymentRequest
      */
-    public function setAmount($amount)
+    public function setAmount(float $amount) : self
     {
         $this->amount = $amount;
         return $this;
@@ -264,7 +264,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getCurrency()
+    public function getCurrency() : string
     {
         return $this->currency;
     }
@@ -273,7 +273,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $currency
      * @return PaymentRequest
      */
-    public function setCurrency($currency)
+    public function setCurrency(string $currency) : self
     {
         $this->currency = $currency;
         return $this;
@@ -282,7 +282,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getLanguage()
+    public function getLanguage() : ?string
     {
         return $this->language;
     }
@@ -291,7 +291,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $language
      * @return PaymentRequest
      */
-    public function setLanguage($language)
+    public function setLanguage(?string $language) : self
     {
         $this->language = $language;
         return $this;
@@ -300,7 +300,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return array
      */
-    public function getTransactionInfo()
+    public function getTransactionInfo() : ?array
     {
         return $this->transactionInfo;
     }
@@ -309,7 +309,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param array $transactionInfo
      * @return PaymentRequest
      */
-    public function setTransactionInfo($transactionInfo)
+    public function setTransactionInfo(?array $transactionInfo) : self
     {
         $this->transactionInfo = $transactionInfo;
         return $this;
@@ -318,7 +318,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getType()
+    public function getType() : ?string
     {
         return $this->type;
     }
@@ -327,7 +327,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $type
      * @return PaymentRequest
      */
-    public function setType($type)
+    public function setType(?string $type) : self
     {
         $this->type = $type;
         return $this;
@@ -336,7 +336,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getCcToken()
+    public function getCcToken() : ?string
     {
         return $this->ccToken;
     }
@@ -345,7 +345,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $ccToken
      * @return PaymentRequest
      */
-    public function setCcToken($ccToken)
+    public function setCcToken(?string $ccToken) : self
     {
         $this->ccToken = $ccToken;
         return $this;
@@ -354,7 +354,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getSaleReconciliationIdentifier()
+    public function getSaleReconciliationIdentifier() : ?string
     {
         return $this->saleReconciliationIdentifier;
     }
@@ -363,7 +363,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $saleReconciliationIdentifier
      * @return PaymentRequest
      */
-    public function setSaleReconciliationIdentifier($saleReconciliationIdentifier)
+    public function setSaleReconciliationIdentifier(?string $saleReconciliationIdentifier) : self
     {
         $this->saleReconciliationIdentifier = $saleReconciliationIdentifier;
         return $this;
@@ -372,7 +372,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getSaleInvoiceNumber()
+    public function getSaleInvoiceNumber() : ?string
     {
         return $this->saleInvoiceNumber;
     }
@@ -381,7 +381,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $saleInvoiceNumber
      * @return PaymentRequest
      */
-    public function setSaleInvoiceNumber($saleInvoiceNumber)
+    public function setSaleInvoiceNumber(?string $saleInvoiceNumber) : self
     {
         $this->saleInvoiceNumber = $saleInvoiceNumber;
         return $this;
@@ -390,7 +390,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return float
      */
-    public function getSalesTax()
+    public function getSalesTax() : ?float
     {
         return $this->salesTax;
     }
@@ -399,7 +399,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param float $salesTax
      * @return PaymentRequest
      */
-    public function setSalesTax($salesTax)
+    public function setSalesTax(?float $salesTax) : self
     {
         $this->salesTax = $salesTax;
         return $this;
@@ -408,7 +408,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getCookie()
+    public function getCookie() : ?string
     {
         return $this->cookie;
     }
@@ -417,7 +417,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $cookie
      * @return PaymentRequest
      */
-    public function setCookie($cookie)
+    public function setCookie(?string $cookie) : self
     {
         $this->cookie = $cookie;
         return $this;
@@ -426,7 +426,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getPaymentSource()
+    public function getPaymentSource() : ?string
     {
         return $this->paymentSource;
     }
@@ -435,7 +435,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $paymentSource
      * @return PaymentRequest
      */
-    public function setPaymentSource($paymentSource)
+    public function setPaymentSource(?string $paymentSource) : self
     {
         $this->paymentSource = $paymentSource;
         return $this;
@@ -444,7 +444,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getFraudService()
+    public function getFraudService() : ?string
     {
         return $this->fraudService;
     }
@@ -453,7 +453,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $fraudService
      * @return PaymentRequest
      */
-    public function setFraudService($fraudService)
+    public function setFraudService(?string $fraudService) : self
     {
         $this->fraudService = $fraudService;
         return $this;
@@ -462,7 +462,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getShippingMethod()
+    public function getShippingMethod() : ?string
     {
         return $this->shippingMethod;
     }
@@ -471,7 +471,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $shippingMethod
      * @return PaymentRequest
      */
-    public function setShippingMethod($shippingMethod)
+    public function setShippingMethod(?string $shippingMethod) : self
     {
         $this->shippingMethod = $shippingMethod;
         return $this;
@@ -480,7 +480,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getCustomerCreatedDate()
+    public function getCustomerCreatedDate() : ?string
     {
         return $this->customerCreatedDate;
     }
@@ -489,7 +489,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $customerCreatedDate
      * @return PaymentRequest
      */
-    public function setCustomerCreatedDate($customerCreatedDate)
+    public function setCustomerCreatedDate(?string $customerCreatedDate) : self
     {
         $this->customerCreatedDate = $customerCreatedDate;
         return $this;
@@ -498,7 +498,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getOrganisationNumber()
+    public function getOrganisationNumber() : ?string
     {
         return $this->organisationNumber;
     }
@@ -507,7 +507,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $organisationNumber
      * @return PaymentRequest
      */
-    public function setOrganisationNumber($organisationNumber)
+    public function setOrganisationNumber(?string $organisationNumber) : self
     {
         $this->organisationNumber = $organisationNumber;
         return $this;
@@ -516,7 +516,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return string
      */
-    public function getAccountOffer()
+    public function getAccountOffer() : ?string
     {
         return $this->accountOffer;
     }
@@ -525,7 +525,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param string $accountOffer
      * @return PaymentRequest
      */
-    public function setAccountOffer($accountOffer)
+    public function setAccountOffer(?string $accountOffer) : self
     {
         $this->accountOffer = $accountOffer;
         return $this;
@@ -534,7 +534,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return OrderLineInterface[]
      */
-    public function getOrderLines()
+    public function getOrderLines() : ?array
     {
         return $this->orderLines;
     }
@@ -543,7 +543,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param OrderLineInterface[] $orderLines
      * @return PaymentRequest
      */
-    public function setOrderLines($orderLines)
+    public function setOrderLines(?array $orderLines) : self
     {
         $this->orderLines = $orderLines;
         return $this;
@@ -552,7 +552,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return CustomerInfoInterface
      */
-    public function getCustomerInfo()
+    public function getCustomerInfo() : CustomerInfoInterface
     {
         if (!$this->customerInfo) {
             $this->customerInfo = new CustomerInfo();
@@ -564,7 +564,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param CustomerInfoInterface $customerInfo
      * @return PaymentRequest
      */
-    public function setCustomerInfo($customerInfo)
+    public function setCustomerInfo(CustomerInfoInterface $customerInfo) : self
     {
         $this->customerInfo = $customerInfo;
         return $this;
@@ -573,7 +573,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     /**
      * @return ConfigInterface
      */
-    public function getConfig()
+    public function getConfig() : ConfigInterface
     {
         if (!$this->config) {
             $this->config = new Config();
@@ -585,7 +585,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param ConfigInterface $config
      * @return PaymentRequest
      */
-    public function setConfig($config)
+    public function setConfig(ConfigInterface $config) : self
     {
         $this->config = $config;
         return $this;

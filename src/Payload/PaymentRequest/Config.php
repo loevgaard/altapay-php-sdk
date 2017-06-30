@@ -36,18 +36,18 @@ class Config extends Payload implements ConfigInterface
     protected $callbackNotification;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $callbackVerifyOrder;
 
     public function __construct(
-        $callbackForm = null,
-        $callbackOk = null,
-        $callbackFail = null,
-        $callbackRedirect = null,
-        $callbackOpen = null,
-        $callbackNotification = null,
-        $callbackVerifyOrder = null
+        ?string $callbackForm = null,
+        ?string $callbackOk = null,
+        ?string $callbackFail = null,
+        ?string $callbackRedirect = null,
+        ?string $callbackOpen = null,
+        ?string $callbackNotification = null,
+        ?string $callbackVerifyOrder = null
     ) {
     
         $this->setCallbackForm($callbackForm);
@@ -59,7 +59,7 @@ class Config extends Payload implements ConfigInterface
         $this->setCallbackVerifyOrder($callbackVerifyOrder);
     }
 
-    public function getPayload()
+    public function getPayload() : array
     {
         $payload = [
             'callback_form' => $this->getCallbackForm(),
@@ -77,7 +77,7 @@ class Config extends Payload implements ConfigInterface
     /**
      * @return string
      */
-    public function getCallbackForm()
+    public function getCallbackForm() : ?string
     {
         return $this->callbackForm;
     }
@@ -86,9 +86,8 @@ class Config extends Payload implements ConfigInterface
      * @param string $callbackForm
      * @return Config
      */
-    public function setCallbackForm($callbackForm)
+    public function setCallbackForm(?string $callbackForm) : self
     {
-        $this->assertStringOrNull($callbackForm);
         $this->callbackForm = $callbackForm;
         return $this;
     }
@@ -96,7 +95,7 @@ class Config extends Payload implements ConfigInterface
     /**
      * @return string
      */
-    public function getCallbackOk()
+    public function getCallbackOk() : ?string
     {
         return $this->callbackOk;
     }
@@ -105,9 +104,8 @@ class Config extends Payload implements ConfigInterface
      * @param string $callbackOk
      * @return Config
      */
-    public function setCallbackOk($callbackOk)
+    public function setCallbackOk(?string $callbackOk) : self
     {
-        $this->assertStringOrNull($callbackOk);
         $this->callbackOk = $callbackOk;
         return $this;
     }
@@ -115,7 +113,7 @@ class Config extends Payload implements ConfigInterface
     /**
      * @return string
      */
-    public function getCallbackFail()
+    public function getCallbackFail() : ?string
     {
         return $this->callbackFail;
     }
@@ -124,9 +122,8 @@ class Config extends Payload implements ConfigInterface
      * @param string $callbackFail
      * @return Config
      */
-    public function setCallbackFail($callbackFail)
+    public function setCallbackFail(?string $callbackFail) : self
     {
-        $this->assertStringOrNull($callbackFail);
         $this->callbackFail = $callbackFail;
         return $this;
     }
@@ -134,7 +131,7 @@ class Config extends Payload implements ConfigInterface
     /**
      * @return string
      */
-    public function getCallbackRedirect()
+    public function getCallbackRedirect() : ?string
     {
         return $this->callbackRedirect;
     }
@@ -143,9 +140,8 @@ class Config extends Payload implements ConfigInterface
      * @param string $callbackRedirect
      * @return Config
      */
-    public function setCallbackRedirect($callbackRedirect)
+    public function setCallbackRedirect(?string $callbackRedirect) : self
     {
-        $this->assertStringOrNull($callbackRedirect);
         $this->callbackRedirect = $callbackRedirect;
         return $this;
     }
@@ -153,7 +149,7 @@ class Config extends Payload implements ConfigInterface
     /**
      * @return string
      */
-    public function getCallbackOpen()
+    public function getCallbackOpen() : ?string
     {
         return $this->callbackOpen;
     }
@@ -162,9 +158,8 @@ class Config extends Payload implements ConfigInterface
      * @param string $callbackOpen
      * @return Config
      */
-    public function setCallbackOpen($callbackOpen)
+    public function setCallbackOpen(?string $callbackOpen) : self
     {
-        $this->assertStringOrNull($callbackOpen);
         $this->callbackOpen = $callbackOpen;
         return $this;
     }
@@ -172,7 +167,7 @@ class Config extends Payload implements ConfigInterface
     /**
      * @return string
      */
-    public function getCallbackNotification()
+    public function getCallbackNotification() : ?string
     {
         return $this->callbackNotification;
     }
@@ -181,9 +176,8 @@ class Config extends Payload implements ConfigInterface
      * @param string $callbackNotification
      * @return Config
      */
-    public function setCallbackNotification($callbackNotification)
+    public function setCallbackNotification(?string $callbackNotification) : self
     {
-        $this->assertStringOrNull($callbackNotification);
         $this->callbackNotification = $callbackNotification;
         return $this;
     }
@@ -191,7 +185,7 @@ class Config extends Payload implements ConfigInterface
     /**
      * @return string
      */
-    public function getCallbackVerifyOrder()
+    public function getCallbackVerifyOrder() : ?string
     {
         return $this->callbackVerifyOrder;
     }
@@ -200,9 +194,8 @@ class Config extends Payload implements ConfigInterface
      * @param string $callbackVerifyOrder
      * @return Config
      */
-    public function setCallbackVerifyOrder($callbackVerifyOrder)
+    public function setCallbackVerifyOrder(?string $callbackVerifyOrder) : self
     {
-        $this->assertStringOrNull($callbackVerifyOrder);
         $this->callbackVerifyOrder = $callbackVerifyOrder;
         return $this;
     }
