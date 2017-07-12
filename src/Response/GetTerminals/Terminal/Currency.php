@@ -10,6 +10,11 @@ class Currency extends PartialResponse
      */
     protected $currency;
 
+    public function __toString() : string
+    {
+        return (string)$this->currency;
+    }
+
     protected function init()
     {
         $this->currency = (string)$this->xmlDoc;

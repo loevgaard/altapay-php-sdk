@@ -10,6 +10,11 @@ class Nature extends PartialResponse
      */
     protected $nature;
 
+    public function __toString() : string
+    {
+        return (string)$this->nature;
+    }
+
     protected function init()
     {
         $this->nature = (string)$this->xmlDoc;
