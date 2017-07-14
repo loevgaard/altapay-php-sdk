@@ -11,14 +11,14 @@ final class PaymentRequestTest extends TestCase
     {
         $birthDate = \DateTime::createFromFormat('Y-m-d', '1972-05-22');
         $expected = [
-            'shop_orderid' => time(),
+            'shop_orderid' => (string)time(),
             'amount' => 100.5,
             'currency' => 'DKK',
-            'terminal' => getenv('ALTAPAY_TERMINAL'),
+            'terminal' => 'terminal',
             'account_offer' => 'account offer',
             'ccToken' => 'cc token',
             'language' => 'da',
-            'cookie' => 'somecookie=cookievalue',
+            'cookie' => 'somecookie%3Dcookievalue',
             'customer_created_date' => '2017-05-31',
             'fraud_service' => 'fraud service',
             'organisation_number' => 'DK123123123',
@@ -130,7 +130,7 @@ final class PaymentRequestTest extends TestCase
             ->setAccountOffer($expected['account_offer'])
             ->setCcToken($expected['ccToken'])
             ->setConfig($config)
-            ->setCookie($expected['cookie'])
+            ->setCookiePart('somecookie', 'cookievalue')
             ->setCustomerCreatedDate($expected['customer_created_date'])
             ->setCustomerInfo($customerInfo)
             ->setFraudService($expected['fraud_service'])
@@ -164,5 +164,19 @@ final class PaymentRequestTest extends TestCase
         }
 
         $this->assertEquals($expected, $payload->getPayload());
+    }
+
+    public function testParseCookieParts()
+    {
+        $cookieParts = [
+            'key1' => 'val1',
+            'key2' => 'val2',
+            'key3' => 'http://www.example.com'
+        ];
+        $actual = PaymentRequestPayload::parseCookieParts($cookieParts);
+
+        $expected = 'key1%3Dval1;key2%3Dval2;key3%3Dhttp%253A%252F%252Fwww.example.com';
+
+        $this->assertEquals($expected, $actual);
     }
 }
