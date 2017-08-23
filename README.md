@@ -7,7 +7,7 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-A library for using the Dandomain Pay API to make payments in the Dandomain webshop system
+A library for making requests to the [Altapay](https://altapay.com/) API.
 
 ## Install
 
