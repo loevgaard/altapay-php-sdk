@@ -206,10 +206,11 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @param array $cookieParts
      * @return string
      */
-    public static function parseCookieParts(array $cookieParts) {
+    public static function parseCookieParts(array $cookieParts)
+    {
         $cookie = '';
         foreach ($cookieParts as $key => $val) {
-            $cookie .= rawurlencode($key.'='.rawurlencode($val)).';';
+            $cookie .= $key.'='.rawurlencode($val).';';
         }
         $cookie = trim($cookie, ';');
 

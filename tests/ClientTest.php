@@ -35,7 +35,8 @@ final class ClientTest extends TestCase
         // @todo create more assertions
     }
 
-    public function testCaptureReservation() {
+    public function testCaptureReservation()
+    {
         $xml = file_get_contents(__DIR__.'/data/CaptureReservationResponse.xml');
 
         $mock = new MockHandler([
@@ -107,7 +108,8 @@ final class ClientTest extends TestCase
         $this->assertEquals('DKK', $currency->getCurrency());
     }
 
-    public function testGetClient() {
+    public function testGetClient()
+    {
         $client = $this->getClient();
 
         $this->assertInstanceOf(GuzzleClient::class, $client->getClient());

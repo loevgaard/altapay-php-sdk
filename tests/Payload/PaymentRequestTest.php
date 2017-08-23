@@ -18,7 +18,7 @@ final class PaymentRequestTest extends TestCase
             'account_offer' => 'account offer',
             'ccToken' => 'cc token',
             'language' => 'da',
-            'cookie' => 'somecookie%3Dcookievalue',
+            'cookie' => 'somecookie=cookievalue',
             'customer_created_date' => '2017-05-31',
             'fraud_service' => 'fraud service',
             'organisation_number' => 'DK123123123',
@@ -175,7 +175,7 @@ final class PaymentRequestTest extends TestCase
         ];
         $actual = PaymentRequestPayload::parseCookieParts($cookieParts);
 
-        $expected = 'key1%3Dval1;key2%3Dval2;key3%3Dhttp%253A%252F%252Fwww.example.com';
+        $expected = 'key1=val1;key2=val2;key3=http%3A%2F%2Fwww.example.com';
 
         $this->assertEquals($expected, $actual);
     }
