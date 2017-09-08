@@ -1,5 +1,5 @@
 <?php
-namespace Loevgaard\AltaPay\Response;
+namespace Loevgaard\AltaPay\Response\Partial;
 
 interface PartialResponseInterface
 {

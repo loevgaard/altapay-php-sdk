@@ -1,8 +1,8 @@
 <?php
-namespace Loevgaard\AltaPay\Response\CaptureReservation\Transaction;
+namespace Loevgaard\AltaPay\Response\Partial\Transaction;
 
 use Loevgaard\AltaPay\Exception\ResponseException;
-use Loevgaard\AltaPay\Response\PartialResponse;
+use Loevgaard\AltaPay\Response\Partial\PartialResponse;
 
 class ReconciliationIdentifier extends PartialResponse
 {
@@ -30,21 +30,6 @@ class ReconciliationIdentifier extends PartialResponse
      * @var \DateTimeImmutable
      */
     private $date;
-
-    protected function init()
-    {
-        $this->id = (string)$this->xmlDoc->Id;
-        $this->amount = (float)$this->xmlDoc->Amount;
-        $this->amountCurrency = (int)$this->xmlDoc->Amount['currency'];
-        $this->type = (string)$this->xmlDoc->Type;
-
-        $this->date = \DateTimeImmutable::createFromFormat(DATE_RFC3339, (string)$this->xmlDoc->Date);
-        if ($this->date === false) {
-            $exception = new ResponseException('The date format is wrong');
-            $exception->setResponse($this->getOriginalResponse());
-            throw $exception;
-        }
-    }
 
     /**
      * @return string
@@ -84,5 +69,20 @@ class ReconciliationIdentifier extends PartialResponse
     public function getDate(): \DateTimeImmutable
     {
         return $this->date;
+    }
+
+    protected function init()
+    {
+        $this->id = (string)$this->xmlDoc->Id;
+        $this->amount = (float)$this->xmlDoc->Amount;
+        $this->amountCurrency = (int)$this->xmlDoc->Amount['currency'];
+        $this->type = (string)$this->xmlDoc->Type;
+
+        $this->date = \DateTimeImmutable::createFromFormat(DATE_RFC3339, (string)$this->xmlDoc->Date);
+        if ($this->date === false) {
+            $exception = new ResponseException('The date format is wrong');
+            $exception->setResponse($this->getOriginalResponse());
+            throw $exception;
+        }
     }
 }

@@ -1,7 +1,7 @@
 <?php
-namespace Loevgaard\AltaPay\Response\CaptureReservation\Transaction;
+namespace Loevgaard\AltaPay\Response\Partial\Transaction;
 
-use Loevgaard\AltaPay\Response\PartialResponse;
+use Loevgaard\AltaPay\Response\Partial\PartialResponse;
 
 class PaymentInfo extends PartialResponse
 {
@@ -14,12 +14,6 @@ class PaymentInfo extends PartialResponse
      * @var string
      */
     private $value;
-
-    protected function init()
-    {
-        $this->name = (string)$this->xmlDoc['name'];
-        $this->value = (string)$this->xmlDoc;
-    }
 
     /**
      * @return string
@@ -35,5 +29,11 @@ class PaymentInfo extends PartialResponse
     public function getValue() : string
     {
         return $this->value;
+    }
+
+    protected function init()
+    {
+        $this->name = (string)$this->xmlDoc['name'];
+        $this->value = (string)$this->xmlDoc;
     }
 }

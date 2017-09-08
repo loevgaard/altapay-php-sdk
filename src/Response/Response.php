@@ -87,14 +87,6 @@ abstract class Response implements ResponseInterface
     }
 
     /**
-     * Is called after the contructor has initialized the properties
-     * Use this to do any initialization you need
-     */
-    protected function init()
-    {
-    }
-
-    /**
      * @return bool
      */
     public function isSuccessful() : bool
@@ -164,5 +156,13 @@ abstract class Response implements ResponseInterface
     public function getErrorMessage() : string
     {
         return $this->errorMessage;
+    }
+
+    /**
+     * Is called after the contructor has initialized the properties
+     * Use this to do any initialization you need
+     */
+    protected function init()
+    {
     }
 }

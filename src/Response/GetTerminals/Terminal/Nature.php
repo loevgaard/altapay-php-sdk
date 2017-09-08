@@ -1,7 +1,7 @@
 <?php
 namespace Loevgaard\AltaPay\Response\GetTerminals\Terminal;
 
-use Loevgaard\AltaPay\Response\PartialResponse;
+use Loevgaard\AltaPay\Response\Partial\PartialResponse;
 
 class Nature extends PartialResponse
 {
@@ -15,16 +15,16 @@ class Nature extends PartialResponse
         return (string)$this->nature;
     }
 
-    protected function init()
-    {
-        $this->nature = (string)$this->xmlDoc;
-    }
-
     /**
      * @return string
      */
     public function getNature(): string
     {
         return $this->nature;
+    }
+
+    protected function init()
+    {
+        $this->nature = (string)$this->xmlDoc;
     }
 }

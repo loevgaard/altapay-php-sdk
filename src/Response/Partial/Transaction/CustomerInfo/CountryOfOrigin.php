@@ -1,7 +1,7 @@
 <?php
-namespace Loevgaard\AltaPay\Response\CaptureReservation\Transaction\CustomerInfo;
+namespace Loevgaard\AltaPay\Response\Partial\Transaction\CustomerInfo;
 
-use Loevgaard\AltaPay\Response\PartialResponse;
+use Loevgaard\AltaPay\Response\Partial\PartialResponse;
 
 class CountryOfOrigin extends PartialResponse
 {
@@ -14,12 +14,6 @@ class CountryOfOrigin extends PartialResponse
      * @var string
      */
     private $source;
-
-    protected function init()
-    {
-        $this->country = (string)$this->xmlDoc->Country;
-        $this->source = (string)$this->xmlDoc->Source;
-    }
 
     /**
      * @return string
@@ -35,5 +29,11 @@ class CountryOfOrigin extends PartialResponse
     public function getSource() : string
     {
         return $this->source;
+    }
+
+    protected function init()
+    {
+        $this->country = (string)$this->xmlDoc->Country;
+        $this->source = (string)$this->xmlDoc->Source;
     }
 }

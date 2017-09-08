@@ -1,7 +1,7 @@
 <?php
-namespace Loevgaard\AltaPay\Response\CaptureReservation\Transaction;
+namespace Loevgaard\AltaPay\Response\Partial\Transaction;
 
-use Loevgaard\AltaPay\Response\PartialResponse;
+use Loevgaard\AltaPay\Response\Partial\PartialResponse;
 
 class PaymentNatureService extends PartialResponse
 {
@@ -29,15 +29,6 @@ class PaymentNatureService extends PartialResponse
      * @var boolean
      */
     private $supportsMultipleRefunds;
-
-    protected function init()
-    {
-        $this->name = (string)$this->xmlDoc['name'];
-        $this->supportsRefunds = (string)$this->xmlDoc->SupportsRefunds === 'true';
-        $this->supportsRelease = (string)$this->xmlDoc->SupportsRelease === 'true';
-        $this->supportsMultipleCaptures = (string)$this->xmlDoc->SupportsMultipleCaptures === 'true';
-        $this->supportsMultipleRefunds = (string)$this->xmlDoc->SupportsMultipleRefunds === 'true';
-    }
 
     /**
      * @return string
@@ -77,5 +68,14 @@ class PaymentNatureService extends PartialResponse
     public function getSupportsMultipleRefunds() : bool
     {
         return $this->supportsMultipleRefunds;
+    }
+
+    protected function init()
+    {
+        $this->name = (string)$this->xmlDoc['name'];
+        $this->supportsRefunds = (string)$this->xmlDoc->SupportsRefunds === 'true';
+        $this->supportsRelease = (string)$this->xmlDoc->SupportsRelease === 'true';
+        $this->supportsMultipleCaptures = (string)$this->xmlDoc->SupportsMultipleCaptures === 'true';
+        $this->supportsMultipleRefunds = (string)$this->xmlDoc->SupportsMultipleRefunds === 'true';
     }
 }

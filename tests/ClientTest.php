@@ -2,16 +2,18 @@
 
 namespace Loevgaard\AltaPay;
 
+use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Loevgaard\AltaPay\Payload\CaptureReservation;
 use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
-use Loevgaard\AltaPay\Response\PaymentRequest as PaymentRequestResponse;
-use Loevgaard\AltaPay\Response\GetTerminals as GetTerminalsResponse;
+use Loevgaard\AltaPay\Payload\RefundCapturedReservation;
 use Loevgaard\AltaPay\Response\CaptureReservation as CaptureReservationResponse;
+use Loevgaard\AltaPay\Response\GetTerminals as GetTerminalsResponse;
+use Loevgaard\AltaPay\Response\PaymentRequest as PaymentRequestResponse;
+use Loevgaard\AltaPay\Response\RefundCapturedReservation as RefundCapturedReservationResponse;
 use PHPUnit\Framework\TestCase;
-use GuzzleHttp\Client as GuzzleClient;
 
 final class ClientTest extends TestCase
 {
@@ -53,6 +55,24 @@ final class ClientTest extends TestCase
         $this->assertTrue($response->isSuccessful());
 
         // @todo move assertions from Response\CaptureReservationTest.php to here
+    }
+
+    public function testRefundCapturedReservation()
+    {
+        $xml = file_get_contents(__DIR__.'/data/RefundCapturedReservationResponse.xml');
+
+        $mock = new MockHandler([
+            new Response(200, [], $xml)
+        ]);
+
+        $handler = HandlerStack::create($mock);
+
+        $client = $this->getClient($handler);
+
+        $payload = new RefundCapturedReservation('transaction_id');
+        $response = $client->refundCapturedReservation($payload);
+        $this->assertInstanceOf(RefundCapturedReservationResponse::class, $response);
+        $this->assertTrue($response->isSuccessful());
     }
 
     public function testGetTerminals()

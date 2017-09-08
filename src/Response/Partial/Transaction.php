@@ -1,12 +1,11 @@
 <?php
-namespace Loevgaard\AltaPay\Response\CaptureReservation;
+namespace Loevgaard\AltaPay\Response\Partial;
 
 use Loevgaard\AltaPay\Exception\ResponseException;
-use Loevgaard\AltaPay\Response\CaptureReservation\Transaction\CustomerInfo;
-use Loevgaard\AltaPay\Response\CaptureReservation\Transaction\PaymentInfo;
-use Loevgaard\AltaPay\Response\CaptureReservation\Transaction\PaymentNatureService;
-use Loevgaard\AltaPay\Response\CaptureReservation\Transaction\ReconciliationIdentifier;
-use Loevgaard\AltaPay\Response\PartialResponse;
+use Loevgaard\AltaPay\Response\Partial\Transaction\CustomerInfo;
+use Loevgaard\AltaPay\Response\Partial\Transaction\PaymentInfo;
+use Loevgaard\AltaPay\Response\Partial\Transaction\PaymentNatureService;
+use Loevgaard\AltaPay\Response\Partial\Transaction\ReconciliationIdentifier;
 
 class Transaction extends PartialResponse
 {
@@ -159,80 +158,6 @@ class Transaction extends PartialResponse
      * @var ReconciliationIdentifier[]
      */
     private $reconciliationIdentifiers;
-
-    protected function init()
-    {
-        $this->transactionId = (int)$this->xmlDoc->TransactionId;
-        $this->paymentId = (string)$this->xmlDoc->PaymentId;
-        $this->cardStatus = (string)$this->xmlDoc->CardStatus;
-        $this->creditCardToken = (string)$this->xmlDoc->CreditCardToken;
-        $this->creditCardMaskedPan = (string)$this->xmlDoc->CreditCardMaskedPan;
-        $this->threeDSecureResult = (string)$this->xmlDoc->ThreeDSecureResult;
-        $this->liableForChargeback = (string)$this->xmlDoc->LiableForChargeback;
-        $this->blacklistToken = (string)$this->xmlDoc->BlacklistToken;
-        $this->shopOrderId = (string)$this->xmlDoc->ShopOrderId;
-        $this->shop = (string)$this->xmlDoc->Shop;
-        $this->terminal = (string)$this->xmlDoc->Terminal;
-        $this->transactionStatus = (string)$this->xmlDoc->TransactionStatus;
-        $this->reasonCode = (string)$this->xmlDoc->ReasonCode;
-        $this->merchantCurrency = (int)$this->xmlDoc->MerchantCurrency;
-        $this->merchantCurrencyAlpha = (string)$this->xmlDoc->MerchantCurrencyAlpha;
-        $this->cardHolderCurrency = (int)$this->xmlDoc->CardHolderCurrency;
-        $this->cardHolderCurrencyAlpha = (string)$this->xmlDoc->CardHolderCurrencyAlpha;
-        $this->reservedAmount = (float)$this->xmlDoc->ReservedAmount;
-        $this->capturedAmount = (float)$this->xmlDoc->CapturedAmount;
-        $this->refundedAmount = (float)$this->xmlDoc->RefundedAmount;
-        $this->recurringDefaultAmount = (float)$this->xmlDoc->RecurringDefaultAmount;
-        $this->paymentNature = (string)$this->xmlDoc->PaymentNature;
-        $this->fraudRiskScore = (float)$this->xmlDoc->FraudRiskScore;
-        $this->fraudExplanation = (string)$this->xmlDoc->FraudExplanation;
-
-        $this->createdDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$this->xmlDoc->CreatedDate);
-        if ($this->createdDate === false) {
-            $exception = new ResponseException('The created date format is wrong');
-            $exception->setResponse($this->getOriginalResponse());
-            throw $exception;
-        }
-
-        $this->updatedDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$this->xmlDoc->UpdatedDate);
-        if ($this->updatedDate === false) {
-            $exception = new ResponseException('The updated date format is wrong');
-            $exception->setResponse($this->getOriginalResponse());
-            throw $exception;
-        }
-
-        // populating payment nature service object
-        $this->paymentNatureService = new PaymentNatureService(
-            $this->getOriginalResponse(),
-            $this->xmlDoc->PaymentNatureService
-        );
-
-        // populating payment info objects
-        $this->paymentInfos = [];
-        if (isset($this->xmlDoc->PaymentInfos) &&
-            isset($this->xmlDoc->PaymentInfos->PaymentInfo) &&
-            !empty($this->xmlDoc->PaymentInfos->PaymentInfo)) {
-            foreach ($this->xmlDoc->PaymentInfos->PaymentInfo as $paymentInfo) {
-                $this->paymentInfos[] = new PaymentInfo($this->getOriginalResponse(), $paymentInfo);
-            }
-        }
-
-        // populating customer info object
-        $this->customerInfo = new Transaction\CustomerInfo($this->getOriginalResponse(), $this->xmlDoc->CustomerInfo);
-
-        // populating reconciliation identifiers
-        $this->reconciliationIdentifiers = [];
-        if (isset($this->xmlDoc->ReconciliationIdentifiers) &&
-            isset($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier) &&
-            !empty($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier)) {
-            foreach ($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier as $reconciliationIdentifier) {
-                $this->reconciliationIdentifiers[] = new ReconciliationIdentifier(
-                    $this->getOriginalResponse(),
-                    $reconciliationIdentifier
-                );
-            }
-        }
-    }
 
     /**
      * @return int
@@ -472,5 +397,79 @@ class Transaction extends PartialResponse
     public function getReconciliationIdentifiers() : array
     {
         return $this->reconciliationIdentifiers;
+    }
+
+    protected function init()
+    {
+        $this->transactionId = (int)$this->xmlDoc->TransactionId;
+        $this->paymentId = (string)$this->xmlDoc->PaymentId;
+        $this->cardStatus = (string)$this->xmlDoc->CardStatus;
+        $this->creditCardToken = (string)$this->xmlDoc->CreditCardToken;
+        $this->creditCardMaskedPan = (string)$this->xmlDoc->CreditCardMaskedPan;
+        $this->threeDSecureResult = (string)$this->xmlDoc->ThreeDSecureResult;
+        $this->liableForChargeback = (string)$this->xmlDoc->LiableForChargeback;
+        $this->blacklistToken = (string)$this->xmlDoc->BlacklistToken;
+        $this->shopOrderId = (string)$this->xmlDoc->ShopOrderId;
+        $this->shop = (string)$this->xmlDoc->Shop;
+        $this->terminal = (string)$this->xmlDoc->Terminal;
+        $this->transactionStatus = (string)$this->xmlDoc->TransactionStatus;
+        $this->reasonCode = (string)$this->xmlDoc->ReasonCode;
+        $this->merchantCurrency = (int)$this->xmlDoc->MerchantCurrency;
+        $this->merchantCurrencyAlpha = (string)$this->xmlDoc->MerchantCurrencyAlpha;
+        $this->cardHolderCurrency = (int)$this->xmlDoc->CardHolderCurrency;
+        $this->cardHolderCurrencyAlpha = (string)$this->xmlDoc->CardHolderCurrencyAlpha;
+        $this->reservedAmount = (float)$this->xmlDoc->ReservedAmount;
+        $this->capturedAmount = (float)$this->xmlDoc->CapturedAmount;
+        $this->refundedAmount = (float)$this->xmlDoc->RefundedAmount;
+        $this->recurringDefaultAmount = (float)$this->xmlDoc->RecurringDefaultAmount;
+        $this->paymentNature = (string)$this->xmlDoc->PaymentNature;
+        $this->fraudRiskScore = (float)$this->xmlDoc->FraudRiskScore;
+        $this->fraudExplanation = (string)$this->xmlDoc->FraudExplanation;
+
+        $this->createdDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$this->xmlDoc->CreatedDate);
+        if ($this->createdDate === false) {
+            $exception = new ResponseException('The created date format is wrong');
+            $exception->setResponse($this->getOriginalResponse());
+            throw $exception;
+        }
+
+        $this->updatedDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$this->xmlDoc->UpdatedDate);
+        if ($this->updatedDate === false) {
+            $exception = new ResponseException('The updated date format is wrong');
+            $exception->setResponse($this->getOriginalResponse());
+            throw $exception;
+        }
+
+        // populating payment nature service object
+        $this->paymentNatureService = new PaymentNatureService(
+            $this->getOriginalResponse(),
+            $this->xmlDoc->PaymentNatureService
+        );
+
+        // populating payment info objects
+        $this->paymentInfos = [];
+        if (isset($this->xmlDoc->PaymentInfos) &&
+            isset($this->xmlDoc->PaymentInfos->PaymentInfo) &&
+            !empty($this->xmlDoc->PaymentInfos->PaymentInfo)) {
+            foreach ($this->xmlDoc->PaymentInfos->PaymentInfo as $paymentInfo) {
+                $this->paymentInfos[] = new PaymentInfo($this->getOriginalResponse(), $paymentInfo);
+            }
+        }
+
+        // populating customer info object
+        $this->customerInfo = new Transaction\CustomerInfo($this->getOriginalResponse(), $this->xmlDoc->CustomerInfo);
+
+        // populating reconciliation identifiers
+        $this->reconciliationIdentifiers = [];
+        if (isset($this->xmlDoc->ReconciliationIdentifiers) &&
+            isset($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier) &&
+            !empty($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier)) {
+            foreach ($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier as $reconciliationIdentifier) {
+                $this->reconciliationIdentifiers[] = new ReconciliationIdentifier(
+                    $this->getOriginalResponse(),
+                    $reconciliationIdentifier
+                );
+            }
+        }
     }
 }

@@ -7,9 +7,63 @@ use PHPUnit\Framework\TestCase;
 
 final class PaymentRequestTest extends TestCase
 {
+    public function testGettersSetters()
+    {
+        $customerCreatedDate = \DateTime::createFromFormat('Y-m-d', '2017-05-31');
+
+        $paymentRequest = new PaymentRequest('terminal', 'orderid', 250.95, 'DKK');
+        $paymentRequest->setSalesTax(100)
+            ->setType('type')
+            ->setLanguage('da')
+            ->setShippingMethod('shippingmethod')
+            ->setCookiePart('key', 'val')
+            ->setTransactionInfo(['transactioninfo'])
+            ->setCcToken('cctoken')
+            ->setSaleReconciliationIdentifier('saleReconciliationIdentifier')
+            ->setSaleInvoiceNumber('invoicenumber')
+            ->setPaymentSource('paymentsource')
+            ->setFraudService('fraudservice')
+            ->setCustomerCreatedDate($customerCreatedDate)
+            ->setOrganisationNumber('organisationnumber')
+            ->setAccountOffer('accountoffer')
+        ;
+
+        $this->assertSame('terminal', $paymentRequest->getTerminal());
+        $this->assertSame('orderid', $paymentRequest->getShopOrderId());
+        $this->assertSame(250.95, $paymentRequest->getAmount());
+        $this->assertSame('DKK', $paymentRequest->getCurrency());
+        $this->assertSame(100.0, $paymentRequest->getSalesTax());
+        $this->assertSame('type', $paymentRequest->getType());
+        $this->assertSame('da', $paymentRequest->getLanguage());
+        $this->assertSame('shippingmethod', $paymentRequest->getShippingMethod());
+        $this->assertSame('val', $paymentRequest->getCookiePart('key'));
+        $this->assertSame(['transactioninfo'], $paymentRequest->getTransactionInfo());
+        $this->assertSame('cctoken', $paymentRequest->getCcToken());
+        $this->assertSame('saleReconciliationIdentifier', $paymentRequest->getSaleReconciliationIdentifier());
+        $this->assertSame('invoicenumber', $paymentRequest->getSaleInvoiceNumber());
+        $this->assertSame('paymentsource', $paymentRequest->getPaymentSource());
+        $this->assertSame('fraudservice', $paymentRequest->getFraudService());
+        $this->assertSame($customerCreatedDate, $paymentRequest->getCustomerCreatedDate());
+        $this->assertSame('organisationnumber', $paymentRequest->getOrganisationNumber());
+        $this->assertSame('accountoffer', $paymentRequest->getAccountOffer());
+
+        $paymentRequest->setTerminal('terminal2')
+            ->setShopOrderId('orderid2')
+            ->setAmount(150.95)
+            ->setCurrency('EUR')
+            ->setCookieParts(['cookiesparts'])
+        ;
+
+        $this->assertSame('terminal2', $paymentRequest->getTerminal());
+        $this->assertSame('orderid2', $paymentRequest->getShopOrderId());
+        $this->assertSame(150.95, $paymentRequest->getAmount());
+        $this->assertSame('EUR', $paymentRequest->getCurrency());
+        $this->assertSame(['cookiesparts'], $paymentRequest->getCookieParts());
+    }
     public function testGetPayload()
     {
         $birthDate = \DateTime::createFromFormat('Y-m-d', '1972-05-22');
+        $customerCreatedDate = \DateTime::createFromFormat('Y-m-d', '2017-05-31');
         $expected = [
             'shop_orderid' => (string)time(),
             'amount' => 100.5,
@@ -19,7 +73,7 @@ final class PaymentRequestTest extends TestCase
             'ccToken' => 'cc token',
             'language' => 'da',
             'cookie' => 'somecookie=cookievalue',
-            'customer_created_date' => '2017-05-31',
+            'customer_created_date' => $customerCreatedDate->format('Y-m-d'),
             'fraud_service' => 'fraud service',
             'organisation_number' => 'DK123123123',
             'payment_source' => PaymentRequest::PAYMENT_SOURCE_ECOMMERCE,
@@ -85,15 +139,16 @@ final class PaymentRequestTest extends TestCase
         ];
 
 
-        $config = new PaymentRequestPayload\Config(
-            $expected['config']['callback_form'],
-            $expected['config']['callback_ok'],
-            $expected['config']['callback_fail'],
-            $expected['config']['callback_redirect'],
-            $expected['config']['callback_open'],
-            $expected['config']['callback_notification'],
-            $expected['config']['callback_verify_order']
-        );
+        $config = new PaymentRequestPayload\Config();
+        $config
+            ->setCallbackForm($expected['config']['callback_form'])
+            ->setCallbackOk($expected['config']['callback_ok'])
+            ->setCallbackFail($expected['config']['callback_fail'])
+            ->setCallbackRedirect($expected['config']['callback_redirect'])
+            ->setCallbackOpen($expected['config']['callback_open'])
+            ->setCallbackNotification($expected['config']['callback_notification'])
+            ->setCallbackVerifyOrder($expected['config']['callback_verify_order'])
+        ;
 
         $customerInfo = new PaymentRequestPayload\CustomerInfo();
         $customerInfo
@@ -131,7 +186,7 @@ final class PaymentRequestTest extends TestCase
             ->setCcToken($expected['ccToken'])
             ->setConfig($config)
             ->setCookiePart('somecookie', 'cookievalue')
-            ->setCustomerCreatedDate($expected['customer_created_date'])
+            ->setCustomerCreatedDate($customerCreatedDate)
             ->setCustomerInfo($customerInfo)
             ->setFraudService($expected['fraud_service'])
             ->setLanguage($expected['language'])
@@ -152,14 +207,26 @@ final class PaymentRequestTest extends TestCase
                 $orderLine['description'],
                 $orderLine['itemId'],
                 $orderLine['quantity'],
-                $orderLine['unitPrice'],
-                isset($orderLine['taxPercent']) ? $orderLine['taxPercent'] : null,
-                isset($orderLine['taxAmount']) ? $orderLine['taxAmount'] : null,
-                isset($orderLine['unitCode']) ? $orderLine['unitCode'] : null,
-                isset($orderLine['discount']) ? $orderLine['discount'] : null,
-                isset($orderLine['goodsType']) ? $orderLine['goodsType'] : null,
-                isset($orderLine['imageUrl']) ? $orderLine['imageUrl'] : null
+                $orderLine['unitPrice']
             );
+            if (isset($orderLine['taxPercent'])) {
+                $ol->setTaxPercent($orderLine['taxPercent']);
+            }
+            if (isset($orderLine['taxAmount'])) {
+                $ol->setTaxAmount($orderLine['taxAmount']);
+            }
+            if (isset($orderLine['unitCode'])) {
+                $ol->setUnitCode($orderLine['unitCode']);
+            }
+            if (isset($orderLine['discount'])) {
+                $ol->setDiscount($orderLine['discount']);
+            }
+            if (isset($orderLine['goodsType'])) {
+                $ol->setGoodsType($orderLine['goodsType']);
+            }
+            if (isset($orderLine['imageUrl'])) {
+                $ol->setImageUrl($orderLine['imageUrl']);
+            }
             $payload->addOrderLine($ol);
         }
 

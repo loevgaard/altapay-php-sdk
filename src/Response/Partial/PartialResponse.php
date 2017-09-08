@@ -1,5 +1,5 @@
 <?php
-namespace Loevgaard\AltaPay\Response;
+namespace Loevgaard\AltaPay\Response\Partial;
 
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
@@ -31,14 +31,6 @@ abstract class PartialResponse implements PartialResponseInterface
     }
 
     /**
-     * Is called after the contructor has initialized the properties
-     * Use this to do any initialization you need
-     */
-    protected function init()
-    {
-    }
-
-    /**
      * @return PsrResponseInterface
      */
     public function getOriginalResponse() : PsrResponseInterface
@@ -52,5 +44,13 @@ abstract class PartialResponse implements PartialResponseInterface
     public function getXmlDoc() : \SimpleXMLElement
     {
         return $this->xmlDoc;
+    }
+
+    /**
+     * Is called after the contructor has initialized the properties
+     * Use this to do any initialization you need
+     */
+    protected function init()
+    {
     }
 }

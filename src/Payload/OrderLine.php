@@ -1,6 +1,8 @@
 <?php
 namespace Loevgaard\AltaPay\Payload;
 
+use Assert\Assert;
+
 class OrderLine extends Payload implements OrderLineInterface
 {
     const GOODS_TYPE_SHIPMENT = 'shipment';
@@ -58,47 +60,46 @@ class OrderLine extends Payload implements OrderLineInterface
      */
     protected $imageUrl;
 
-    public function __construct(
-        $description,
-        $itemId,
-        $quantity,
-        $unitPrice,
-        ?float $taxPercent = null,
-        ?float $taxAmount = null,
-        ?string $unitCode = null,
-        ?float $discount = null,
-        ?string $goodsType = null,
-        ?string $imageUrl = null
-    ) {
-    
-        $this->setDescription($description);
-        $this->setItemId($itemId);
-        $this->setQuantity($quantity);
-        $this->setUnitPrice($unitPrice);
-        $this->setTaxPercent($taxPercent);
-        $this->setTaxAmount($taxAmount);
-        $this->setUnitCode($unitCode);
-        $this->setDiscount($discount);
-        $this->setGoodsType($goodsType);
-        $this->setImageUrl($imageUrl);
+    public function __construct(string $description, string $itemId, float $quantity, float $unitPrice)
+    {
+        $this->description = $description;
+        $this->itemId = $itemId;
+        $this->quantity = $quantity;
+        $this->unitPrice = $unitPrice;
     }
 
     public function getPayload() : array
     {
         $payload = [
-            'description' => $this->getDescription(),
-            'itemId' => $this->getItemId(),
-            'quantity' => $this->getQuantity(),
-            'unitPrice' => $this->getUnitPrice(),
-            'taxPercent' => $this->getTaxPercent(),
-            'taxAmount' => $this->getTaxAmount(),
-            'unitCode' => $this->getUnitCode(),
-            'discount' => $this->getDiscount(),
-            'goodsType' => $this->getGoodsType(),
-            'imageUrl' => $this->getImageUrl(),
+            'description' => $this->description,
+            'itemId' => $this->itemId,
+            'quantity' => $this->quantity,
+            'unitPrice' => $this->unitPrice,
+            'taxPercent' => $this->taxPercent,
+            'taxAmount' => $this->taxAmount,
+            'unitCode' => $this->unitCode,
+            'discount' => $this->discount,
+            'goodsType' => $this->goodsType,
+            'imageUrl' => $this->imageUrl,
         ];
 
-        return $this->cleanPayload($payload);
+        $this->validate();
+
+        return static::simplePayload($payload);
+    }
+
+    public function validate()
+    {
+        Assert::that($this->description)->string();
+        Assert::that($this->itemId)->string();
+        Assert::that($this->quantity)->float();
+        Assert::that($this->unitPrice)->float();
+        Assert::thatNullOr($this->taxPercent)->float();
+        Assert::thatNullOr($this->taxAmount)->float();
+        Assert::thatNullOr($this->unitCode)->string();
+        Assert::thatNullOr($this->discount)->float();
+        Assert::thatNullOr($this->goodsType)->string()->inArray(static::getGoodsTypes());
+        Assert::thatNullOr($this->imageUrl)->string();
     }
 
     /**
@@ -198,7 +199,7 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param float $taxPercent
      * @return OrderLine
      */
-    public function setTaxPercent(?float $taxPercent) : self
+    public function setTaxPercent(float $taxPercent) : self
     {
         $this->taxPercent = $taxPercent;
         return $this;
@@ -216,7 +217,7 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param float $taxAmount
      * @return OrderLine
      */
-    public function setTaxAmount(?float $taxAmount) : self
+    public function setTaxAmount(float $taxAmount) : self
     {
         $this->taxAmount = $taxAmount;
         return $this;
@@ -234,7 +235,7 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param string $unitCode
      * @return OrderLine
      */
-    public function setUnitCode(?string $unitCode) : self
+    public function setUnitCode(string $unitCode) : self
     {
         $this->unitCode = $unitCode;
         return $this;
@@ -252,7 +253,7 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param float $discount
      * @return OrderLine
      */
-    public function setDiscount(?float $discount) : self
+    public function setDiscount(float $discount) : self
     {
         $this->discount = $discount;
         return $this;
@@ -270,7 +271,7 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param string $goodsType
      * @return OrderLine
      */
-    public function setGoodsType(?string $goodsType) : self
+    public function setGoodsType(string $goodsType) : self
     {
         $this->goodsType = $goodsType;
         return $this;
@@ -288,7 +289,7 @@ class OrderLine extends Payload implements OrderLineInterface
      * @param string $imageUrl
      * @return OrderLine
      */
-    public function setImageUrl(?string $imageUrl) : self
+    public function setImageUrl(string $imageUrl) : self
     {
         $this->imageUrl = $imageUrl;
         return $this;

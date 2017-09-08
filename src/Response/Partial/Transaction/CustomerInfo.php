@@ -1,9 +1,9 @@
 <?php
-namespace Loevgaard\AltaPay\Response\CaptureReservation\Transaction;
+namespace Loevgaard\AltaPay\Response\Partial\Transaction;
 
-use Loevgaard\AltaPay\Response\CaptureReservation\Transaction\CustomerInfo\BillingAddress;
-use Loevgaard\AltaPay\Response\CaptureReservation\Transaction\CustomerInfo\CountryOfOrigin;
-use Loevgaard\AltaPay\Response\PartialResponse;
+use Loevgaard\AltaPay\Response\Partial\PartialResponse;
+use Loevgaard\AltaPay\Response\Partial\Transaction\CustomerInfo\BillingAddress;
+use Loevgaard\AltaPay\Response\Partial\Transaction\CustomerInfo\CountryOfOrigin;
 
 class CustomerInfo extends PartialResponse
 {
@@ -56,29 +56,6 @@ class CustomerInfo extends PartialResponse
      * @var string
      */
     private $registeredAddress;
-
-    protected function init()
-    {
-        $this->userAgent = (string)$this->xmlDoc->UserAgent;
-        $this->ipAddress = (string)$this->xmlDoc->IpAddress;
-        $this->email = (string)$this->xmlDoc->Email;
-        $this->username = (string)$this->xmlDoc->Username;
-        $this->customerPhone = (string)$this->xmlDoc->CustomerPhone;
-        $this->organisationNumber = (string)$this->xmlDoc->OrganisationNumber;
-
-        // @todo these two properties should probably have their own objects,
-        // but I am awaiting a response from Altapay regarding the possible contents of these
-        // since the documentation does not say anything about it:
-        // https://testgateway.altapaysecure.com/merchant/help/Merchant_API#API_captureReservation
-        $this->shippingAddress = (string)$this->xmlDoc->ShippingAddress;
-        $this->registeredAddress = (string)$this->xmlDoc->RegisteredAddress;
-
-        // populating country of origin object
-        $this->countryOfOrigin = new CountryOfOrigin($this->getOriginalResponse(), $this->xmlDoc->CountryOfOrigin);
-
-        // populating billing address object
-        $this->billingAddress = new BillingAddress($this->getOriginalResponse(), $this->xmlDoc->BillingAddress);
-    }
 
     /**
      * @return string
@@ -158,5 +135,28 @@ class CustomerInfo extends PartialResponse
     public function getRegisteredAddress() : string
     {
         return $this->registeredAddress;
+    }
+
+    protected function init()
+    {
+        $this->userAgent = (string)$this->xmlDoc->UserAgent;
+        $this->ipAddress = (string)$this->xmlDoc->IpAddress;
+        $this->email = (string)$this->xmlDoc->Email;
+        $this->username = (string)$this->xmlDoc->Username;
+        $this->customerPhone = (string)$this->xmlDoc->CustomerPhone;
+        $this->organisationNumber = (string)$this->xmlDoc->OrganisationNumber;
+
+        // @todo these two properties should probably have their own objects,
+        // but I am awaiting a response from Altapay regarding the possible contents of these
+        // since the documentation does not say anything about it:
+        // https://testgateway.altapaysecure.com/merchant/help/Merchant_API#API_captureReservation
+        $this->shippingAddress = (string)$this->xmlDoc->ShippingAddress;
+        $this->registeredAddress = (string)$this->xmlDoc->RegisteredAddress;
+
+        // populating country of origin object
+        $this->countryOfOrigin = new CountryOfOrigin($this->getOriginalResponse(), $this->xmlDoc->CountryOfOrigin);
+
+        // populating billing address object
+        $this->billingAddress = new BillingAddress($this->getOriginalResponse(), $this->xmlDoc->BillingAddress);
     }
 }

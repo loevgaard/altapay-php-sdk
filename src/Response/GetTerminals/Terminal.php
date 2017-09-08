@@ -3,7 +3,7 @@ namespace Loevgaard\AltaPay\Response\GetTerminals;
 
 use Loevgaard\AltaPay\Response\GetTerminals\Terminal\Currency;
 use Loevgaard\AltaPay\Response\GetTerminals\Terminal\Nature;
-use Loevgaard\AltaPay\Response\PartialResponse;
+use Loevgaard\AltaPay\Response\Partial\PartialResponse;
 
 class Terminal extends PartialResponse
 {
@@ -26,30 +26,6 @@ class Terminal extends PartialResponse
      * @var Currency[]
      */
     protected $currencies;
-
-    protected function init()
-    {
-        $this->natures = [];
-        $this->currencies = [];
-        $this->title = (string)$this->xmlDoc->Title;
-        $this->country = (string)$this->xmlDoc->Country;
-
-        if (isset($this->xmlDoc->Natures) &&
-            isset($this->xmlDoc->Natures->Nature) &&
-            !empty($this->xmlDoc->Natures->Nature)) {
-            foreach ($this->xmlDoc->Natures->Nature as $natureXml) {
-                $this->natures[] = new Nature($this->getOriginalResponse(), $natureXml);
-            }
-        }
-
-        if (isset($this->xmlDoc->Currencies) &&
-            isset($this->xmlDoc->Currencies->Currency) &&
-            !empty($this->xmlDoc->Currencies->Currency)) {
-            foreach ($this->xmlDoc->Currencies->Currency as $currencyXml) {
-                $this->currencies[] = new Currency($this->getOriginalResponse(), $currencyXml);
-            }
-        }
-    }
 
     /**
      * @return string
@@ -81,5 +57,29 @@ class Terminal extends PartialResponse
     public function getCurrencies() : array
     {
         return $this->currencies;
+    }
+
+    protected function init()
+    {
+        $this->natures = [];
+        $this->currencies = [];
+        $this->title = (string)$this->xmlDoc->Title;
+        $this->country = (string)$this->xmlDoc->Country;
+
+        if (isset($this->xmlDoc->Natures) &&
+            isset($this->xmlDoc->Natures->Nature) &&
+            !empty($this->xmlDoc->Natures->Nature)) {
+            foreach ($this->xmlDoc->Natures->Nature as $natureXml) {
+                $this->natures[] = new Nature($this->getOriginalResponse(), $natureXml);
+            }
+        }
+
+        if (isset($this->xmlDoc->Currencies) &&
+            isset($this->xmlDoc->Currencies->Currency) &&
+            !empty($this->xmlDoc->Currencies->Currency)) {
+            foreach ($this->xmlDoc->Currencies->Currency as $currencyXml) {
+                $this->currencies[] = new Currency($this->getOriginalResponse(), $currencyXml);
+            }
+        }
     }
 }

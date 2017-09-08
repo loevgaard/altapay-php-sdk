@@ -8,12 +8,27 @@ final class PayloadTest extends TestCase
 {
     public function testGetPayload()
     {
-        $stub = $this->getPayloadStub();
-        $this->assertTrue(is_array($stub->getPayload()));
+        $mock = $this->getPayloadStub();
+        $this->assertTrue(is_array($mock->getPayload()));
+    }
+
+    public function testCleanPayload()
+    {
+        $arr = [
+            'elm1' => 'val1',
+            'elm2' => null,
+            'elm3' => [],
+            'elm4' => ['nested']
+        ];
+
+        $this->assertSame([
+            'elm1' => 'val1',
+            'elm4' => ['nested']
+        ], Payload::simplePayload($arr));
     }
 
     /**
-     * @return Payload
+     * @return Payload|\PHPUnit_Framework_MockObject_MockObject
      */
     private function getPayloadStub()
     {

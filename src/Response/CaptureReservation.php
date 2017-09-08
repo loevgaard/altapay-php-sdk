@@ -1,7 +1,7 @@
 <?php
 namespace Loevgaard\AltaPay\Response;
 
-use Loevgaard\AltaPay\Response\CaptureReservation\Transaction;
+use Loevgaard\AltaPay\Response\Partial\Transaction;
 
 class CaptureReservation extends Response
 {
@@ -29,23 +29,6 @@ class CaptureReservation extends Response
      * @var Transaction[]
      */
     protected $transactions;
-
-    protected function init()
-    {
-        $this->transactions     = [];
-        $this->captureAmount    = (float)$this->xmlDoc->Body->CaptureAmount;
-        $this->captureCurrency  = (int)$this->xmlDoc->Body->CaptureCurrency;
-        $this->result           = (string)$this->xmlDoc->Body->Result;
-        $this->captureResult    = (string)$this->xmlDoc->Body->CaptureResult;
-
-        if (isset($this->xmlDoc->Body->Transactions) &&
-            isset($this->xmlDoc->Body->Transactions->Transaction) &&
-            !empty($this->xmlDoc->Body->Transactions->Transaction)) {
-            foreach ($this->xmlDoc->Body->Transactions->Transaction as $transactionXml) {
-                $this->transactions[] = new Transaction($this->getResponse(), $transactionXml);
-            }
-        }
-    }
 
     /**
      * @return float
@@ -87,5 +70,22 @@ class CaptureReservation extends Response
     public function getTransactions() : array
     {
         return $this->transactions;
+    }
+
+    protected function init()
+    {
+        $this->transactions     = [];
+        $this->captureAmount    = (float)$this->xmlDoc->Body->CaptureAmount;
+        $this->captureCurrency  = (int)$this->xmlDoc->Body->CaptureCurrency;
+        $this->result           = (string)$this->xmlDoc->Body->Result;
+        $this->captureResult    = (string)$this->xmlDoc->Body->CaptureResult;
+
+        if (isset($this->xmlDoc->Body->Transactions) &&
+            isset($this->xmlDoc->Body->Transactions->Transaction) &&
+            !empty($this->xmlDoc->Body->Transactions->Transaction)) {
+            foreach ($this->xmlDoc->Body->Transactions->Transaction as $transactionXml) {
+                $this->transactions[] = new Transaction($this->getResponse(), $transactionXml);
+            }
+        }
     }
 }

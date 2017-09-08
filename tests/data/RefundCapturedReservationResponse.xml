@@ -2,15 +2,15 @@
 <APIResponse version="20170228">
     <Header>
         <Date>2010-09-29T12:34:56+02:00</Date>
-        <Path>API/captureReservation</Path>
+        <Path>API/refundCapturedReservation</Path>
         <ErrorCode>0</ErrorCode>
         <ErrorMessage></ErrorMessage>
     </Header>
     <Body>
-        <CaptureAmount>0.20</CaptureAmount>
-        <CaptureCurrency>978</CaptureCurrency>
+        <RefundAmount>0.12</RefundAmount>
+        <RefundCurrency>978</RefundCurrency>
         <Result>Success</Result>
-        <CaptureResult>Success</CaptureResult> <!-- deprecated -->
+        <RefundResult>Success</RefundResult> <!-- deprecated -->
         <Transactions>
             <Transaction>
                 <TransactionId>1</TransactionId>
@@ -24,7 +24,7 @@
                 <ShopOrderId>myorderid</ShopOrderId>
                 <Shop>AltaPay Shop</Shop>
                 <Terminal>AltaPay Test Terminal</Terminal>
-                <TransactionStatus>captured</TransactionStatus>
+                <TransactionStatus>refunded</TransactionStatus>
                 <ReasonCode>NONE</ReasonCode>
                 <MerchantCurrency>978</MerchantCurrency>
                 <MerchantCurrencyAlpha>EUR</MerchantCurrencyAlpha>
@@ -32,10 +32,10 @@
                 <CardHolderCurrencyAlpha>EUR</CardHolderCurrencyAlpha>
                 <ReservedAmount>1.00</ReservedAmount>
                 <CapturedAmount>1.00</CapturedAmount>
-                <RefundedAmount>0</RefundedAmount>
+                <RefundedAmount>0.12</RefundedAmount>
                 <RecurringDefaultAmount>0</RecurringDefaultAmount>
-                <CreatedDate>2010-09-28 12:34:56</CreatedDate>
-                <UpdatedDate>2010-09-28 12:34:57</UpdatedDate>
+                <CreatedDate>2010-09-28 11:34:56</CreatedDate>
+                <UpdatedDate>2010-09-28 13:00:00</UpdatedDate>
                 <PaymentNature>CreditCard</PaymentNature>
                 <PaymentNatureService name="TestAcquirer">
                     <SupportsRefunds>true</SupportsRefunds>
@@ -69,8 +69,8 @@
                         <PostalCode>2860</PostalCode>
                         <Country>DK</Country>
                     </BillingAddress>
-                    <ShippingAddress />
-                    <RegisteredAddress />
+                    <ShippingAddress/>
+                    <RegisteredAddress/>
                 </CustomerInfo>
                 <ReconciliationIdentifiers>
                     <ReconciliationIdentifier>
@@ -78,6 +78,12 @@
                         <Amount currency="978">1.00</Amount>
                         <Type>captured</Type>
                         <Date>2010-09-28T12:00:00+02:00</Date>
+                    </ReconciliationIdentifier>
+                    <ReconciliationIdentifier>
+                        <Id>8774bcef-7549-4497-948e-82280ca69f80</Id>
+                        <Amount currency="978">0.12</Amount>
+                        <Type>refunded</Type>
+                        <Date>2010-09-28T13:00:00+02:00</Date>
                     </ReconciliationIdentifier>
                 </ReconciliationIdentifiers>
             </Transaction>

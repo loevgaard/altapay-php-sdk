@@ -3,10 +3,7 @@ namespace Loevgaard\AltaPay\Payload;
 
 use Assert\Assert;
 
-/**
- * @todo create assertions
- */
-class CaptureReservation extends Payload implements CaptureReservationInterface
+class RefundCapturedReservation extends Payload implements RefundCapturedReservationInterface
 {
     use OrderLineArrayTrait;
 
@@ -26,14 +23,14 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     private $reconciliationIdentifier;
 
     /**
-     * @var string
+     * @var boolean
      */
-    private $invoiceNumber;
+    private $allowOverRefund;
 
     /**
      * @var string
      */
-    private $salesTax;
+    private $invoiceNumber;
 
     public function __construct(string $transactionId)
     {
@@ -47,12 +44,12 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     public function getPayload() : array
     {
         $payload = [
-            'transaction_id' => $this->getTransactionId(),
-            'amount' => $this->getAmount(),
-            'reconciliation_identifier' => $this->getReconciliationIdentifier(),
-            'invoice_number' => $this->getInvoiceNumber(),
-            'sales_tax' => $this->getSalesTax(),
-            'orderLines' => $this->orderLines
+            'transaction_id' => $this->transactionId,
+            'amount' => $this->amount,
+            'reconciliation_identifier' => $this->reconciliationIdentifier,
+            'allow_over_refund' => is_bool($this->allowOverRefund) ? intval($this->allowOverRefund) : null,
+            'invoice_number' => $this->invoiceNumber,
+            'orderLines' => $this->orderLines,
         ];
 
         $this->validate();
@@ -65,22 +62,22 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
         Assert::that($this->transactionId)->string();
         Assert::thatNullOr($this->amount)->float();
         Assert::thatNullOr($this->reconciliationIdentifier)->string();
+        Assert::thatNullOr($this->allowOverRefund)->boolean();
         Assert::thatNullOr($this->invoiceNumber)->string();
-        Assert::thatNullOr($this->salesTax)->string();
         Assert::thatNullOr($this->orderLines)->isArray();
     }
 
     /**
      * @return string
      */
-    public function getTransactionId() : string
+    public function getTransactionId(): string
     {
         return $this->transactionId;
     }
 
     /**
      * @param string $transactionId
-     * @return CaptureReservation
+     * @return RefundCapturedReservation
      */
     public function setTransactionId(string $transactionId) : self
     {
@@ -91,14 +88,14 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     /**
      * @return float
      */
-    public function getAmount() : ?float
+    public function getAmount(): ?float
     {
         return $this->amount;
     }
 
     /**
      * @param float $amount
-     * @return CaptureReservation
+     * @return RefundCapturedReservation
      */
     public function setAmount(float $amount) : self
     {
@@ -109,14 +106,14 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     /**
      * @return string
      */
-    public function getReconciliationIdentifier() : ?string
+    public function getReconciliationIdentifier(): ?string
     {
         return $this->reconciliationIdentifier;
     }
 
     /**
      * @param string $reconciliationIdentifier
-     * @return CaptureReservation
+     * @return RefundCapturedReservation
      */
     public function setReconciliationIdentifier(string $reconciliationIdentifier) : self
     {
@@ -125,38 +122,38 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getInvoiceNumber() : ?string
+    public function isAllowOverRefund(): ?bool
     {
-        return $this->invoiceNumber;
+        return $this->allowOverRefund;
     }
 
     /**
-     * @param string $invoiceNumber
-     * @return CaptureReservation
+     * @param bool $allowOverRefund
+     * @return RefundCapturedReservation
      */
-    public function setInvoiceNumber(string $invoiceNumber) : self
+    public function setAllowOverRefund(bool $allowOverRefund) : self
     {
-        $this->invoiceNumber = $invoiceNumber;
+        $this->allowOverRefund = $allowOverRefund;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getSalesTax() : ?string
+    public function getInvoiceNumber(): ?string
     {
-        return $this->salesTax;
+        return $this->invoiceNumber;
     }
 
     /**
-     * @param string $salesTax
-     * @return CaptureReservation
+     * @param string $invoiceNumber
+     * @return RefundCapturedReservation
      */
-    public function setSalesTax(string $salesTax) : self
+    public function setInvoiceNumber(string $invoiceNumber) : self
     {
-        $this->salesTax = $salesTax;
+        $this->invoiceNumber = $invoiceNumber;
         return $this;
     }
 }

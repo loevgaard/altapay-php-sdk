@@ -1,7 +1,7 @@
 <?php
-namespace Loevgaard\AltaPay\Response\CaptureReservation\Transaction\CustomerInfo;
+namespace Loevgaard\AltaPay\Response\Partial\Transaction\CustomerInfo;
 
-use Loevgaard\AltaPay\Response\PartialResponse;
+use Loevgaard\AltaPay\Response\Partial\PartialResponse;
 
 class BillingAddress extends PartialResponse
 {
@@ -34,16 +34,6 @@ class BillingAddress extends PartialResponse
      * @var string
      */
     private $country;
-
-    protected function init()
-    {
-        $this->firstName = (string)$this->xmlDoc->Firstname;
-        $this->lastName = (string)$this->xmlDoc->Lastname;
-        $this->address = (string)$this->xmlDoc->Address;
-        $this->city = (string)$this->xmlDoc->City;
-        $this->postalCode = (string)$this->xmlDoc->PostalCode;
-        $this->country = (string)$this->xmlDoc->Country;
-    }
 
     /**
      * @return string
@@ -91,5 +81,15 @@ class BillingAddress extends PartialResponse
     public function getCountry() : string
     {
         return $this->country;
+    }
+
+    protected function init()
+    {
+        $this->firstName = (string)$this->xmlDoc->Firstname;
+        $this->lastName = (string)$this->xmlDoc->Lastname;
+        $this->address = (string)$this->xmlDoc->Address;
+        $this->city = (string)$this->xmlDoc->City;
+        $this->postalCode = (string)$this->xmlDoc->PostalCode;
+        $this->country = (string)$this->xmlDoc->Country;
     }
 }

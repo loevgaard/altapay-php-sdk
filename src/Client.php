@@ -5,9 +5,11 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
 use Loevgaard\AltaPay\Payload\CaptureReservationInterface;
 use Loevgaard\AltaPay\Payload\PaymentRequestInterface;
-use Loevgaard\AltaPay\Response\PaymentRequest as PaymentRequestResponse;
+use Loevgaard\AltaPay\Payload\RefundCapturedReservationInterface;
 use Loevgaard\AltaPay\Response\CaptureReservation as CaptureReservationResponse;
 use Loevgaard\AltaPay\Response\GetTerminals as GetTerminalsResponse;
+use Loevgaard\AltaPay\Response\PaymentRequest as PaymentRequestResponse;
+use Loevgaard\AltaPay\Response\RefundCapturedReservation as RefundCapturedReservationResponse;
 use Psr\Http\Message\ResponseInterface;
 
 class Client
@@ -110,13 +112,16 @@ class Client
         throw new \RuntimeException('Method is not implemented');
     }
 
+
     /**
-     * @codeCoverageIgnore
+     * @param RefundCapturedReservationInterface $refundCapturedReservation
+     * @return RefundCapturedReservationResponse
      */
-    public function refundCapturedReservation()
+    public function refundCapturedReservation(RefundCapturedReservationInterface $refundCapturedReservation) : RefundCapturedReservationResponse
     {
-        // @todo Implement method
-        throw new \RuntimeException('Method is not implemented');
+        return new RefundCapturedReservationResponse($this->doRequest('get', '/merchant/API/refundCapturedReservation', [
+            'query' => $refundCapturedReservation->getPayload()
+        ]));
     }
 
     /**
@@ -252,7 +257,6 @@ class Client
      */
     public function doRequest($method, $uri, array $options = null)
     {
-
         $url = $this->baseUrl.$uri;
         $options = $options ? : [];
         $defaultOptions = [];

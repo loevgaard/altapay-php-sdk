@@ -1,16 +1,16 @@
 <?php
 namespace Loevgaard\AltaPay\Payload;
 
+use Assert\Assert;
 use Loevgaard\AltaPay\Payload\PaymentRequest\Config;
 use Loevgaard\AltaPay\Payload\PaymentRequest\ConfigInterface;
 use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfo;
 use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfoInterface;
 
-/**
- * @todo create assertions
- */
 class PaymentRequest extends Payload implements PaymentRequestInterface
 {
+    use OrderLineArrayTrait;
+
     const ACCOUNT_OFFER_REQUIRED = 'required';
     const ACCOUNT_OFFER_DISABLED = 'disabled';
 
@@ -108,7 +108,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     private $shippingMethod;
 
     /**
-     * @var string
+     * @var \DateTimeInterface
      */
     private $customerCreatedDate;
 
@@ -121,11 +121,6 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      * @var string
      */
     private $accountOffer;
-
-    /**
-     * @var OrderLineInterface[]
-     */
-    private $orderLines;
 
     /**
      * @var CustomerInfoInterface
@@ -141,10 +136,10 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     {
         $this->cookieParts = [];
         $this->orderLines = [];
-        $this->setTerminal($terminal);
-        $this->setShopOrderId($shopOrderId);
-        $this->setAmount($amount);
-        $this->setCurrency($currency);
+        $this->terminal = $terminal;
+        $this->shopOrderId = $shopOrderId;
+        $this->amount = $amount;
+        $this->currency = $currency;
     }
 
     /**
@@ -155,49 +150,54 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
         $cookie = static::parseCookieParts($this->cookieParts);
 
         $payload = [
-            'terminal' => $this->getTerminal(),
-            'shop_orderid' => $this->getShopOrderId(),
-            'amount' => $this->getAmount(),
-            'currency' => $this->getCurrency(),
-            'language' => $this->getLanguage(),
-            'transaction_info' => $this->getTransactionInfo(),
-            'type' => $this->getType(),
-            'ccToken' => $this->getCcToken(),
-            'sale_reconciliation_identifier' => $this->getSaleReconciliationIdentifier(),
-            'sale_invoice_number' => $this->getSaleInvoiceNumber(),
-            'sales_tax' => $this->getSalesTax(),
+            'terminal' => $this->terminal,
+            'shop_orderid' => $this->shopOrderId,
+            'amount' => $this->amount,
+            'currency' => $this->currency,
+            'language' => $this->language,
+            'transaction_info' => $this->transactionInfo,
+            'type' => $this->type,
+            'ccToken' => $this->ccToken,
+            'sale_reconciliation_identifier' => $this->saleReconciliationIdentifier,
+            'sale_invoice_number' => $this->saleInvoiceNumber,
+            'sales_tax' => $this->salesTax,
             'cookie' => $cookie,
-            'payment_source' => $this->getPaymentSource(),
-            'fraud_service' => $this->getFraudService(),
-            'shipping_method' => $this->getShippingMethod(),
-            'customer_created_date' => $this->getCustomerCreatedDate(),
-            'organisation_number' => $this->getOrganisationNumber(),
-            'account_offer' => $this->getAccountOffer(),
+            'payment_source' => $this->paymentSource,
+            'fraud_service' => $this->fraudService,
+            'shipping_method' => $this->shippingMethod,
+            'customer_created_date' => $this->customerCreatedDate ? $this->customerCreatedDate->format('Y-m-d') : null,
+            'organisation_number' => $this->organisationNumber,
+            'account_offer' => $this->accountOffer,
+            'config' => $this->getConfig(),
+            'customer_info' => $this->getCustomerInfo(),
+            'orderLines' => $this->orderLines,
         ];
 
-        // set config payload if any
-        $config = $this->getConfig()->getPayload();
-        if (!empty($config)) {
-            $payload['config'] = $config;
-        }
+        $this->validate();
 
-        // set customer info payload if any
-        $customerInfo = $this->getCustomerInfo()->getPayload();
-        if (!empty($customerInfo)) {
-            $payload['customer_info'] = $customerInfo;
-        }
+        return static::simplePayload($payload);
+    }
 
-        // create order lines array
-        $orderLines = [];
-        foreach ($this->getOrderLines() as $orderLine) {
-            $orderLines[] = $orderLine->getPayload();
-        }
-
-        if (!empty($orderLines)) {
-            $payload['orderLines'] = $orderLines;
-        }
-
-        return $this->cleanPayload($payload);
+    public function validate()
+    {
+        Assert::that($this->terminal)->string();
+        Assert::that($this->shopOrderId)->string();
+        Assert::that($this->amount)->float();
+        Assert::that($this->currency)->string();
+        Assert::thatNullOr($this->language)->string();
+        Assert::thatNullOr($this->transactionInfo)->isArray();
+        Assert::thatNullOr($this->type)->string();
+        Assert::thatNullOr($this->ccToken)->string();
+        Assert::thatNullOr($this->saleReconciliationIdentifier)->string();
+        Assert::thatNullOr($this->saleInvoiceNumber)->string();
+        Assert::thatNullOr($this->salesTax)->float();
+        Assert::thatNullOr($this->paymentSource)->string();
+        Assert::thatNullOr($this->fraudService)->string();
+        Assert::thatNullOr($this->shippingMethod)->string();
+        Assert::thatNullOr($this->customerCreatedDate)->isInstanceOf(\DateTimeInterface::class);
+        Assert::thatNullOr($this->organisationNumber)->string();
+        Assert::thatNullOr($this->accountOffer)->string();
+        Assert::thatNullOr($this->orderLines)->isArray();
     }
 
     /**
@@ -215,16 +215,6 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
         $cookie = trim($cookie, ';');
 
         return $cookie;
-    }
-
-    /**
-     * @param OrderLineInterface $orderLine
-     * @return PaymentRequest
-     */
-    public function addOrderLine(OrderLineInterface $orderLine) : self
-    {
-        $this->orderLines[] = $orderLine;
-        return $this;
     }
 
     /**
@@ -518,18 +508,18 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     }
 
     /**
-     * @return string
+     * @return \DateTimeInterface
      */
-    public function getCustomerCreatedDate() : ?string
+    public function getCustomerCreatedDate() : ?\DateTimeInterface
     {
         return $this->customerCreatedDate;
     }
 
     /**
-     * @param string $customerCreatedDate
+     * @param \DateTimeInterface $customerCreatedDate
      * @return PaymentRequest
      */
-    public function setCustomerCreatedDate(string $customerCreatedDate) : self
+    public function setCustomerCreatedDate(\DateTimeInterface $customerCreatedDate) : self
     {
         $this->customerCreatedDate = $customerCreatedDate;
         return $this;
@@ -568,24 +558,6 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     public function setAccountOffer(string $accountOffer) : self
     {
         $this->accountOffer = $accountOffer;
-        return $this;
-    }
-
-    /**
-     * @return OrderLineInterface[]
-     */
-    public function getOrderLines() : ?array
-    {
-        return $this->orderLines;
-    }
-
-    /**
-     * @param OrderLineInterface[] $orderLines
-     * @return PaymentRequest
-     */
-    public function setOrderLines(array $orderLines) : self
-    {
-        $this->orderLines = $orderLines;
         return $this;
     }
 
