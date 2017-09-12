@@ -21,12 +21,24 @@ abstract class Payload implements PayloadInterface
     public static function simplePayload(array $payload) : array
     {
         $payload = array_filter($payload, function ($val) {
+            if ($val instanceof PayloadInterface) {
+                $val = $val->getPayload();
+            }
+
             // this will effectively remove empty arrays
             if (is_array($val) && empty($val)) {
                 return false;
             }
 
-            return !is_null($val) && $val !== '';
+            if(is_null($val)) {
+                return false;
+            }
+
+            if($val === '') {
+                return false;
+            }
+
+            return true;
         });
 
         foreach ($payload as $key => $val) {

@@ -2,6 +2,7 @@
 
 namespace Loevgaard\AltaPay\Payload;
 
+use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfo;
 use PHPUnit\Framework\TestCase;
 
 final class PayloadTest extends TestCase
@@ -12,19 +13,48 @@ final class PayloadTest extends TestCase
         $this->assertTrue(is_array($mock->getPayload()));
     }
 
-    public function testCleanPayload()
+    public function testSimplePayload()
     {
+        $customerInfoPayload = new CustomerInfo();
+        $customerInfoPayload->setBillingFirstName('First name');
+        $customerInfoPayload->setBillingLastName('');
+
         $arr = [
             'elm1' => 'val1',
             'elm2' => null,
             'elm3' => [],
-            'elm4' => ['nested']
+            'elm4' => ['nested'],
+            'elm5' => '',
+            'elm6' => $customerInfoPayload,
         ];
 
         $this->assertSame([
             'elm1' => 'val1',
-            'elm4' => ['nested']
+            'elm4' => ['nested'],
+            'elm6' => ['billing_firstname' => 'First name'],
         ], Payload::simplePayload($arr));
+    }
+
+    public function testSimplePayloadWithObjects()
+    {
+        $customerInfoPayload = new CustomerInfo();
+        $customerInfoPayload->setBillingFirstName('First name');
+        $customerInfoPayload->setBillingLastName('');
+
+        $paymentRequestPayload = new PaymentRequest('terminal', 'order123', 100, 'DKK');
+        $paymentRequestPayload->setCustomerInfo($customerInfoPayload);
+
+        $expected = [
+            'terminal' => 'terminal',
+            'shop_orderid' => 'order123',
+            'amount' => 100.0,
+            'currency' => 'DKK',
+            'customer_info' => [
+                'billing_firstname' => 'First name'
+            ],
+        ];
+
+        $this->assertSame($expected, $paymentRequestPayload->getPayload());
     }
 
     /**
