@@ -13,7 +13,7 @@ abstract class Payload implements PayloadInterface
 
     /**
      * If the input array contains objects of PayloadInterface it will convert these to simple arrays
-     * Also it will remove values that are null or empty arrays
+     * Also it will remove values that are null, empty string or empty arrays
      *
      * @param array $payload
      * @return array
@@ -26,7 +26,7 @@ abstract class Payload implements PayloadInterface
                 return false;
             }
 
-            return !is_null($val);
+            return !is_null($val) && $val !== '';
         });
 
         foreach ($payload as $key => $val) {
