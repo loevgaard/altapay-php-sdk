@@ -1,9 +1,9 @@
 <?php
-namespace Loevgaard\AltaPay\Response\GetTerminals\Terminal;
+namespace Loevgaard\AltaPay\Entity;
 
-use Loevgaard\AltaPay\Response\Partial\PartialResponse;
+use Loevgaard\AltaPay\Hydrator\HydratableInterface;
 
-class Nature extends PartialResponse
+class Nature implements HydratableInterface
 {
     /**
      * @var string
@@ -15,16 +15,16 @@ class Nature extends PartialResponse
         return (string)$this->nature;
     }
 
+    public function hydrateXml(\SimpleXMLElement $xml)
+    {
+        $this->nature = (string)$xml;
+    }
+
     /**
      * @return string
      */
     public function getNature(): string
     {
         return $this->nature;
-    }
-
-    protected function init()
-    {
-        $this->nature = (string)$this->xmlDoc;
     }
 }

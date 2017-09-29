@@ -7,7 +7,7 @@ use Loevgaard\AltaPay\Response\Partial\Transaction\PaymentInfo;
 use Loevgaard\AltaPay\Response\Partial\Transaction\PaymentNatureService;
 use Loevgaard\AltaPay\Response\Partial\Transaction\ReconciliationIdentifier;
 
-class Transaction extends PartialResponse
+class Transaction
 {
     /**
      * @var int
