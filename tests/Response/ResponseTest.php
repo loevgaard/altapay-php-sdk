@@ -2,7 +2,7 @@
 
 namespace Loevgaard\AltaPay\Response;
 
-use Loevgaard\AltaPay\Exception\ResponseException;
+use Loevgaard\AltaPay\Exception\XmlException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
@@ -48,12 +48,11 @@ XML;
         <ErrorCode>0</ErrorCode>
         <ErrorMessage/>
     </Header>
-    <Body></Body>
 </APIResponse>
 XML;
 
         $response = new \GuzzleHttp\Psr7\Response(200, [], $xml);
-        $this->expectException(ResponseException::class);
+        $this->expectException(XmlException::class);
 
         $this->getMockForAbstractClass(Response::class, [$response]);
     }

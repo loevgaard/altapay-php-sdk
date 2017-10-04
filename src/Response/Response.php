@@ -1,7 +1,7 @@
 <?php
 namespace Loevgaard\AltaPay\Response;
 
-use Loevgaard\AltaPay\Exception\ResponseException;
+use Loevgaard\AltaPay\Exception\XmlException;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
 abstract class Response implements ResponseInterface
@@ -66,7 +66,7 @@ abstract class Response implements ResponseInterface
 
     /**
      * @param PsrResponseInterface $response
-     * @throws ResponseException
+     * @throws XmlException
      */
     public function __construct(PsrResponseInterface $response)
     {
@@ -76,8 +76,8 @@ abstract class Response implements ResponseInterface
         $this->version = (string)$this->xmlDoc['version'];
         $this->date = \DateTimeImmutable::createFromFormat(DATE_RFC3339, (string)$this->xmlDoc->Header->Date);
         if ($this->date === false) {
-            $exception = new ResponseException('The date format is wrong in xml header');
-            $exception->setResponse($this->response);
+            $exception = new XmlException('The date format is wrong in xml header');
+            $exception->setXmlElement($this->xmlDoc);
             throw $exception;
         }
         $this->path = (string)$this->xmlDoc->Header->Path;
