@@ -22,7 +22,7 @@ class XmlException extends Exception
      */
     public function setXml(string $xml) : XmlException
     {
-        $this->$xml = $xml;
+        $this->xml = $xml;
         return $this;
     }
 

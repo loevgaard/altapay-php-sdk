@@ -39,7 +39,7 @@ trait CurrenciesTrait
 
     public function hydrateCurrencies(\SimpleXMLElement $xml)
     {
-        if(!isset($xml->Currencies) || !isset($xml->Currencies->Currency) || empty($xml->Currencies->Currency)) {
+        if (!isset($xml->Currencies) || !isset($xml->Currencies->Currency) || empty($xml->Currencies->Currency)) {
             return;
         }
 

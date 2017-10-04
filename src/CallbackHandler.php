@@ -18,7 +18,7 @@ class CallbackHandler
     {
         $body = $request->getParsedBody();
         $body = is_array($body) ? $body : [];
-        if(isset($body['xml'])) {
+        if (isset($body['xml'])) {
             $callback = new XmlCallback($request);
         } else {
             $callback = new FormCallback($request);

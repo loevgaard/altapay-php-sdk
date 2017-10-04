@@ -72,7 +72,7 @@ class PaymentNatureService implements HydratableInterface
 
     public function hydrateXml(\SimpleXMLElement $xml)
     {
-        if(!isset($xml->PaymentNatureService)) {
+        if (!isset($xml->PaymentNatureService)) {
             return;
         }
 

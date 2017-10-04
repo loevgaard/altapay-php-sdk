@@ -17,11 +17,27 @@ class CreditCardExpiry implements HydratableInterface
 
     public function hydrateXml(\SimpleXMLElement $xml)
     {
-        if(!isset($xml->CreditCardExpiry)) {
+        if (!isset($xml->CreditCardExpiry)) {
             return;
         }
 
         $this->year = (string)$xml->CreditCardExpiry->Year;
         $this->month = (string)$xml->CreditCardExpiry->Month;
+    }
+
+    /**
+     * @return int
+     */
+    public function getYear(): ?int
+    {
+        return $this->year;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMonth(): ?int
+    {
+        return $this->month;
     }
 }

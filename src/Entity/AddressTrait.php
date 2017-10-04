@@ -37,7 +37,7 @@ trait AddressTrait
     /**
      * @return string
      */
-    public function getFirstName() : string
+    public function getFirstName() : ?string
     {
         return $this->firstName;
     }
@@ -45,7 +45,7 @@ trait AddressTrait
     /**
      * @return string
      */
-    public function getLastName() : string
+    public function getLastName() : ?string
     {
         return $this->lastName;
     }
@@ -53,7 +53,7 @@ trait AddressTrait
     /**
      * @return string
      */
-    public function getAddress() : string
+    public function getAddress() : ?string
     {
         return $this->address;
     }
@@ -61,7 +61,7 @@ trait AddressTrait
     /**
      * @return string
      */
-    public function getCity() : string
+    public function getCity() : ?string
     {
         return $this->city;
     }
@@ -69,7 +69,7 @@ trait AddressTrait
     /**
      * @return string
      */
-    public function getPostalCode() : string
+    public function getPostalCode() : ?string
     {
         return $this->postalCode;
     }
@@ -77,7 +77,7 @@ trait AddressTrait
     /**
      * @return string
      */
-    public function getCountry() : string
+    public function getCountry() : ?string
     {
         return $this->country;
     }

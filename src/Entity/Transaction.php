@@ -216,25 +216,29 @@ class Transaction implements HydratableInterface
         $this->hydrateReconciliationIdentifiers($xml);
         $this->hydrateCreditCardExpiry($xml);
 
-        $this->createdDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$xml->CreatedDate);
-        if ($this->createdDate === false) {
-            $exception = new XmlException('The created date format is wrong');
-            $exception->setXmlElement($xml);
-            throw $exception;
+        if (isset($xml->CreatedDate)) {
+            $this->createdDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$xml->CreatedDate);
+            if ($this->createdDate === false) {
+                $exception = new XmlException('The created date format is wrong');
+                $exception->setXmlElement($xml);
+                throw $exception;
+            }
         }
 
-        $this->updatedDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$xml->UpdatedDate);
-        if ($this->updatedDate === false) {
-            $exception = new XmlException('The updated date format is wrong');
-            $exception->setXmlElement($xml);
-            throw $exception;
+        if (isset($xml->UpdatedDate)) {
+            $this->updatedDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$xml->UpdatedDate);
+            if ($this->updatedDate === false) {
+                $exception = new XmlException('The updated date format is wrong');
+                $exception->setXmlElement($xml);
+                throw $exception;
+            }
         }
     }
 
     /**
      * @return int
      */
-    public function getTransactionId() : int
+    public function getTransactionId() : ?int
     {
         return $this->transactionId;
     }
@@ -242,7 +246,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getPaymentId() : string
+    public function getPaymentId() : ?string
     {
         return $this->paymentId;
     }
@@ -250,7 +254,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getAuthType(): string
+    public function getAuthType(): ?string
     {
         return $this->authType;
     }
@@ -258,7 +262,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getCardStatus() : string
+    public function getCardStatus() : ?string
     {
         return $this->cardStatus;
     }
@@ -266,7 +270,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getCreditCardToken() : string
+    public function getCreditCardToken() : ?string
     {
         return $this->creditCardToken;
     }
@@ -274,7 +278,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getCreditCardMaskedPan() : string
+    public function getCreditCardMaskedPan() : ?string
     {
         return $this->creditCardMaskedPan;
     }
@@ -282,7 +286,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getThreeDSecureResult() : string
+    public function getThreeDSecureResult() : ?string
     {
         return $this->threeDSecureResult;
     }
@@ -290,7 +294,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getLiableForChargeback() : string
+    public function getLiableForChargeback() : ?string
     {
         return $this->liableForChargeback;
     }
@@ -298,7 +302,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getCVVCheckResult(): string
+    public function getCVVCheckResult(): ?string
     {
         return $this->CVVCheckResult;
     }
@@ -306,7 +310,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getBlacklistToken() : string
+    public function getBlacklistToken() : ?string
     {
         return $this->blacklistToken;
     }
@@ -314,7 +318,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getShopOrderId() : string
+    public function getShopOrderId() : ?string
     {
         return $this->shopOrderId;
     }
@@ -322,7 +326,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getShop() : string
+    public function getShop() : ?string
     {
         return $this->shop;
     }
@@ -330,7 +334,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getTerminal() : string
+    public function getTerminal() : ?string
     {
         return $this->terminal;
     }
@@ -338,7 +342,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getTransactionStatus() : string
+    public function getTransactionStatus() : ?string
     {
         return $this->transactionStatus;
     }
@@ -346,7 +350,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getReasonCode() : string
+    public function getReasonCode() : ?string
     {
         return $this->reasonCode;
     }
@@ -354,7 +358,7 @@ class Transaction implements HydratableInterface
     /**
      * @return int
      */
-    public function getMerchantCurrency() : int
+    public function getMerchantCurrency() : ?int
     {
         return $this->merchantCurrency;
     }
@@ -362,7 +366,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getMerchantCurrencyAlpha() : string
+    public function getMerchantCurrencyAlpha() : ?string
     {
         return $this->merchantCurrencyAlpha;
     }
@@ -370,7 +374,7 @@ class Transaction implements HydratableInterface
     /**
      * @return int
      */
-    public function getCardHolderCurrency() : int
+    public function getCardHolderCurrency() : ?int
     {
         return $this->cardHolderCurrency;
     }
@@ -378,7 +382,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getCardHolderCurrencyAlpha() : string
+    public function getCardHolderCurrencyAlpha() : ?string
     {
         return $this->cardHolderCurrencyAlpha;
     }
@@ -386,7 +390,7 @@ class Transaction implements HydratableInterface
     /**
      * @return float
      */
-    public function getReservedAmount() : float
+    public function getReservedAmount() : ?float
     {
         return $this->reservedAmount;
     }
@@ -394,7 +398,7 @@ class Transaction implements HydratableInterface
     /**
      * @return float
      */
-    public function getCapturedAmount() : float
+    public function getCapturedAmount() : ?float
     {
         return $this->capturedAmount;
     }
@@ -402,7 +406,7 @@ class Transaction implements HydratableInterface
     /**
      * @return float
      */
-    public function getRefundedAmount() : float
+    public function getRefundedAmount() : ?float
     {
         return $this->refundedAmount;
     }
@@ -410,7 +414,7 @@ class Transaction implements HydratableInterface
     /**
      * @return float
      */
-    public function getCreditedAmount(): float
+    public function getCreditedAmount(): ?float
     {
         return $this->creditedAmount;
     }
@@ -418,7 +422,7 @@ class Transaction implements HydratableInterface
     /**
      * @return float
      */
-    public function getRecurringDefaultAmount() : float
+    public function getRecurringDefaultAmount() : ?float
     {
         return $this->recurringDefaultAmount;
     }
@@ -426,7 +430,7 @@ class Transaction implements HydratableInterface
     /**
      * @return float
      */
-    public function getSurchargeAmount(): float
+    public function getSurchargeAmount(): ?float
     {
         return $this->surchargeAmount;
     }
@@ -434,7 +438,7 @@ class Transaction implements HydratableInterface
     /**
      * @return \DateTimeImmutable
      */
-    public function getCreatedDate() : \DateTimeImmutable
+    public function getCreatedDate() : ?\DateTimeImmutable
     {
         return $this->createdDate;
     }
@@ -442,7 +446,7 @@ class Transaction implements HydratableInterface
     /**
      * @return \DateTimeImmutable
      */
-    public function getUpdatedDate() : \DateTimeImmutable
+    public function getUpdatedDate() : ?\DateTimeImmutable
     {
         return $this->updatedDate;
     }
@@ -450,7 +454,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getPaymentNature() : string
+    public function getPaymentNature() : ?string
     {
         return $this->paymentNature;
     }
@@ -458,7 +462,7 @@ class Transaction implements HydratableInterface
     /**
      * @return float
      */
-    public function getFraudRiskScore() : float
+    public function getFraudRiskScore() : ?float
     {
         return $this->fraudRiskScore;
     }
@@ -466,7 +470,7 @@ class Transaction implements HydratableInterface
     /**
      * @return string
      */
-    public function getFraudExplanation() : string
+    public function getFraudExplanation() : ?string
     {
         return $this->fraudExplanation;
     }

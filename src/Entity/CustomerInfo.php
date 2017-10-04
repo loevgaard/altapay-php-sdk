@@ -40,19 +40,9 @@ class CustomerInfo implements HydratableInterface
      */
     private $organisationNumber;
 
-    /**
-     * @var string
-     */
-    private $shippingAddress;
-
-    /**
-     * @var string
-     */
-    private $registeredAddress;
-    
     public function hydrateXml(\SimpleXMLElement $xml)
     {
-        if(!isset($xml->CustomerInfo)) {
+        if (!isset($xml->CustomerInfo)) {
             return;
         }
 
@@ -74,7 +64,7 @@ class CustomerInfo implements HydratableInterface
     /**
      * @return string
      */
-    public function getUserAgent() : string
+    public function getUserAgent() : ?string
     {
         return $this->userAgent;
     }
@@ -82,7 +72,7 @@ class CustomerInfo implements HydratableInterface
     /**
      * @return string
      */
-    public function getIpAddress() : string
+    public function getIpAddress() : ?string
     {
         return $this->ipAddress;
     }
@@ -90,7 +80,7 @@ class CustomerInfo implements HydratableInterface
     /**
      * @return string
      */
-    public function getEmail() : string
+    public function getEmail() : ?string
     {
         return $this->email;
     }
@@ -98,7 +88,7 @@ class CustomerInfo implements HydratableInterface
     /**
      * @return string
      */
-    public function getUsername() : string
+    public function getUsername() : ?string
     {
         return $this->username;
     }
@@ -106,7 +96,7 @@ class CustomerInfo implements HydratableInterface
     /**
      * @return string
      */
-    public function getCustomerPhone() : string
+    public function getCustomerPhone() : ?string
     {
         return $this->customerPhone;
     }
@@ -114,32 +104,8 @@ class CustomerInfo implements HydratableInterface
     /**
      * @return string
      */
-    public function getOrganisationNumber() : string
+    public function getOrganisationNumber() : ?string
     {
         return $this->organisationNumber;
-    }
-
-    /**
-     * @return BillingAddress
-     */
-    public function getBillingAddress() : BillingAddress
-    {
-        return $this->billingAddress;
-    }
-
-    /**
-     * @return string
-     */
-    public function getShippingAddress() : string
-    {
-        return $this->shippingAddress;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRegisteredAddress() : string
-    {
-        return $this->registeredAddress;
     }
 }
