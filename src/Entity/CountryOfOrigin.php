@@ -17,6 +17,10 @@ class CountryOfOrigin implements HydratableInterface
 
     public function hydrateXml(\SimpleXMLElement $xml)
     {
+        if(!isset($xml->CountryOfOrigin)) {
+            return;
+        }
+
         $this->country = (string)$xml->CountryOfOrigin->Country;
         $this->source = (string)$xml->CountryOfOrigin->Source;
     }

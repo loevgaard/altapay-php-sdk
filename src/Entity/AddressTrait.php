@@ -87,11 +87,11 @@ trait AddressTrait
      */
     public function hydrateAddress(\SimpleXMLElement $xml)
     {
-        $this->firstName = (string)$xml->Firstname;
-        $this->lastName = (string)$xml->Lastname;
-        $this->address = (string)$xml->Address;
-        $this->city = (string)$xml->City;
-        $this->postalCode = (string)$xml->PostalCode;
-        $this->country = (string)$xml->Country;
+        $this->firstName = isset($xml->Firstname) ? (string)$xml->Firstname : null;
+        $this->lastName = isset($xml->Lastname) ? (string)$xml->Lastname : null;
+        $this->address = isset($xml->Address) ? (string)$xml->Address : null;
+        $this->city = isset($xml->City) ? (string)$xml->City : null;
+        $this->postalCode = isset($xml->PostalCode) ? (string)$xml->PostalCode : null;
+        $this->country = isset($xml->Country) ? (string)$xml->Country : null;
     }
 }

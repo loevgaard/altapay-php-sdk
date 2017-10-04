@@ -39,14 +39,16 @@ trait PaymentInfosTrait
 
     public function hydratePaymentInfos(\SimpleXMLElement $xml)
     {
+        if (!isset($xml->PaymentInfos) || !isset($xml->PaymentInfos->PaymentInfo) || empty($xml->PaymentInfos->PaymentInfo)) {
+            return;
+        }
+
         $this->initializePaymentInfos();
 
-        if (isset($xml->PaymentInfos) && isset($xml->PaymentInfos->PaymentInfo) && !empty($xml->PaymentInfos->PaymentInfo)) {
-            foreach ($xml->PaymentInfos->PaymentInfo as $paymentInfoXml) {
-                $paymentInfo = new PaymentInfo();
-                $paymentInfo->hydrateXml($paymentInfoXml);
-                $this->paymentInfos[] = $paymentInfo;
-            }
+        foreach ($xml->PaymentInfos->PaymentInfo as $paymentInfoXml) {
+            $paymentInfo = new PaymentInfo();
+            $paymentInfo->hydrateXml($paymentInfoXml);
+            $this->paymentInfos[] = $paymentInfo;
         }
     }
 

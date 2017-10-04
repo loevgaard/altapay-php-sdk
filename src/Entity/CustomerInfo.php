@@ -52,6 +52,10 @@ class CustomerInfo implements HydratableInterface
     
     public function hydrateXml(\SimpleXMLElement $xml)
     {
+        if(!isset($xml->CustomerInfo)) {
+            return;
+        }
+
         /** @var \SimpleXMLElement $customerInfo */
         $customerInfo = $xml->CustomerInfo;
         

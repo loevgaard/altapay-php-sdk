@@ -39,14 +39,16 @@ trait TerminalsTrait
 
     public function hydrateTerminals(\SimpleXMLElement $xml)
     {
+        if (!isset($xml->Terminals) || !isset($xml->Terminals->Terminal) || empty($xml->Terminals->Terminal)) {
+            return;
+        }
+
         $this->initializeTerminals();
 
-        if (isset($xml->Terminals) && isset($xml->Terminals->Terminal) && !empty($xml->Terminals->Terminal)) {
-            foreach ($xml->Terminals->Terminal as $terminalXml) {
-                $terminal = new Terminal();
-                $terminal->hydrateXml($terminalXml);
-                $this->terminals[] = $terminal;
-            }
+        foreach ($xml->Terminals->Terminal as $terminalXml) {
+            $terminal = new Terminal();
+            $terminal->hydrateXml($terminalXml);
+            $this->terminals[] = $terminal;
         }
     }
 

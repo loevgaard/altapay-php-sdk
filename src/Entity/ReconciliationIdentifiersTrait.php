@@ -39,15 +39,17 @@ trait ReconciliationIdentifiersTrait
 
     public function hydrateReconciliationIdentifiers(\SimpleXMLElement $xml)
     {
+        if (!isset($xml->ReconciliationIdentifiers) || !isset($xml->ReconciliationIdentifiers->ReconciliationIdentifier)
+            || empty($xml->ReconciliationIdentifiers->ReconciliationIdentifier)) {
+            return;
+        }
+
         $this->initializeReconciliationIdentifiers();
 
-        if (isset($xml->ReconciliationIdentifiers) && isset($xml->ReconciliationIdentifiers->ReconciliationIdentifier)
-            && !empty($xml->ReconciliationIdentifiers->ReconciliationIdentifier)) {
-            foreach ($xml->ReconciliationIdentifiers->ReconciliationIdentifier as $reconciliationIdentifierXml) {
-                $reconciliationIdentifier = new ReconciliationIdentifier();
-                $reconciliationIdentifier->hydrateXml($reconciliationIdentifierXml);
-                $this->reconciliationIdentifiers[] = $reconciliationIdentifier;
-            }
+        foreach ($xml->ReconciliationIdentifiers->ReconciliationIdentifier as $reconciliationIdentifierXml) {
+            $reconciliationIdentifier = new ReconciliationIdentifier();
+            $reconciliationIdentifier->hydrateXml($reconciliationIdentifierXml);
+            $this->reconciliationIdentifiers[] = $reconciliationIdentifier;
         }
     }
 

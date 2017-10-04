@@ -39,14 +39,16 @@ trait TransactionsTrait
 
     public function hydrateTransactions(\SimpleXMLElement $xml)
     {
+        if (!isset($xml->Transactions) || !isset($xml->Transactions->Transaction) || empty($xml->Transactions->Transaction)) {
+            return;
+        }
+
         $this->initializeTransactions();
 
-        if (isset($xml->Transactions) && isset($xml->Transactions->Transaction) && !empty($xml->Transactions->Transaction)) {
-            foreach ($xml->Transactions->Transaction as $transactionXml) {
-                $transaction = new Transaction();
-                $transaction->hydrateXml($transactionXml);
-                $this->transactions[] = $transaction;
-            }
+        foreach ($xml->Transactions->Transaction as $transactionXml) {
+            $transaction = new Transaction();
+            $transaction->hydrateXml($transactionXml);
+            $this->transactions[] = $transaction;
         }
     }
 

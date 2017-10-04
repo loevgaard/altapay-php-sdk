@@ -39,14 +39,16 @@ trait CurrenciesTrait
 
     public function hydrateCurrencies(\SimpleXMLElement $xml)
     {
+        if(!isset($xml->Currencies) || !isset($xml->Currencies->Currency) || empty($xml->Currencies->Currency)) {
+            return;
+        }
+
         $this->initializeCurrencies();
 
-        if (isset($xml->Currencies) && isset($xml->Currencies->Currency) && !empty($xml->Currencies->Currency)) {
-            foreach ($xml->Currencies->Currency as $currencyXml) {
-                $currency = new Currency();
-                $currency->hydrateXml($currencyXml);
-                $this->currencies[] = $currency;
-            }
+        foreach ($xml->Currencies->Currency as $currencyXml) {
+            $currency = new Currency();
+            $currency->hydrateXml($currencyXml);
+            $this->currencies[] = $currency;
         }
     }
 

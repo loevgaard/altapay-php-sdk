@@ -10,11 +10,13 @@ class ShippingAddress implements HydratableInterface
 
     public function hydrateXml(\SimpleXMLElement $xml)
     {
-        if (isset($xml->ShippingAddress)) {
-            /** @var \SimpleXMLElement $shippingAddress */
-            $shippingAddress = $xml->ShippingAddress;
-            
-            $this->hydrateAddress($shippingAddress);
+        if (!isset($xml->ShippingAddress)) {
+            return;
         }
+
+        /** @var \SimpleXMLElement $shippingAddress */
+        $shippingAddress = $xml->ShippingAddress;
+
+        $this->hydrateAddress($shippingAddress);
     }
 }

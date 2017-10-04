@@ -10,11 +10,13 @@ class RegisteredAddress implements HydratableInterface
 
     public function hydrateXml(\SimpleXMLElement $xml)
     {
-        if (isset($xml->RegisteredAddress)) {
-            /** @var \SimpleXMLElement $registeredAddress */
-            $registeredAddress = $xml->RegisteredAddress;
-            
-            $this->hydrateAddress($registeredAddress);
+        if (!isset($xml->RegisteredAddress)) {
+            return;
         }
+
+        /** @var \SimpleXMLElement $registeredAddress */
+        $registeredAddress = $xml->RegisteredAddress;
+
+        $this->hydrateAddress($registeredAddress);
     }
 }

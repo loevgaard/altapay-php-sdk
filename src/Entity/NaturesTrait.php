@@ -39,14 +39,16 @@ trait NaturesTrait
 
     public function hydrateNatures(\SimpleXMLElement $xml)
     {
+        if (!isset($xml->Natures) || !isset($xml->Natures->Nature) || empty($xml->Natures->Nature)) {
+            return;
+        }
+
         $this->initializeNatures();
 
-        if (isset($xml->Natures) && isset($xml->Natures->Nature) && !empty($xml->Natures->Nature)) {
-            foreach ($xml->Natures->Nature as $currencyXml) {
-                $nature = new Nature();
-                $nature->hydrateXml($currencyXml);
-                $this->natures[] = $nature;
-            }
+        foreach ($xml->Natures->Nature as $currencyXml) {
+            $nature = new Nature();
+            $nature->hydrateXml($currencyXml);
+            $this->natures[] = $nature;
         }
     }
 

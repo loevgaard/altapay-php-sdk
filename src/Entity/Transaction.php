@@ -10,6 +10,7 @@ class Transaction implements HydratableInterface
     use PaymentInfosTrait;
     use CustomerInfoTrait;
     use ReconciliationIdentifiersTrait;
+    use CreditCardExpiryTrait;
 
     /**
      * @var int
@@ -20,6 +21,11 @@ class Transaction implements HydratableInterface
      * @var string
      */
     private $paymentId;
+
+    /**
+     * @var string
+     */
+    private $authType;
 
     /**
      * @var string
@@ -45,6 +51,11 @@ class Transaction implements HydratableInterface
      * @var string
      */
     private $liableForChargeback;
+
+    /**
+     * @var string
+     */
+    private $CVVCheckResult;
 
     /**
      * @var string
@@ -114,7 +125,17 @@ class Transaction implements HydratableInterface
     /**
      * @var float
      */
+    private $creditedAmount;
+
+    /**
+     * @var float
+     */
     private $recurringDefaultAmount;
+
+    /**
+     * @var float
+     */
+    private $surchargeAmount;
 
     /**
      * @var \DateTimeImmutable
@@ -132,6 +153,21 @@ class Transaction implements HydratableInterface
     private $paymentNature;
 
     /**
+     * @var string
+     */
+    private $paymentSchemeName;
+
+    /**
+     * @var string
+     */
+    private $addressVerification;
+
+    /**
+     * @var string
+     */
+    private $addressVerificationDescription;
+
+    /**
      * @var float
      */
     private $fraudRiskScore;
@@ -145,11 +181,13 @@ class Transaction implements HydratableInterface
     {
         $this->transactionId = (int)$xml->TransactionId;
         $this->paymentId = (string)$xml->PaymentId;
+        $this->authType = isset($xml->AuthType) ? (string)$xml->AuthType : null;
         $this->cardStatus = (string)$xml->CardStatus;
         $this->creditCardToken = (string)$xml->CreditCardToken;
         $this->creditCardMaskedPan = (string)$xml->CreditCardMaskedPan;
         $this->threeDSecureResult = (string)$xml->ThreeDSecureResult;
         $this->liableForChargeback = (string)$xml->LiableForChargeback;
+        $this->CVVCheckResult = isset($xml->CVVCheckResult) ? (string)$xml->CVVCheckResult : null;
         $this->blacklistToken = (string)$xml->BlacklistToken;
         $this->shopOrderId = (string)$xml->ShopOrderId;
         $this->shop = (string)$xml->Shop;
@@ -163,14 +201,20 @@ class Transaction implements HydratableInterface
         $this->reservedAmount = (float)$xml->ReservedAmount;
         $this->capturedAmount = (float)$xml->CapturedAmount;
         $this->refundedAmount = (float)$xml->RefundedAmount;
+        $this->creditedAmount = isset($xml->CreditedAmount) ? (float)$xml->CreditedAmount : null;
         $this->recurringDefaultAmount = (float)$xml->RecurringDefaultAmount;
+        $this->surchargeAmount = isset($xml->SurchargeAmount) ? (float)$xml->SurchargeAmount : null;
         $this->paymentNature = (string)$xml->PaymentNature;
+        $this->paymentSchemeName = isset($xml->PaymentSchemeName) ? (string)$xml->PaymentSchemeName : null;
+        $this->addressVerification = isset($xml->AddressVerification) ? (string)$xml->AddressVerification : null;
+        $this->addressVerificationDescription = isset($xml->AddressVerificationDescription) ? (string)$xml->AddressVerificationDescription : null;
         $this->fraudRiskScore = (float)$xml->FraudRiskScore;
         $this->fraudExplanation = (string)$xml->FraudExplanation;
         $this->hydratePaymentNatureService($xml);
         $this->hydratePaymentInfos($xml);
         $this->hydrateCustomerInfo($xml);
         $this->hydrateReconciliationIdentifiers($xml);
+        $this->hydrateCreditCardExpiry($xml);
 
         $this->createdDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$xml->CreatedDate);
         if ($this->createdDate === false) {
@@ -201,6 +245,14 @@ class Transaction implements HydratableInterface
     public function getPaymentId() : string
     {
         return $this->paymentId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthType(): string
+    {
+        return $this->authType;
     }
 
     /**
@@ -241,6 +293,14 @@ class Transaction implements HydratableInterface
     public function getLiableForChargeback() : string
     {
         return $this->liableForChargeback;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCVVCheckResult(): string
+    {
+        return $this->CVVCheckResult;
     }
 
     /**
@@ -350,9 +410,25 @@ class Transaction implements HydratableInterface
     /**
      * @return float
      */
+    public function getCreditedAmount(): float
+    {
+        return $this->creditedAmount;
+    }
+
+    /**
+     * @return float
+     */
     public function getRecurringDefaultAmount() : float
     {
         return $this->recurringDefaultAmount;
+    }
+
+    /**
+     * @return float
+     */
+    public function getSurchargeAmount(): float
+    {
+        return $this->surchargeAmount;
     }
 
     /**

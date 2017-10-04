@@ -10,11 +10,13 @@ class BillingAddress implements HydratableInterface
 
     public function hydrateXml(\SimpleXMLElement $xml)
     {
-        if (isset($xml->BillingAddress)) {
-            /** @var \SimpleXMLElement $billingAddress */
-            $billingAddress = $xml->BillingAddress;
-
-            $this->hydrateAddress($billingAddress);
+        if (!isset($xml->BillingAddress)) {
+            return;
         }
+
+        /** @var \SimpleXMLElement $billingAddress */
+        $billingAddress = $xml->BillingAddress;
+
+        $this->hydrateAddress($billingAddress);
     }
 }

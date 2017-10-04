@@ -72,6 +72,10 @@ class PaymentNatureService implements HydratableInterface
 
     public function hydrateXml(\SimpleXMLElement $xml)
     {
+        if(!isset($xml->PaymentNatureService)) {
+            return;
+        }
+
         $this->name = (string)$xml->PaymentNatureService['name'];
         $this->supportsRefunds = (string)$xml->PaymentNatureService->SupportsRefunds === 'true';
         $this->supportsRelease = (string)$xml->PaymentNatureService->SupportsRelease === 'true';
