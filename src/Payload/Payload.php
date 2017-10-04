@@ -30,11 +30,11 @@ abstract class Payload implements PayloadInterface
                 return false;
             }
 
-            if(is_null($val)) {
+            if (is_null($val)) {
                 return false;
             }
 
-            if($val === '') {
+            if ($val === '') {
                 return false;
             }
 

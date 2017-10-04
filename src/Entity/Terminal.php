@@ -34,17 +34,11 @@ class Terminal implements HydratableInterface
         return $this->country;
     }
 
-    /**
-     * @return Nature[]
-     */
-    public function getNatures() : array
-    {
-        return $this->natures;
-    }
-
     public function hydrateXml(\SimpleXMLElement $xml)
     {
         $this->title = (string)$xml->Title;
         $this->country = (string)$xml->Country;
+        $this->hydrateCurrencies($xml);
+        $this->hydrateNatures($xml);
     }
 }

@@ -13,6 +13,8 @@ class GetTerminals extends Response
     {
         /** @var \SimpleXMLElement $body */
         $body = $this->xmlDoc->Body;
+
+        $this->hydrateResult($body);
         $this->hydrateTerminals($body);
     }
 }

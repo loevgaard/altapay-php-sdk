@@ -52,7 +52,7 @@ trait NaturesTrait
 
     private function initializeNatures()
     {
-        if(is_null($this->natures)) {
+        if (is_null($this->natures)) {
             $this->natures = [];
         }
     }

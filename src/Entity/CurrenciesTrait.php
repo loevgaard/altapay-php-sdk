@@ -52,7 +52,7 @@ trait CurrenciesTrait
 
     private function initializeCurrencies()
     {
-        if(is_null($this->currencies)) {
+        if (is_null($this->currencies)) {
             $this->currencies = [];
         }
     }

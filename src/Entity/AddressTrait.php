@@ -1,9 +1,8 @@
 <?php
-namespace Loevgaard\AltaPay\Response\Partial\Transaction\CustomerInfo;
 
-use Loevgaard\AltaPay\Response\Partial\PartialResponse;
+namespace Loevgaard\AltaPay\Entity;
 
-class BillingAddress extends PartialResponse
+trait AddressTrait
 {
     /**
      * @var string
@@ -83,13 +82,16 @@ class BillingAddress extends PartialResponse
         return $this->country;
     }
 
-    protected function init()
+    /**
+     * @param \SimpleXMLElement $xml
+     */
+    public function hydrateAddress(\SimpleXMLElement $xml)
     {
-        $this->firstName = (string)$this->xmlDoc->Firstname;
-        $this->lastName = (string)$this->xmlDoc->Lastname;
-        $this->address = (string)$this->xmlDoc->Address;
-        $this->city = (string)$this->xmlDoc->City;
-        $this->postalCode = (string)$this->xmlDoc->PostalCode;
-        $this->country = (string)$this->xmlDoc->Country;
+        $this->firstName = (string)$xml->Firstname;
+        $this->lastName = (string)$xml->Lastname;
+        $this->address = (string)$xml->Address;
+        $this->city = (string)$xml->City;
+        $this->postalCode = (string)$xml->PostalCode;
+        $this->country = (string)$xml->Country;
     }
 }

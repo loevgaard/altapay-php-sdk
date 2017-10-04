@@ -1,9 +1,9 @@
 <?php
-namespace Loevgaard\AltaPay\Response\Partial\Transaction;
+namespace Loevgaard\AltaPay\Entity;
 
-use Loevgaard\AltaPay\Response\Partial\PartialResponse;
+use Loevgaard\AltaPay\Hydrator\HydratableInterface;
 
-class PaymentInfo extends PartialResponse
+class PaymentInfo implements HydratableInterface
 {
     /**
      * @var string
@@ -31,9 +31,9 @@ class PaymentInfo extends PartialResponse
         return $this->value;
     }
 
-    protected function init()
+    public function hydrateXml(\SimpleXMLElement $xml)
     {
-        $this->name = (string)$this->xmlDoc['name'];
-        $this->value = (string)$this->xmlDoc;
+        $this->name = (string)$xml['name'];
+        $this->value = (string)$xml;
     }
 }

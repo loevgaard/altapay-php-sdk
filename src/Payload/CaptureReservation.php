@@ -3,9 +3,6 @@ namespace Loevgaard\AltaPay\Payload;
 
 use Assert\Assert;
 
-/**
- * @todo create assertions
- */
 class CaptureReservation extends Payload implements CaptureReservationInterface
 {
     use OrderLineArrayTrait;
@@ -31,7 +28,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     private $invoiceNumber;
 
     /**
-     * @var string
+     * @var float
      */
     private $salesTax;
 
@@ -47,11 +44,11 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     public function getPayload() : array
     {
         $payload = [
-            'transaction_id' => $this->getTransactionId(),
-            'amount' => $this->getAmount(),
-            'reconciliation_identifier' => $this->getReconciliationIdentifier(),
-            'invoice_number' => $this->getInvoiceNumber(),
-            'sales_tax' => $this->getSalesTax(),
+            'transaction_id' => $this->transactionId,
+            'amount' => $this->amount,
+            'reconciliation_identifier' => $this->reconciliationIdentifier,
+            'invoice_number' => $this->invoiceNumber,
+            'sales_tax' => $this->salesTax,
             'orderLines' => $this->orderLines
         ];
 
@@ -66,8 +63,8 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
         Assert::thatNullOr($this->amount)->float();
         Assert::thatNullOr($this->reconciliationIdentifier)->string();
         Assert::thatNullOr($this->invoiceNumber)->string();
-        Assert::thatNullOr($this->salesTax)->string();
-        Assert::thatNullOr($this->orderLines)->isArray();
+        Assert::thatNullOr($this->salesTax)->float();
+        Assert::that($this->orderLines)->isArray();
     }
 
     /**
@@ -143,18 +140,18 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     }
 
     /**
-     * @return string
+     * @return float
      */
-    public function getSalesTax() : ?string
+    public function getSalesTax() : ?float
     {
         return $this->salesTax;
     }
 
     /**
-     * @param string $salesTax
+     * @param float $salesTax
      * @return CaptureReservation
      */
-    public function setSalesTax(string $salesTax) : self
+    public function setSalesTax(float $salesTax) : self
     {
         $this->salesTax = $salesTax;
         return $this;

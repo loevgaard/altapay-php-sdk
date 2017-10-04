@@ -52,7 +52,7 @@ trait TerminalsTrait
 
     private function initializeTerminals()
     {
-        if(is_null($this->terminals)) {
+        if (is_null($this->terminals)) {
             $this->terminals = [];
         }
     }

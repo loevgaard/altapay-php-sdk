@@ -1,14 +1,11 @@
 <?php
 namespace Loevgaard\AltaPay\Response;
 
+use Loevgaard\AltaPay\Entity\ResultTrait;
+
 class PaymentRequest extends Response
 {
-    const RESULT_SUCCESS = 'Success';
-
-    /**
-     * @var string
-     */
-    protected $result;
+    use ResultTrait;
 
     /**
      * @var string
@@ -24,19 +21,6 @@ class PaymentRequest extends Response
      * @var string
      */
     protected $dynamicJavascriptUrl;
-
-    public function isSuccessful() : bool
-    {
-        return parent::isSuccessful() && $this->result === self::RESULT_SUCCESS;
-    }
-
-    /**
-     * @return string
-     */
-    public function getResult() : string
-    {
-        return $this->result;
-    }
 
     /**
      * @return string
@@ -64,9 +48,12 @@ class PaymentRequest extends Response
 
     protected function init()
     {
-        $this->result               = (string)$this->xmlDoc->Body->Result;
-        $this->paymentRequestId     = (string)$this->xmlDoc->Body->PaymentRequestId;
-        $this->url                  = (string)$this->xmlDoc->Body->Url;
-        $this->dynamicJavascriptUrl = (string)$this->xmlDoc->Body->DynamicJavascriptUrl;
+        /** @var \SimpleXMLElement $body */
+        $body = $this->xmlDoc->Body;
+
+        $this->paymentRequestId     = (string)$body->PaymentRequestId;
+        $this->url                  = (string)$body->Url;
+        $this->dynamicJavascriptUrl = (string)$body->DynamicJavascriptUrl;
+        $this->hydrateResult($body);
     }
 }

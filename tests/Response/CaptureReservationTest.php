@@ -2,11 +2,13 @@
 
 namespace Loevgaard\AltaPay\Response;
 
-use Loevgaard\AltaPay\Response\Partial\Transaction;
-use Loevgaard\AltaPay\Response\Partial\Transaction\CustomerInfo;
-use Loevgaard\AltaPay\Response\Partial\Transaction\PaymentInfo;
-use Loevgaard\AltaPay\Response\Partial\Transaction\PaymentNatureService;
-use Loevgaard\AltaPay\Response\Partial\Transaction\ReconciliationIdentifier;
+use Loevgaard\AltaPay\Entity\BillingAddress;
+use Loevgaard\AltaPay\Entity\CountryOfOrigin;
+use Loevgaard\AltaPay\Entity\CustomerInfo;
+use Loevgaard\AltaPay\Entity\PaymentInfo;
+use Loevgaard\AltaPay\Entity\PaymentNatureService;
+use Loevgaard\AltaPay\Entity\ReconciliationIdentifier;
+use Loevgaard\AltaPay\Entity\Transaction;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
@@ -35,7 +37,6 @@ final class CaptureReservationTest extends TestCase
          */
         $transactionResponse = $captureReservationResponse->getTransactions()[0];
         $this->assertInstanceOf(Transaction::class, $transactionResponse);
-        $this->assertSame($captureReservationResponse->getResponse(), $transactionResponse->getOriginalResponse());
 
         $this->assertTrue(is_int($transactionResponse->getTransactionId()));
         $this->assertSame(1, $transactionResponse->getTransactionId());
@@ -69,22 +70,14 @@ final class CaptureReservationTest extends TestCase
 
         // test payment nature
         $this->assertInstanceOf(PaymentNatureService::class, $transactionResponse->getPaymentNatureService());
-        $this->assertSame(
-            $captureReservationResponse->getResponse(),
-            $transactionResponse->getPaymentNatureService()->getOriginalResponse()
-        );
         $this->assertTrue(is_string($transactionResponse->getPaymentNatureService()->getName()));
-        $this->assertTrue(is_bool($transactionResponse->getPaymentNatureService()->getSupportsRefunds()));
-        $this->assertTrue($transactionResponse->getPaymentNatureService()->getSupportsRefunds());
+        $this->assertTrue($transactionResponse->getPaymentNatureService()->isSupportsRefunds());
 
-        $this->assertTrue(is_bool($transactionResponse->getPaymentNatureService()->getSupportsRelease()));
-        $this->assertTrue($transactionResponse->getPaymentNatureService()->getSupportsRelease());
+        $this->assertTrue($transactionResponse->getPaymentNatureService()->isSupportsRelease());
 
-        $this->assertTrue(is_bool($transactionResponse->getPaymentNatureService()->getSupportsMultipleCaptures()));
-        $this->assertTrue($transactionResponse->getPaymentNatureService()->getSupportsMultipleCaptures());
+        $this->assertTrue($transactionResponse->getPaymentNatureService()->isSupportsMultipleCaptures());
 
-        $this->assertTrue(is_bool($transactionResponse->getPaymentNatureService()->getSupportsMultipleRefunds()));
-        $this->assertFalse($transactionResponse->getPaymentNatureService()->getSupportsMultipleRefunds());
+        $this->assertFalse($transactionResponse->getPaymentNatureService()->isSupportsMultipleRefunds());
 
         // test payment infos
         $this->assertTrue(is_array($transactionResponse->getPaymentInfos()));
@@ -106,7 +99,7 @@ final class CaptureReservationTest extends TestCase
         $this->assertSame('12345678', $transactionResponse->getCustomerInfo()->getOrganisationNumber());
 
         $this->assertInstanceOf(
-            CustomerInfo\CountryOfOrigin::class,
+            CountryOfOrigin::class,
             $transactionResponse->getCustomerInfo()->getCountryOfOrigin()
         );
         $this->assertSame('DK', $transactionResponse->getCustomerInfo()->getCountryOfOrigin()->getCountry());
@@ -116,7 +109,7 @@ final class CaptureReservationTest extends TestCase
         );
 
         $this->assertInstanceOf(
-            CustomerInfo\BillingAddress::class,
+            BillingAddress::class,
             $transactionResponse->getCustomerInfo()->getBillingAddress()
         );
         $this->assertSame('Palle', $transactionResponse->getCustomerInfo()->getBillingAddress()->getFirstName());

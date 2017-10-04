@@ -1,14 +1,16 @@
 <?php
-namespace Loevgaard\AltaPay\Response\Partial;
+namespace Loevgaard\AltaPay\Entity;
 
-use Loevgaard\AltaPay\Exception\ResponseException;
-use Loevgaard\AltaPay\Response\Partial\Transaction\CustomerInfo;
-use Loevgaard\AltaPay\Response\Partial\Transaction\PaymentInfo;
-use Loevgaard\AltaPay\Response\Partial\Transaction\PaymentNatureService;
-use Loevgaard\AltaPay\Response\Partial\Transaction\ReconciliationIdentifier;
+use Loevgaard\AltaPay\Exception\XmlException;
+use Loevgaard\AltaPay\Hydrator\HydratableInterface;
 
-class Transaction
+class Transaction implements HydratableInterface
 {
+    use PaymentNatureServiceTrait;
+    use PaymentInfosTrait;
+    use CustomerInfoTrait;
+    use ReconciliationIdentifiersTrait;
+
     /**
      * @var int
      */
@@ -130,11 +132,6 @@ class Transaction
     private $paymentNature;
 
     /**
-     * @var PaymentNatureService
-     */
-    private $paymentNatureService;
-
-    /**
      * @var float
      */
     private $fraudRiskScore;
@@ -144,20 +141,51 @@ class Transaction
      */
     private $fraudExplanation;
 
-    /**
-     * @var PaymentInfo[]
-     */
-    private $paymentInfos;
+    public function hydrateXml(\SimpleXMLElement $xml)
+    {
+        $this->transactionId = (int)$xml->TransactionId;
+        $this->paymentId = (string)$xml->PaymentId;
+        $this->cardStatus = (string)$xml->CardStatus;
+        $this->creditCardToken = (string)$xml->CreditCardToken;
+        $this->creditCardMaskedPan = (string)$xml->CreditCardMaskedPan;
+        $this->threeDSecureResult = (string)$xml->ThreeDSecureResult;
+        $this->liableForChargeback = (string)$xml->LiableForChargeback;
+        $this->blacklistToken = (string)$xml->BlacklistToken;
+        $this->shopOrderId = (string)$xml->ShopOrderId;
+        $this->shop = (string)$xml->Shop;
+        $this->terminal = (string)$xml->Terminal;
+        $this->transactionStatus = (string)$xml->TransactionStatus;
+        $this->reasonCode = (string)$xml->ReasonCode;
+        $this->merchantCurrency = (int)$xml->MerchantCurrency;
+        $this->merchantCurrencyAlpha = (string)$xml->MerchantCurrencyAlpha;
+        $this->cardHolderCurrency = (int)$xml->CardHolderCurrency;
+        $this->cardHolderCurrencyAlpha = (string)$xml->CardHolderCurrencyAlpha;
+        $this->reservedAmount = (float)$xml->ReservedAmount;
+        $this->capturedAmount = (float)$xml->CapturedAmount;
+        $this->refundedAmount = (float)$xml->RefundedAmount;
+        $this->recurringDefaultAmount = (float)$xml->RecurringDefaultAmount;
+        $this->paymentNature = (string)$xml->PaymentNature;
+        $this->fraudRiskScore = (float)$xml->FraudRiskScore;
+        $this->fraudExplanation = (string)$xml->FraudExplanation;
+        $this->hydratePaymentNatureService($xml);
+        $this->hydratePaymentInfos($xml);
+        $this->hydrateCustomerInfo($xml);
+        $this->hydrateReconciliationIdentifiers($xml);
 
-    /**
-     * @var CustomerInfo
-     */
-    private $customerInfo;
+        $this->createdDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$xml->CreatedDate);
+        if ($this->createdDate === false) {
+            $exception = new XmlException('The created date format is wrong');
+            $exception->setXmlElement($xml);
+            throw $exception;
+        }
 
-    /**
-     * @var ReconciliationIdentifier[]
-     */
-    private $reconciliationIdentifiers;
+        $this->updatedDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$xml->UpdatedDate);
+        if ($this->updatedDate === false) {
+            $exception = new XmlException('The updated date format is wrong');
+            $exception->setXmlElement($xml);
+            throw $exception;
+        }
+    }
 
     /**
      * @return int
@@ -352,14 +380,6 @@ class Transaction
     }
 
     /**
-     * @return PaymentNatureService
-     */
-    public function getPaymentNatureService()
-    {
-        return $this->paymentNatureService;
-    }
-
-    /**
      * @return float
      */
     public function getFraudRiskScore() : float
@@ -373,103 +393,5 @@ class Transaction
     public function getFraudExplanation() : string
     {
         return $this->fraudExplanation;
-    }
-
-    /**
-     * @return PaymentInfo[]
-     */
-    public function getPaymentInfos() : array
-    {
-        return $this->paymentInfos;
-    }
-
-    /**
-     * @return CustomerInfo
-     */
-    public function getCustomerInfo() : CustomerInfo
-    {
-        return $this->customerInfo;
-    }
-
-    /**
-     * @return ReconciliationIdentifier[]
-     */
-    public function getReconciliationIdentifiers() : array
-    {
-        return $this->reconciliationIdentifiers;
-    }
-
-    protected function init()
-    {
-        $this->transactionId = (int)$this->xmlDoc->TransactionId;
-        $this->paymentId = (string)$this->xmlDoc->PaymentId;
-        $this->cardStatus = (string)$this->xmlDoc->CardStatus;
-        $this->creditCardToken = (string)$this->xmlDoc->CreditCardToken;
-        $this->creditCardMaskedPan = (string)$this->xmlDoc->CreditCardMaskedPan;
-        $this->threeDSecureResult = (string)$this->xmlDoc->ThreeDSecureResult;
-        $this->liableForChargeback = (string)$this->xmlDoc->LiableForChargeback;
-        $this->blacklistToken = (string)$this->xmlDoc->BlacklistToken;
-        $this->shopOrderId = (string)$this->xmlDoc->ShopOrderId;
-        $this->shop = (string)$this->xmlDoc->Shop;
-        $this->terminal = (string)$this->xmlDoc->Terminal;
-        $this->transactionStatus = (string)$this->xmlDoc->TransactionStatus;
-        $this->reasonCode = (string)$this->xmlDoc->ReasonCode;
-        $this->merchantCurrency = (int)$this->xmlDoc->MerchantCurrency;
-        $this->merchantCurrencyAlpha = (string)$this->xmlDoc->MerchantCurrencyAlpha;
-        $this->cardHolderCurrency = (int)$this->xmlDoc->CardHolderCurrency;
-        $this->cardHolderCurrencyAlpha = (string)$this->xmlDoc->CardHolderCurrencyAlpha;
-        $this->reservedAmount = (float)$this->xmlDoc->ReservedAmount;
-        $this->capturedAmount = (float)$this->xmlDoc->CapturedAmount;
-        $this->refundedAmount = (float)$this->xmlDoc->RefundedAmount;
-        $this->recurringDefaultAmount = (float)$this->xmlDoc->RecurringDefaultAmount;
-        $this->paymentNature = (string)$this->xmlDoc->PaymentNature;
-        $this->fraudRiskScore = (float)$this->xmlDoc->FraudRiskScore;
-        $this->fraudExplanation = (string)$this->xmlDoc->FraudExplanation;
-
-        $this->createdDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$this->xmlDoc->CreatedDate);
-        if ($this->createdDate === false) {
-            $exception = new ResponseException('The created date format is wrong');
-            $exception->setResponse($this->getOriginalResponse());
-            throw $exception;
-        }
-
-        $this->updatedDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string)$this->xmlDoc->UpdatedDate);
-        if ($this->updatedDate === false) {
-            $exception = new ResponseException('The updated date format is wrong');
-            $exception->setResponse($this->getOriginalResponse());
-            throw $exception;
-        }
-
-        // populating payment nature service object
-        $this->paymentNatureService = new PaymentNatureService(
-            $this->getOriginalResponse(),
-            $this->xmlDoc->PaymentNatureService
-        );
-
-        // populating payment info objects
-        $this->paymentInfos = [];
-        if (isset($this->xmlDoc->PaymentInfos) &&
-            isset($this->xmlDoc->PaymentInfos->PaymentInfo) &&
-            !empty($this->xmlDoc->PaymentInfos->PaymentInfo)) {
-            foreach ($this->xmlDoc->PaymentInfos->PaymentInfo as $paymentInfo) {
-                $this->paymentInfos[] = new PaymentInfo($this->getOriginalResponse(), $paymentInfo);
-            }
-        }
-
-        // populating customer info object
-        $this->customerInfo = new Transaction\CustomerInfo($this->getOriginalResponse(), $this->xmlDoc->CustomerInfo);
-
-        // populating reconciliation identifiers
-        $this->reconciliationIdentifiers = [];
-        if (isset($this->xmlDoc->ReconciliationIdentifiers) &&
-            isset($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier) &&
-            !empty($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier)) {
-            foreach ($this->xmlDoc->ReconciliationIdentifiers->ReconciliationIdentifier as $reconciliationIdentifier) {
-                $this->reconciliationIdentifiers[] = new ReconciliationIdentifier(
-                    $this->getOriginalResponse(),
-                    $reconciliationIdentifier
-                );
-            }
-        }
     }
 }

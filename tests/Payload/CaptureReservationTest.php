@@ -11,14 +11,14 @@ final class CaptureReservationTest extends TestCase
         $captureReservation = new CaptureReservation('transactionid');
         $captureReservation
             ->setAmount(1)
-            ->setSalesTax('100')
+            ->setSalesTax(100)
             ->setInvoiceNumber('invoice123')
             ->setReconciliationIdentifier('reconciliationIdentifier')
         ;
 
         $this->assertSame('transactionid', $captureReservation->getTransactionId());
         $this->assertSame(1.0, $captureReservation->getAmount());
-        $this->assertSame('100', $captureReservation->getSalesTax());
+        $this->assertSame(100.0, $captureReservation->getSalesTax());
         $this->assertSame('invoice123', $captureReservation->getInvoiceNumber());
         $this->assertSame('reconciliationIdentifier', $captureReservation->getReconciliationIdentifier());
 

@@ -6,6 +6,9 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use Loevgaard\AltaPay\Entity\Currency;
+use Loevgaard\AltaPay\Entity\Nature;
+use Loevgaard\AltaPay\Entity\Terminal;
 use Loevgaard\AltaPay\Payload\CaptureReservation;
 use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
 use Loevgaard\AltaPay\Payload\RefundCapturedReservation;
@@ -100,7 +103,7 @@ final class ClientTest extends TestCase
         $this->assertCount(2, $terminals);
 
         // test first terminal
-        /** @var GetTerminalsResponse\Terminal $terminal */
+        /** @var Terminal $terminal */
         $terminal = $terminals[0];
         $this->assertEquals('AltaPay Multi-Nature Terminal', $terminal->getTitle());
         $this->assertEquals('DK', $terminal->getCountry());
@@ -112,7 +115,7 @@ final class ClientTest extends TestCase
         $this->assertCount(4, $natures);
 
         // test first nature of first terminal
-        /** @var GetTerminalsResponse\Terminal\Nature $nature */
+        /** @var Nature $nature */
         $nature = $natures[0];
         $this->assertEquals('CreditCard', $nature->getNature());
 
@@ -123,7 +126,7 @@ final class ClientTest extends TestCase
         $this->assertCount(2, $currencies);
 
         // test first currency of first terminal
-        /** @var GetTerminalsResponse\Terminal\Currency $currency */
+        /** @var Currency $currency */
         $currency = $currencies[0];
         $this->assertEquals('DKK', $currency->getCurrency());
     }

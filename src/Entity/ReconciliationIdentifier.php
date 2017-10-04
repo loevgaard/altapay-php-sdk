@@ -1,10 +1,10 @@
 <?php
-namespace Loevgaard\AltaPay\Response\Partial\Transaction;
+namespace Loevgaard\AltaPay\Entity;
 
-use Loevgaard\AltaPay\Exception\ResponseException;
-use Loevgaard\AltaPay\Response\Partial\PartialResponse;
+use Loevgaard\AltaPay\Exception\XmlException;
+use Loevgaard\AltaPay\Hydrator\HydratableInterface;
 
-class ReconciliationIdentifier extends PartialResponse
+class ReconciliationIdentifier implements HydratableInterface
 {
     /**
      * @var string
@@ -30,6 +30,21 @@ class ReconciliationIdentifier extends PartialResponse
      * @var \DateTimeImmutable
      */
     private $date;
+
+    public function hydrateXml(\SimpleXMLElement $xml)
+    {
+        $this->id = (string)$xml->Id;
+        $this->amount = (float)$xml->Amount;
+        $this->amountCurrency = (int)$xml->Amount['currency'];
+        $this->type = (string)$xml->Type;
+
+        $this->date = \DateTimeImmutable::createFromFormat(DATE_RFC3339, (string)$xml->Date);
+        if ($this->date === false) {
+            $exception = new XmlException('The date format is wrong');
+            $exception->setXmlElement($xml);
+            throw $exception;
+        }
+    }
 
     /**
      * @return string
@@ -69,20 +84,5 @@ class ReconciliationIdentifier extends PartialResponse
     public function getDate(): \DateTimeImmutable
     {
         return $this->date;
-    }
-
-    protected function init()
-    {
-        $this->id = (string)$this->xmlDoc->Id;
-        $this->amount = (float)$this->xmlDoc->Amount;
-        $this->amountCurrency = (int)$this->xmlDoc->Amount['currency'];
-        $this->type = (string)$this->xmlDoc->Type;
-
-        $this->date = \DateTimeImmutable::createFromFormat(DATE_RFC3339, (string)$this->xmlDoc->Date);
-        if ($this->date === false) {
-            $exception = new ResponseException('The date format is wrong');
-            $exception->setResponse($this->getOriginalResponse());
-            throw $exception;
-        }
     }
 }

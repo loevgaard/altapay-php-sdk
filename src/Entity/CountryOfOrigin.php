@@ -1,9 +1,9 @@
 <?php
-namespace Loevgaard\AltaPay\Response\Partial\Transaction\CustomerInfo;
+namespace Loevgaard\AltaPay\Entity;
 
-use Loevgaard\AltaPay\Response\Partial\PartialResponse;
+use Loevgaard\AltaPay\Hydrator\HydratableInterface;
 
-class CountryOfOrigin extends PartialResponse
+class CountryOfOrigin implements HydratableInterface
 {
     /**
      * @var string
@@ -14,6 +14,12 @@ class CountryOfOrigin extends PartialResponse
      * @var string
      */
     private $source;
+
+    public function hydrateXml(\SimpleXMLElement $xml)
+    {
+        $this->country = (string)$xml->CountryOfOrigin->Country;
+        $this->source = (string)$xml->CountryOfOrigin->Source;
+    }
 
     /**
      * @return string
@@ -29,11 +35,5 @@ class CountryOfOrigin extends PartialResponse
     public function getSource() : string
     {
         return $this->source;
-    }
-
-    protected function init()
-    {
-        $this->country = (string)$this->xmlDoc->Country;
-        $this->source = (string)$this->xmlDoc->Source;
     }
 }
