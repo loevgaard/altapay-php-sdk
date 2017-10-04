@@ -24,12 +24,10 @@ before_script:
   - vendor/bin/phpunit --version
 
 script:
-  - vendor/bin/phpcs --standard=psr2 src/
+  - vendor/bin/php-cs-fixer fix --verbose
   - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
 
 after_script:
   - |
-    if [[ "$TRAVIS_PHP_VERSION" != '7.0' ]]; then
-      wget https://scrutinizer-ci.com/ocular.phar
-      php ocular.phar code-coverage:upload --format=php-clover coverage.clover
-    fi
+    wget https://scrutinizer-ci.com/ocular.phar
+    php ocular.phar code-coverage:upload --format=php-clover coverage.clover
