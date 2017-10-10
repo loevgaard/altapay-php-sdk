@@ -20,6 +20,18 @@ use PHPUnit\Framework\TestCase;
 
 final class ClientTest extends TestCase
 {
+    public function testGettersSetters()
+    {
+        $defaultOptions = [
+            'key' => 'val'
+        ];
+
+        $client = $this->getClient();
+        $client->setDefaultOptions($defaultOptions);
+
+        $this->assertSame($defaultOptions, $client->getDefaultOptions());
+    }
+
     public function testCreatePaymentRequest()
     {
         $xml = file_get_contents(__DIR__.'/data/PaymentRequestResponse.xml');

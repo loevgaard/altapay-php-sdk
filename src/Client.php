@@ -3,6 +3,7 @@ namespace Loevgaard\AltaPay;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
+use GuzzleHttp\RequestOptions;
 use Loevgaard\AltaPay\Payload\CaptureReservationInterface;
 use Loevgaard\AltaPay\Payload\PaymentRequestInterface;
 use Loevgaard\AltaPay\Payload\RefundCapturedReservationInterface;
@@ -11,6 +12,7 @@ use Loevgaard\AltaPay\Response\GetTerminals as GetTerminalsResponse;
 use Loevgaard\AltaPay\Response\PaymentRequest as PaymentRequestResponse;
 use Loevgaard\AltaPay\Response\RefundCapturedReservation as RefundCapturedReservationResponse;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Client
 {
@@ -41,16 +43,22 @@ class Client
      */
     private $baseUrl;
 
+    /**
+     * @var array
+     */
+    private $defaultOptions;
+
+    /**
+     * @var ResponseInterface
+     */
+    private $lastResponse;
+
     public function __construct($username, $password, $baseUrl = 'https://testgateway.altapaysecure.com')
     {
         $this->username = $username;
         $this->password = $password;
-
-        $parsedBaseUrl = parse_url($baseUrl);
-        $baseUrl = $parsedBaseUrl['scheme'].
-            '://'.rawurlencode($this->username).':'.rawurlencode($this->password).'@'.$parsedBaseUrl['host'];
-
         $this->baseUrl  = $baseUrl;
+        $this->defaultOptions = [];
     }
 
     /**
@@ -252,17 +260,19 @@ class Client
     /**
      * @param string $method
      * @param string $uri
-     * @param array|null $options
+     * @param array $options
      * @return ResponseInterface
      */
-    public function doRequest($method, $uri, array $options = null)
+    public function doRequest($method, $uri, array $options = []) : ResponseInterface
     {
-        $url = $this->baseUrl.$uri;
-        $options = $options ? : [];
-        $defaultOptions = [];
-        $options = array_merge($defaultOptions, $options);
-        $client = $this->getClient();
-        return $client->request($method, $url, $options);
+        $optionsResolver = new OptionsResolver();
+        $this->configureOptions($optionsResolver);
+
+        $url = $this->baseUrl . $uri;
+        $options = $optionsResolver->resolve(array_replace($this->defaultOptions, $options));
+        $this->lastResponse = $this->getClient()->request($method, $url, $options);
+
+        return $this->lastResponse;
     }
 
     /**
@@ -271,10 +281,7 @@ class Client
     public function getClient()
     {
         if (!$this->client) {
-            $this->client = new GuzzleClient([
-                'allow_redirects' => false,
-                'cookies' => false,
-            ]);
+            $this->client = new GuzzleClient();
         }
         return $this->client;
     }
@@ -287,5 +294,42 @@ class Client
     {
         $this->client = $client;
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultOptions() : array
+    {
+        return $this->defaultOptions;
+    }
+
+    /**
+     * @param array $options
+     * @return Client
+     */
+    public function setDefaultOptions(array $options) : self
+    {
+        $this->defaultOptions = $options;
+        return $this;
+    }
+
+    protected function configureOptions(OptionsResolver $optionsResolver)
+    {
+        // add request options from Guzzle
+        $reflection = new \ReflectionClass(RequestOptions::class);
+        $optionsResolver->setDefined($reflection->getConstants());
+
+        // set defaults
+        $optionsResolver->setDefaults([
+            'allow_redirects' => false,
+            'cookies' => false,
+            'timeout' => 60,
+            'http_errors' => false,
+            'auth' => [
+                $this->username,
+                $this->password
+            ]
+        ]);
     }
 }
