@@ -27,9 +27,11 @@ require_once 'vendor/autoload.php';
 
 use Loevgaard\AltaPay\Client;
 use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
+use Money\Money;
+use Money\Currency;
 
 $client = new Client('Altapay Username', 'Altapay Password');
-$payload = new PaymentRequestPayload('Terminal', 'order-1234', 100.5, 'DKK');
+$payload = new PaymentRequestPayload('Terminal', 'order-1234', new Money(12595, new Currency('DKK')));
 $response = $client->createPaymentRequest($payload);
 ```
 
