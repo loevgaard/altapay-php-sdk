@@ -17,8 +17,10 @@
     ],
     "require": {
         "php": "~7.1",
+        "alcohol/iso4217": "^3.1",
         "beberlei/assert": "^2.7",
         "guzzlehttp/guzzle": "^6.2",
+        "moneyphp/money": "^3.0",
         "symfony/options-resolver": "^3.3"
     },
     "require-dev": {
@@ -26,6 +28,7 @@
         "friendsofphp/php-cs-fixer": "^2.0"
     },
     "autoload": {
+        "files": ["src/functions_include.php"],
         "psr-4": {
             "Loevgaard\\AltaPay\\": "src"
         }

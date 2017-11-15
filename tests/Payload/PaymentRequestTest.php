@@ -2,7 +2,10 @@
 
 namespace Loevgaard\AltaPay\Payload;
 
+use Loevgaard\AltaPay;
 use Loevgaard\AltaPay\Payload\PaymentRequest as PaymentRequestPayload;
+use Money\Currency;
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 
 final class PaymentRequestTest extends TestCase
@@ -11,8 +14,11 @@ final class PaymentRequestTest extends TestCase
     {
         $customerCreatedDate = \DateTime::createFromFormat('Y-m-d', '2017-05-31');
 
-        $paymentRequest = new PaymentRequest('terminal', 'orderid', 250.95, 'DKK');
-        $paymentRequest->setSalesTax(100)
+        $amount = new Money(25095, new Currency('DKK'));
+        $salesTax = new Money(10000, new Currency('DKK'));
+
+        $paymentRequest = new PaymentRequest('terminal', 'orderid', $amount);
+        $paymentRequest->setSalesTax($salesTax)
             ->setType('type')
             ->setLanguage('da')
             ->setShippingMethod('shippingmethod')
@@ -30,9 +36,8 @@ final class PaymentRequestTest extends TestCase
 
         $this->assertSame('terminal', $paymentRequest->getTerminal());
         $this->assertSame('orderid', $paymentRequest->getShopOrderId());
-        $this->assertSame(250.95, $paymentRequest->getAmount());
-        $this->assertSame('DKK', $paymentRequest->getCurrency());
-        $this->assertSame(100.0, $paymentRequest->getSalesTax());
+        $this->assertEquals($amount, $paymentRequest->getAmount());
+        $this->assertEquals($salesTax, $paymentRequest->getSalesTax());
         $this->assertSame('type', $paymentRequest->getType());
         $this->assertSame('da', $paymentRequest->getLanguage());
         $this->assertSame('shippingmethod', $paymentRequest->getShippingMethod());
@@ -46,27 +51,31 @@ final class PaymentRequestTest extends TestCase
         $this->assertSame($customerCreatedDate, $paymentRequest->getCustomerCreatedDate());
         $this->assertSame('organisationnumber', $paymentRequest->getOrganisationNumber());
         $this->assertSame('accountoffer', $paymentRequest->getAccountOffer());
+    }
+
+    public function testGettersSetters2()
+    {
+        $amount = new Money(15095, new Currency('EUR'));
+        $paymentRequest = new PaymentRequest('terminal', 'orderid', $amount);
 
         $paymentRequest->setTerminal('terminal2')
             ->setShopOrderId('orderid2')
-            ->setAmount(150.95)
-            ->setCurrency('EUR')
             ->setCookieParts(['cookiesparts'])
         ;
 
         $this->assertSame('terminal2', $paymentRequest->getTerminal());
         $this->assertSame('orderid2', $paymentRequest->getShopOrderId());
-        $this->assertSame(150.95, $paymentRequest->getAmount());
-        $this->assertSame('EUR', $paymentRequest->getCurrency());
+        $this->assertEquals($amount, $paymentRequest->getAmount());
         $this->assertSame(['cookiesparts'], $paymentRequest->getCookieParts());
     }
+
     public function testGetPayload()
     {
         $birthDate = \DateTime::createFromFormat('Y-m-d', '1972-05-22');
         $customerCreatedDate = \DateTime::createFromFormat('Y-m-d', '2017-05-31');
         $expected = [
             'shop_orderid' => (string)time(),
-            'amount' => 100.5,
+            'amount' => 100.50,
             'currency' => 'DKK',
             'terminal' => 'terminal',
             'account_offer' => 'account offer',
@@ -79,7 +88,7 @@ final class PaymentRequestTest extends TestCase
             'payment_source' => PaymentRequest::PAYMENT_SOURCE_ECOMMERCE,
             'sale_invoice_number' => 'INV2020202',
             'sale_reconciliation_identifier' => 'IDNT98721',
-            'sales_tax' => 20.5,
+            'sales_tax' => 20.50,
             'shipping_method' => 'PostNord',
             'type' => 'type',
             'config' => [
@@ -130,8 +139,8 @@ final class PaymentRequestTest extends TestCase
                 ], [
                     'description' => 'Shipping fee',
                     'itemId' => 'ShipShip',
-                    'quantity' => 1,
-                    'unitPrice' => 5,
+                    'quantity' => 1.0,
+                    'unitPrice' => 5.0,
                     // optional stuff
                     'goodsType' => 'shipment',
                 ]
@@ -178,7 +187,7 @@ final class PaymentRequestTest extends TestCase
         $payload = new PaymentRequestPayload(
             $expected['terminal'],
             $expected['shop_orderid'],
-            $expected['amount'],
+            AltaPay\createMoneyFromFloat('DKK', $expected['amount']),
             $expected['currency']
         );
         $payload
@@ -194,7 +203,7 @@ final class PaymentRequestTest extends TestCase
             ->setPaymentSource($expected['payment_source'])
             ->setSaleInvoiceNumber($expected['sale_invoice_number'])
             ->setSaleReconciliationIdentifier($expected['sale_reconciliation_identifier'])
-            ->setSalesTax($expected['sales_tax'])
+            ->setSalesTax(AltaPay\createMoneyFromFloat('DKK', $expected['sales_tax']))
             ->setShippingMethod($expected['shipping_method'])
             ->setTransactionInfo($expected['transaction_info'])
             ->setType($expected['type'])
@@ -207,13 +216,13 @@ final class PaymentRequestTest extends TestCase
                 $orderLine['description'],
                 $orderLine['itemId'],
                 $orderLine['quantity'],
-                $orderLine['unitPrice']
+                AltaPay\createMoneyFromFloat('DKK', $orderLine['unitPrice'])
             );
             if (isset($orderLine['taxPercent'])) {
                 $ol->setTaxPercent($orderLine['taxPercent']);
             }
             if (isset($orderLine['taxAmount'])) {
-                $ol->setTaxAmount($orderLine['taxAmount']);
+                $ol->setTaxAmount(AltaPay\createMoneyFromFloat('DKK', $orderLine['taxAmount']));
             }
             if (isset($orderLine['unitCode'])) {
                 $ol->setUnitCode($orderLine['unitCode']);

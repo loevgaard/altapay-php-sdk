@@ -1,8 +1,10 @@
 <?php
 namespace Loevgaard\AltaPay\Entity;
 
+use Loevgaard\AltaPay;
 use Loevgaard\AltaPay\Exception\XmlException;
 use Loevgaard\AltaPay\Hydrator\HydratableInterface;
+use Money\Money;
 
 class Transaction implements HydratableInterface
 {
@@ -108,32 +110,32 @@ class Transaction implements HydratableInterface
     private $cardHolderCurrencyAlpha;
 
     /**
-     * @var float
+     * @var int
      */
     private $reservedAmount;
 
     /**
-     * @var float
+     * @var int
      */
     private $capturedAmount;
 
     /**
-     * @var float
+     * @var int
      */
     private $refundedAmount;
 
     /**
-     * @var float
+     * @var int
      */
     private $creditedAmount;
 
     /**
-     * @var float
+     * @var int
      */
     private $recurringDefaultAmount;
 
     /**
-     * @var float
+     * @var int
      */
     private $surchargeAmount;
 
@@ -179,6 +181,38 @@ class Transaction implements HydratableInterface
 
     public function hydrateXml(\SimpleXMLElement $xml)
     {
+        $currency = (string)$xml->MerchantCurrencyAlpha;
+
+        $reservedAmount = AltaPay\createMoneyFromFloat($currency, (float)$xml->ReservedAmount);
+        if ($reservedAmount) {
+            $this->reservedAmount = $reservedAmount->getAmount();
+        }
+
+        $capturedAmount = AltaPay\createMoneyFromFloat($currency, (float)$xml->CapturedAmount);
+        if ($capturedAmount) {
+            $this->capturedAmount = $capturedAmount->getAmount();
+        }
+
+        $refundedAmount = AltaPay\createMoneyFromFloat($currency, (float)$xml->RefundedAmount);
+        if ($refundedAmount) {
+            $this->refundedAmount = $refundedAmount->getAmount();
+        }
+
+        $creditedAmount = AltaPay\createMoneyFromFloat($currency, (float)($xml->CreditedAmount ?? 0));
+        if ($creditedAmount) {
+            $this->creditedAmount = $creditedAmount->getAmount();
+        }
+
+        $recurringDefaultAmount = AltaPay\createMoneyFromFloat($currency, (float)$xml->RecurringDefaultAmount);
+        if ($recurringDefaultAmount) {
+            $this->recurringDefaultAmount = $recurringDefaultAmount->getAmount();
+        }
+
+        $surchargeAmount = AltaPay\createMoneyFromFloat($currency, (float)($xml->SurchargeAmount ?? 0));
+        if ($surchargeAmount) {
+            $this->surchargeAmount = $surchargeAmount->getAmount();
+        }
+
         $this->transactionId = (int)$xml->TransactionId;
         $this->paymentId = (string)$xml->PaymentId;
         $this->authType = isset($xml->AuthType) ? (string)$xml->AuthType : null;
@@ -195,15 +229,9 @@ class Transaction implements HydratableInterface
         $this->transactionStatus = (string)$xml->TransactionStatus;
         $this->reasonCode = (string)$xml->ReasonCode;
         $this->merchantCurrency = (int)$xml->MerchantCurrency;
-        $this->merchantCurrencyAlpha = (string)$xml->MerchantCurrencyAlpha;
+        $this->merchantCurrencyAlpha = $currency;
         $this->cardHolderCurrency = (int)$xml->CardHolderCurrency;
         $this->cardHolderCurrencyAlpha = (string)$xml->CardHolderCurrencyAlpha;
-        $this->reservedAmount = (float)$xml->ReservedAmount;
-        $this->capturedAmount = (float)$xml->CapturedAmount;
-        $this->refundedAmount = (float)$xml->RefundedAmount;
-        $this->creditedAmount = isset($xml->CreditedAmount) ? (float)$xml->CreditedAmount : null;
-        $this->recurringDefaultAmount = (float)$xml->RecurringDefaultAmount;
-        $this->surchargeAmount = isset($xml->SurchargeAmount) ? (float)$xml->SurchargeAmount : null;
         $this->paymentNature = (string)$xml->PaymentNature;
         $this->paymentSchemeName = isset($xml->PaymentSchemeName) ? (string)$xml->PaymentSchemeName : null;
         $this->addressVerification = isset($xml->AddressVerification) ? (string)$xml->AddressVerification : null;
@@ -388,51 +416,51 @@ class Transaction implements HydratableInterface
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getReservedAmount() : ?float
+    public function getReservedAmount() : ?Money
     {
-        return $this->reservedAmount;
+        return AltaPay\createMoney((string)$this->merchantCurrencyAlpha, (int)$this->reservedAmount);
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getCapturedAmount() : ?float
+    public function getCapturedAmount() : ?Money
     {
-        return $this->capturedAmount;
+        return AltaPay\createMoney((string)$this->merchantCurrencyAlpha, (int)$this->capturedAmount);
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getRefundedAmount() : ?float
+    public function getRefundedAmount() : ?Money
     {
-        return $this->refundedAmount;
+        return AltaPay\createMoney((string)$this->merchantCurrencyAlpha, (int)$this->refundedAmount);
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getCreditedAmount(): ?float
+    public function getCreditedAmount(): ?Money
     {
-        return $this->creditedAmount;
+        return AltaPay\createMoney((string)$this->merchantCurrencyAlpha, (int)$this->creditedAmount);
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getRecurringDefaultAmount() : ?float
+    public function getRecurringDefaultAmount() : ?Money
     {
-        return $this->recurringDefaultAmount;
+        return AltaPay\createMoney((string)$this->merchantCurrencyAlpha, (int)$this->recurringDefaultAmount);
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getSurchargeAmount(): ?float
+    public function getSurchargeAmount(): ?Money
     {
-        return $this->surchargeAmount;
+        return AltaPay\createMoney((string)$this->merchantCurrencyAlpha, (int)$this->surchargeAmount);
     }
 
     /**

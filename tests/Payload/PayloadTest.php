@@ -3,6 +3,8 @@
 namespace Loevgaard\AltaPay\Payload;
 
 use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfo;
+use Money\Currency;
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 
 final class PayloadTest extends TestCase
@@ -41,7 +43,9 @@ final class PayloadTest extends TestCase
         $customerInfoPayload->setBillingFirstName('First name');
         $customerInfoPayload->setBillingLastName('');
 
-        $paymentRequestPayload = new PaymentRequest('terminal', 'order123', 100, 'DKK');
+        $amount = new Money(10000, new Currency('DKK'));
+
+        $paymentRequestPayload = new PaymentRequest('terminal', 'order123', $amount);
         $paymentRequestPayload->setCustomerInfo($customerInfoPayload);
 
         $expected = [

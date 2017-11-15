@@ -2,6 +2,9 @@
 
 namespace Loevgaard\AltaPay\Callback;
 
+use Loevgaard\AltaPay;
+use Money\Money;
+
 class Form extends Callback
 {
     /**
@@ -10,7 +13,7 @@ class Form extends Callback
     protected $shopOrderId;
 
     /**
-     * @var float
+     * @var Money
      */
     protected $amount;
 
@@ -35,11 +38,14 @@ class Form extends Callback
 
     public function init()
     {
+        $currency = (int)$this->body['currency'];
+        $alphaCurrency = AltaPay\alphaCurrencyFromNumeric($currency);
+
         $this->shopOrderId = $this->body['shop_orderid'];
-        $this->amount = (float)$this->body['amount'];
-        $this->currency = (int)$this->body['currency'];
+        $this->amount = AltaPay\createMoneyFromFloat($alphaCurrency, (float)$this->body['amount']);
+        $this->currency = $currency;
         $this->language = $this->body['language'];
-        $this->embeddedWindow = (int)$this->body['embedded_window'] === 1;
+        $this->embeddedWindow = (int)($this->body['embedded_window'] === 1);
     }
 
     /**
@@ -51,9 +57,9 @@ class Form extends Callback
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getAmount(): float
+    public function getAmount(): Money
     {
         return $this->amount;
     }

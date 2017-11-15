@@ -1,8 +1,10 @@
 <?php
 namespace Loevgaard\AltaPay\Response;
 
+use Loevgaard\AltaPay;
 use Loevgaard\AltaPay\Entity\ResultTrait;
 use Loevgaard\AltaPay\Entity\TransactionsTrait;
+use Money\Money;
 
 class RefundCapturedReservation extends Response
 {
@@ -10,7 +12,7 @@ class RefundCapturedReservation extends Response
     use TransactionsTrait;
 
     /**
-     * @var float
+     * @var Money
      */
     protected $refundAmount;
 
@@ -26,9 +28,9 @@ class RefundCapturedReservation extends Response
     protected $refundResult;
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getRefundAmount(): float
+    public function getRefundAmount(): Money
     {
         return $this->refundAmount;
     }
@@ -55,8 +57,11 @@ class RefundCapturedReservation extends Response
         /** @var \SimpleXMLElement $body */
         $body = $this->xmlDoc->Body;
 
-        $this->refundAmount = (float)$body->RefundAmount;
-        $this->refundCurrency = (int)$body->RefundCurrency;
+        $currency = (int)$body->RefundCurrency;
+        $alphaCurrency = AltaPay\alphaCurrencyFromNumeric($currency);
+
+        $this->refundAmount = AltaPay\createMoneyFromFloat($alphaCurrency, (float)$body->RefundAmount);
+        $this->refundCurrency = $currency;
         $this->refundResult = (string)$body->RefundResult;
         $this->hydrateTransactions($body);
     }

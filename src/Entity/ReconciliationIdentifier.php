@@ -1,8 +1,10 @@
 <?php
 namespace Loevgaard\AltaPay\Entity;
 
+use Loevgaard\AltaPay;
 use Loevgaard\AltaPay\Exception\XmlException;
 use Loevgaard\AltaPay\Hydrator\HydratableInterface;
+use Money\Money;
 
 class ReconciliationIdentifier implements HydratableInterface
 {
@@ -12,7 +14,7 @@ class ReconciliationIdentifier implements HydratableInterface
     private $id;
 
     /**
-     * @var float
+     * @var Money
      */
     private $amount;
 
@@ -33,9 +35,12 @@ class ReconciliationIdentifier implements HydratableInterface
 
     public function hydrateXml(\SimpleXMLElement $xml)
     {
+        $currency = (int)$xml->Amount['currency'];
+        $alphaCurrency = AltaPay\alphaCurrencyFromNumeric($currency);
+
         $this->id = (string)$xml->Id;
-        $this->amount = (float)$xml->Amount;
-        $this->amountCurrency = (int)$xml->Amount['currency'];
+        $this->amount = AltaPay\createMoneyFromFloat($alphaCurrency, (float)$xml->Amount);
+        $this->amountCurrency = $currency;
         $this->type = (string)$xml->Type;
 
         $this->date = \DateTimeImmutable::createFromFormat(DATE_RFC3339, (string)$xml->Date);
@@ -55,9 +60,9 @@ class ReconciliationIdentifier implements HydratableInterface
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getAmount() : float
+    public function getAmount() : Money
     {
         return $this->amount;
     }

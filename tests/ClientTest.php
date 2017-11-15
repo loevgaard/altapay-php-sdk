@@ -16,6 +16,7 @@ use Loevgaard\AltaPay\Response\CaptureReservation as CaptureReservationResponse;
 use Loevgaard\AltaPay\Response\GetTerminals as GetTerminalsResponse;
 use Loevgaard\AltaPay\Response\PaymentRequest as PaymentRequestResponse;
 use Loevgaard\AltaPay\Response\RefundCapturedReservation as RefundCapturedReservationResponse;
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 
 final class ClientTest extends TestCase
@@ -43,7 +44,7 @@ final class ClientTest extends TestCase
         $handler = HandlerStack::create($mock);
 
         $client = $this->getClient($handler);
-        $payload = new PaymentRequestPayload('Terminal', time(), 100.5, 'DKK');
+        $payload = new PaymentRequestPayload('Terminal', time(), new Money(10050, new \Money\Currency('DKK')));
         $response = $client->createPaymentRequest($payload);
 
         $this->assertInstanceOf(PaymentRequestResponse::class, $response);

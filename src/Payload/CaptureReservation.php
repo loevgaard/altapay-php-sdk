@@ -2,6 +2,8 @@
 namespace Loevgaard\AltaPay\Payload;
 
 use Assert\Assert;
+use Loevgaard\AltaPay;
+use Money\Money;
 
 class CaptureReservation extends Payload implements CaptureReservationInterface
 {
@@ -13,9 +15,14 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     private $transactionId;
 
     /**
-     * @var float
+     * @var int
      */
-    private $amount;
+    private $amountValue;
+
+    /**
+     * @var string
+     */
+    private $amountCurrency;
 
     /**
      * @var string
@@ -28,7 +35,7 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     private $invoiceNumber;
 
     /**
-     * @var float
+     * @var int
      */
     private $salesTax;
 
@@ -43,16 +50,16 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
      */
     public function getPayload() : array
     {
+        $this->validate();
+
         $payload = [
             'transaction_id' => $this->transactionId,
-            'amount' => $this->amount,
+            'amount' => AltaPay\floatFromMoney($this->getAmount()),
             'reconciliation_identifier' => $this->reconciliationIdentifier,
             'invoice_number' => $this->invoiceNumber,
-            'sales_tax' => $this->salesTax,
+            'sales_tax' => AltaPay\floatFromMoney($this->getSalesTax()),
             'orderLines' => $this->orderLines
         ];
-
-        $this->validate();
 
         return static::simplePayload($payload);
     }
@@ -60,10 +67,10 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     public function validate()
     {
         Assert::that($this->transactionId)->string();
-        Assert::thatNullOr($this->amount)->float();
+        Assert::thatNullOr($this->getAmount())->isInstanceOf(Money::class);
         Assert::thatNullOr($this->reconciliationIdentifier)->string();
         Assert::thatNullOr($this->invoiceNumber)->string();
-        Assert::thatNullOr($this->salesTax)->float();
+        Assert::thatNullOr($this->getSalesTax())->isInstanceOf(Money::class);
         Assert::that($this->orderLines)->isArray();
     }
 
@@ -86,20 +93,22 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getAmount() : ?float
+    public function getAmount() : ?Money
     {
-        return $this->amount;
+        return AltaPay\createMoney((string)$this->amountCurrency, (int)$this->amountValue);
     }
 
     /**
-     * @param float $amount
+     * @param Money $amount
      * @return CaptureReservation
      */
-    public function setAmount(float $amount) : self
+    public function setAmount(Money $amount) : self
     {
-        $this->amount = $amount;
+        $this->amountValue = $amount->getAmount();
+        $this->amountCurrency = $amount->getCurrency()->getCode();
+
         return $this;
     }
 
@@ -140,20 +149,20 @@ class CaptureReservation extends Payload implements CaptureReservationInterface
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getSalesTax() : ?float
+    public function getSalesTax() : ?Money
     {
-        return $this->salesTax;
+        return AltaPay\createMoney((string)$this->amountCurrency, (int)$this->salesTax);
     }
 
     /**
-     * @param float $salesTax
+     * @param Money $salesTax
      * @return CaptureReservation
      */
-    public function setSalesTax(float $salesTax) : self
+    public function setSalesTax(Money $salesTax) : self
     {
-        $this->salesTax = $salesTax;
+        $this->salesTax = $salesTax->getAmount();
         return $this;
     }
 }

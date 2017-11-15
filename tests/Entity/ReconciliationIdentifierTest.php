@@ -3,6 +3,7 @@
 namespace Loevgaard\AltaPay\Entity;
 
 use Loevgaard\AltaPay\Exception\XmlException;
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 
 final class ReconciliationIdentifierTest extends TestCase
@@ -23,7 +24,7 @@ XML;
         $entity->hydrateXml($xmlElement);
 
         $this->assertSame('f4e2533e-c578-4383-b075-bc8a6866784a', $entity->getId());
-        $this->assertSame(1.0, $entity->getAmount());
+        $this->assertEquals(new Money(100, new \Money\Currency('EUR')), $entity->getAmount());
         $this->assertSame('captured', $entity->getType());
         $this->assertInstanceOf(\DateTimeImmutable::class, $entity->getDate());
         $this->assertSame('2010-09-28T12:00:00+02:00', $entity->getDate()->format(DATE_RFC3339));

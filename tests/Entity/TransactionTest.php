@@ -3,6 +3,7 @@
 namespace Loevgaard\AltaPay\Entity;
 
 use Loevgaard\AltaPay\Exception\XmlException;
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 
 final class TransactionTest extends TestCase
@@ -92,8 +93,8 @@ XML;
 
         $this->assertSame('payment', $entity->getAuthType());
         $this->assertSame('Not_Attempted', $entity->getCVVCheckResult());
-        $this->assertSame(10.0, $entity->getCreditedAmount());
-        $this->assertSame(20.0, $entity->getSurchargeAmount());
+        $this->assertEquals(new Money(1000, new \Money\Currency('EUR')), $entity->getCreditedAmount());
+        $this->assertEquals(new Money(2000, new \Money\Currency('EUR')), $entity->getSurchargeAmount());
     }
 
     public function testHydrate2()

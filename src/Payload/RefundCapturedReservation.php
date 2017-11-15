@@ -2,6 +2,8 @@
 namespace Loevgaard\AltaPay\Payload;
 
 use Assert\Assert;
+use Loevgaard\AltaPay;
+use Money\Money;
 
 class RefundCapturedReservation extends Payload implements RefundCapturedReservationInterface
 {
@@ -13,9 +15,14 @@ class RefundCapturedReservation extends Payload implements RefundCapturedReserva
     private $transactionId;
 
     /**
-     * @var float
+     * @var int
      */
-    private $amount;
+    private $amountValue;
+
+    /**
+     * @var string
+     */
+    private $amountCurrency;
 
     /**
      * @var string
@@ -43,16 +50,16 @@ class RefundCapturedReservation extends Payload implements RefundCapturedReserva
      */
     public function getPayload() : array
     {
+        $this->validate();
+
         $payload = [
             'transaction_id' => $this->transactionId,
-            'amount' => $this->amount,
+            'amount' => AltaPay\floatFromMoney($this->getAmount()),
             'reconciliation_identifier' => $this->reconciliationIdentifier,
             'allow_over_refund' => is_bool($this->allowOverRefund) ? intval($this->allowOverRefund) : null,
             'invoice_number' => $this->invoiceNumber,
             'orderLines' => $this->orderLines,
         ];
-
-        $this->validate();
 
         return static::simplePayload($payload);
     }
@@ -60,7 +67,7 @@ class RefundCapturedReservation extends Payload implements RefundCapturedReserva
     public function validate()
     {
         Assert::that($this->transactionId)->string();
-        Assert::thatNullOr($this->amount)->float();
+        Assert::thatNullOr($this->getAmount())->isInstanceOf(Money::class);
         Assert::thatNullOr($this->reconciliationIdentifier)->string();
         Assert::thatNullOr($this->allowOverRefund)->boolean();
         Assert::thatNullOr($this->invoiceNumber)->string();
@@ -86,20 +93,22 @@ class RefundCapturedReservation extends Payload implements RefundCapturedReserva
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getAmount(): ?float
+    public function getAmount(): ?Money
     {
-        return $this->amount;
+        return AltaPay\createMoney((string)$this->amountCurrency, (int)$this->amountValue);
     }
 
     /**
-     * @param float $amount
+     * @param Money $amount
      * @return RefundCapturedReservation
      */
-    public function setAmount(float $amount) : self
+    public function setAmount(Money $amount) : self
     {
-        $this->amount = $amount;
+        $this->amountCurrency = $amount->getCurrency()->getCode();
+        $this->amountValue = $amount->getAmount();
+
         return $this;
     }
 

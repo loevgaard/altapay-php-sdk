@@ -2,6 +2,8 @@
 namespace Loevgaard\AltaPay\Payload;
 
 use Assert\Assert;
+use Loevgaard\AltaPay;
+use Money\Money;
 
 class OrderLine extends Payload implements OrderLineInterface
 {
@@ -9,6 +11,13 @@ class OrderLine extends Payload implements OrderLineInterface
     const GOODS_TYPE_HANDLING = 'handling';
     const GOODS_TYPE_ITEM = 'item';
     const GOODS_TYPE_REFUND = 'refund';
+
+    /**
+     * Used to create Money objects
+     *
+     * @var string
+     */
+    protected $currency;
 
     /**
      * @var string
@@ -26,7 +35,7 @@ class OrderLine extends Payload implements OrderLineInterface
     protected $quantity;
 
     /**
-     * @var float
+     * @var int
      */
     protected $unitPrice;
 
@@ -36,7 +45,7 @@ class OrderLine extends Payload implements OrderLineInterface
     protected $taxPercent;
 
     /**
-     * @var float
+     * @var int
      */
     protected $taxAmount;
 
@@ -46,7 +55,7 @@ class OrderLine extends Payload implements OrderLineInterface
     protected $unitCode;
 
     /**
-     * @var float
+     * @var int
      */
     protected $discount;
 
@@ -60,30 +69,32 @@ class OrderLine extends Payload implements OrderLineInterface
      */
     protected $imageUrl;
 
-    public function __construct(string $description, string $itemId, float $quantity, float $unitPrice)
+    public function __construct(string $description, string $itemId, float $quantity, Money $unitPrice)
     {
-        $this->description = $description;
-        $this->itemId = $itemId;
-        $this->quantity = $quantity;
-        $this->unitPrice = $unitPrice;
+        $this->currency = $unitPrice->getCurrency()->getCode();
+
+        $this->setDescription($description);
+        $this->setItemId($itemId);
+        $this->setQuantity($quantity);
+        $this->setUnitPrice($unitPrice);
     }
 
     public function getPayload() : array
     {
+        $this->validate();
+
         $payload = [
             'description' => $this->description,
             'itemId' => $this->itemId,
             'quantity' => $this->quantity,
-            'unitPrice' => $this->unitPrice,
+            'unitPrice' => AltaPay\floatFromMoney($this->getUnitPrice()),
             'taxPercent' => $this->taxPercent,
-            'taxAmount' => $this->taxAmount,
+            'taxAmount' => AltaPay\floatFromMoney($this->getTaxAmount()),
             'unitCode' => $this->unitCode,
-            'discount' => $this->discount,
+            'discount' => AltaPay\floatFromMoney($this->getDiscount()),
             'goodsType' => $this->goodsType,
             'imageUrl' => $this->imageUrl,
         ];
-
-        $this->validate();
 
         return static::simplePayload($payload);
     }
@@ -93,11 +104,11 @@ class OrderLine extends Payload implements OrderLineInterface
         Assert::that($this->description)->string();
         Assert::that($this->itemId)->string();
         Assert::that($this->quantity)->float();
-        Assert::that($this->unitPrice)->float();
+        Assert::that($this->getUnitPrice())->isInstanceOf(Money::class);
         Assert::thatNullOr($this->taxPercent)->float();
-        Assert::thatNullOr($this->taxAmount)->float();
+        Assert::thatNullOr($this->getTaxAmount())->isInstanceOf(Money::class);
         Assert::thatNullOr($this->unitCode)->string();
-        Assert::thatNullOr($this->discount)->float();
+        Assert::thatNullOr($this->getDiscount())->isInstanceOf(Money::class);
         Assert::thatNullOr($this->goodsType)->string()->inArray(static::getGoodsTypes());
         Assert::thatNullOr($this->imageUrl)->string();
     }
@@ -170,20 +181,24 @@ class OrderLine extends Payload implements OrderLineInterface
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getUnitPrice() : float
+    public function getUnitPrice() : ?Money
     {
-        return $this->unitPrice;
+        return AltaPay\createMoney((string)$this->currency, (int)$this->unitPrice);
     }
 
     /**
-     * @param float $unitPrice
+     * @param Money $unitPrice
      * @return OrderLine
      */
-    public function setUnitPrice(float $unitPrice) : self
+    public function setUnitPrice(Money $unitPrice) : self
     {
-        $this->unitPrice = $unitPrice;
+        if ($unitPrice->getCurrency()->getCode() !== $this->currency) {
+            throw new \InvalidArgumentException('The $unitPrice does not have the same currency as this order line');
+        }
+
+        $this->unitPrice = $unitPrice->getAmount();
         return $this;
     }
 
@@ -206,20 +221,28 @@ class OrderLine extends Payload implements OrderLineInterface
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getTaxAmount() : ?float
+    public function getTaxAmount() : ?Money
     {
-        return $this->taxAmount;
+        if (is_null($this->taxAmount)) {
+            return null;
+        }
+
+        return AltaPay\createMoney((string)$this->currency, (int)$this->taxAmount);
     }
 
     /**
-     * @param float $taxAmount
+     * @param Money $taxAmount
      * @return OrderLine
      */
-    public function setTaxAmount(float $taxAmount) : self
+    public function setTaxAmount(Money $taxAmount) : self
     {
-        $this->taxAmount = $taxAmount;
+        if ($taxAmount->getCurrency()->getCode() !== $this->currency) {
+            throw new \InvalidArgumentException('The $taxAmount does not have the same currency as this order line');
+        }
+
+        $this->taxAmount = $taxAmount->getAmount();
         return $this;
     }
 
@@ -242,20 +265,28 @@ class OrderLine extends Payload implements OrderLineInterface
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getDiscount() : ?float
+    public function getDiscount() : ?Money
     {
-        return $this->discount;
+        if (is_null($this->discount)) {
+            return null;
+        }
+
+        return AltaPay\createMoney((string)$this->currency, (int)$this->discount);
     }
 
     /**
-     * @param float $discount
+     * @param Money $discount
      * @return OrderLine
      */
-    public function setDiscount(float $discount) : self
+    public function setDiscount(Money $discount) : self
     {
-        $this->discount = $discount;
+        if ($discount->getCurrency()->getCode() !== $this->currency) {
+            throw new \InvalidArgumentException('The $discount does not have the same currency as this order line');
+        }
+
+        $this->discount = $discount->getAmount();
         return $this;
     }
 

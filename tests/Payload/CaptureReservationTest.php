@@ -2,23 +2,28 @@
 
 namespace Loevgaard\AltaPay\Payload;
 
+use Money\Currency;
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 
 final class CaptureReservationTest extends TestCase
 {
     public function testGettersSetters()
     {
+        $amount = new Money(100, new Currency('DKK'));
+        $salesTax = new Money(10000, new Currency('DKK'));
+
         $captureReservation = new CaptureReservation('transactionid');
         $captureReservation
-            ->setAmount(1)
-            ->setSalesTax(100)
+            ->setAmount($amount)
+            ->setSalesTax($salesTax)
             ->setInvoiceNumber('invoice123')
             ->setReconciliationIdentifier('reconciliationIdentifier')
         ;
 
         $this->assertSame('transactionid', $captureReservation->getTransactionId());
-        $this->assertSame(1.0, $captureReservation->getAmount());
-        $this->assertSame(100.0, $captureReservation->getSalesTax());
+        $this->assertEquals($amount, $captureReservation->getAmount());
+        $this->assertEquals($salesTax, $captureReservation->getSalesTax());
         $this->assertSame('invoice123', $captureReservation->getInvoiceNumber());
         $this->assertSame('reconciliationIdentifier', $captureReservation->getReconciliationIdentifier());
 

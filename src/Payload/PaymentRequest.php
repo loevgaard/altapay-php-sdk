@@ -2,10 +2,12 @@
 namespace Loevgaard\AltaPay\Payload;
 
 use Assert\Assert;
+use Loevgaard\AltaPay;
 use Loevgaard\AltaPay\Payload\PaymentRequest\Config;
 use Loevgaard\AltaPay\Payload\PaymentRequest\ConfigInterface;
 use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfo;
 use Loevgaard\AltaPay\Payload\PaymentRequest\CustomerInfoInterface;
+use Money\Money;
 
 class PaymentRequest extends Payload implements PaymentRequestInterface
 {
@@ -41,7 +43,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     private $shopOrderId;
 
     /**
-     * @var float
+     * @var int
      */
     private $amount;
 
@@ -83,7 +85,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     private $saleInvoiceNumber;
 
     /**
-     * @var float
+     * @var int
      */
     private $salesTax;
 
@@ -132,14 +134,15 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      */
     private $config;
 
-    public function __construct(string $terminal, string $shopOrderId, float $amount, string $currency)
+    public function __construct(string $terminal, string $shopOrderId, Money $amount)
     {
         $this->cookieParts = [];
         $this->orderLines = [];
-        $this->terminal = $terminal;
-        $this->shopOrderId = $shopOrderId;
-        $this->amount = $amount;
-        $this->currency = $currency;
+
+        $this->currency = $amount->getCurrency()->getCode();
+        $this->setTerminal($terminal);
+        $this->setShopOrderId($shopOrderId);
+        $this->setAmount($amount);
     }
 
     /**
@@ -147,20 +150,22 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
      */
     public function getPayload() : array
     {
+        $this->validate();
+
         $cookie = static::parseCookieParts($this->cookieParts);
 
         $payload = [
             'terminal' => $this->terminal,
             'shop_orderid' => $this->shopOrderId,
-            'amount' => $this->amount,
-            'currency' => $this->currency,
+            'amount' => AltaPay\floatFromMoney($this->getAmount()),
+            'currency' => $this->getAmount()->getCurrency()->getCode(),
             'language' => $this->language,
             'transaction_info' => $this->transactionInfo,
             'type' => $this->type,
             'ccToken' => $this->ccToken,
             'sale_reconciliation_identifier' => $this->saleReconciliationIdentifier,
             'sale_invoice_number' => $this->saleInvoiceNumber,
-            'sales_tax' => $this->salesTax,
+            'sales_tax' => AltaPay\floatFromMoney($this->getSalesTax()),
             'cookie' => $cookie,
             'payment_source' => $this->paymentSource,
             'fraud_service' => $this->fraudService,
@@ -173,8 +178,6 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
             'orderLines' => $this->orderLines,
         ];
 
-        $this->validate();
-
         return static::simplePayload($payload);
     }
 
@@ -182,7 +185,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     {
         Assert::that($this->terminal)->string();
         Assert::that($this->shopOrderId)->string();
-        Assert::that($this->amount)->float();
+        Assert::that($this->getAmount())->isInstanceOf(Money::class);
         Assert::that($this->currency)->string();
         Assert::thatNullOr($this->language)->string();
         Assert::thatNullOr($this->transactionInfo)->isArray();
@@ -190,7 +193,7 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
         Assert::thatNullOr($this->ccToken)->string();
         Assert::thatNullOr($this->saleReconciliationIdentifier)->string();
         Assert::thatNullOr($this->saleInvoiceNumber)->string();
-        Assert::thatNullOr($this->salesTax)->float();
+        Assert::thatNullOr($this->getSalesTax())->isInstanceOf(Money::class);
         Assert::thatNullOr($this->paymentSource)->string();
         Assert::thatNullOr($this->fraudService)->string();
         Assert::thatNullOr($this->shippingMethod)->string();
@@ -274,38 +277,25 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getAmount() : float
+    public function getAmount() : ?Money
     {
-        return $this->amount;
+        return AltaPay\createMoney((string)$this->currency, (int)$this->amount);
     }
 
     /**
-     * @param float $amount
+     * @param Money $amount
      * @return PaymentRequest
      */
-    public function setAmount(float $amount) : self
+    public function setAmount(Money $amount) : self
     {
-        $this->amount = $amount;
-        return $this;
-    }
+        if ($amount->getCurrency()->getCode() !== $this->currency) {
+            throw new \InvalidArgumentException('The $amount does not have the same currency as this payment request');
+        }
 
-    /**
-     * @return string
-     */
-    public function getCurrency() : string
-    {
-        return $this->currency;
-    }
+        $this->amount = $amount->getAmount();
 
-    /**
-     * @param string $currency
-     * @return PaymentRequest
-     */
-    public function setCurrency(string $currency) : self
-    {
-        $this->currency = $currency;
         return $this;
     }
 
@@ -418,20 +408,28 @@ class PaymentRequest extends Payload implements PaymentRequestInterface
     }
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getSalesTax() : ?float
+    public function getSalesTax() : ?Money
     {
-        return $this->salesTax;
+        if (is_null($this->salesTax)) {
+            return null;
+        }
+
+        return AltaPay\createMoney((string)$this->currency, (int)$this->salesTax);
     }
 
     /**
-     * @param float $salesTax
+     * @param Money $salesTax
      * @return PaymentRequest
      */
-    public function setSalesTax(float $salesTax) : self
+    public function setSalesTax(Money $salesTax) : self
     {
-        $this->salesTax = $salesTax;
+        if ($salesTax->getCurrency()->getCode() !== $this->currency) {
+            throw new \InvalidArgumentException('The $salesTax does not have the same currency as this payment request');
+        }
+
+        $this->salesTax = $salesTax->getAmount();
         return $this;
     }
 

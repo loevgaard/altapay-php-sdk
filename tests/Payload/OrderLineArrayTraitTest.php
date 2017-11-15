@@ -2,6 +2,8 @@
 
 namespace Loevgaard\AltaPay\Payload;
 
+use Money\Currency;
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 
 final class OrderLineArrayTraitTest extends TestCase
@@ -10,7 +12,7 @@ final class OrderLineArrayTraitTest extends TestCase
     {
         $obj = $this->getMockForTrait(OrderLineArrayTrait::class);
 
-        $orderLines = [new OrderLine('description', 'itemid', 1, 150.95)];
+        $orderLines = [new OrderLine('description', 'itemid', 1, new Money(15095, new Currency('DKK')))];
         $obj->setOrderLines($orderLines);
 
         $this->assertSame($orderLines, $obj->getOrderLines());
@@ -20,7 +22,7 @@ final class OrderLineArrayTraitTest extends TestCase
     {
         $obj = $this->getMockForTrait(OrderLineArrayTrait::class);
 
-        $orderLine = new OrderLine('description', 'itemid', 1, 150.95);
+        $orderLine = new OrderLine('description', 'itemid', 1, new Money(15095, new Currency('DKK')));
         $obj->addOrderLine($orderLine);
 
         $this->assertSame([$orderLine], $obj->getOrderLines());
@@ -30,7 +32,7 @@ final class OrderLineArrayTraitTest extends TestCase
     {
         $obj = $this->getMockForTrait(OrderLineArrayTrait::class);
 
-        $orderLine = new OrderLine('description', 'itemid', 1, 150.95);
+        $orderLine = new OrderLine('description', 'itemid', 1, new Money(15095, new Currency('DKK')));
         $obj->addOrderLine($orderLine);
         $obj->removeOrderLine($orderLine);
 

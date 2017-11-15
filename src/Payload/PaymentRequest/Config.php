@@ -37,7 +37,7 @@ class Config extends Payload implements ConfigInterface
     protected $callbackNotification;
 
     /**
-     * @var string|null
+     * @var string
      */
     protected $callbackVerifyOrder;
 

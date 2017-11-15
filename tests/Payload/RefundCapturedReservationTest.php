@@ -2,22 +2,26 @@
 
 namespace Loevgaard\AltaPay\Payload;
 
+use Money\Currency;
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 
 final class RefundCapturedReservationTest extends TestCase
 {
     public function testGettersSetters()
     {
+        $amount = new Money(100, new Currency('DKK'));
+
         $refundCapturedReservation = new RefundCapturedReservation('transactionid');
         $refundCapturedReservation
-            ->setAmount(1)
+            ->setAmount($amount)
             ->setInvoiceNumber('invoice123')
             ->setReconciliationIdentifier('reconciliationIdentifier')
             ->setAllowOverRefund(true)
         ;
 
         $this->assertSame('transactionid', $refundCapturedReservation->getTransactionId());
-        $this->assertSame(1.0, $refundCapturedReservation->getAmount());
+        $this->assertEquals($amount, $refundCapturedReservation->getAmount());
         $this->assertSame('invoice123', $refundCapturedReservation->getInvoiceNumber());
         $this->assertSame('reconciliationIdentifier', $refundCapturedReservation->getReconciliationIdentifier());
         $this->assertSame(true, $refundCapturedReservation->isAllowOverRefund());
@@ -28,9 +32,11 @@ final class RefundCapturedReservationTest extends TestCase
 
     public function testGetPayload()
     {
+        $amount = new Money(100, new Currency('DKK'));
+
         $refundCapturedReservation = new RefundCapturedReservation('transactionid');
         $refundCapturedReservation
-            ->setAmount(1)
+            ->setAmount($amount)
             ->setInvoiceNumber('invoice123')
             ->setReconciliationIdentifier('reconciliationIdentifier')
             ->setAllowOverRefund(true)

@@ -2,6 +2,8 @@
 
 namespace Loevgaard\AltaPay\Response;
 
+use Money\Currency;
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
@@ -18,7 +20,9 @@ final class RefundCapturedReservationTest extends TestCase
 
         $this->assertInstanceOf(PsrResponseInterface::class, $refundCapturedReservationResponse->getResponse());
 
-        $this->assertSame(0.12, $refundCapturedReservationResponse->getRefundAmount());
+        $refundAmount = new Money('12', new Currency('EUR'));
+
+        $this->assertEquals($refundAmount, $refundCapturedReservationResponse->getRefundAmount());
         $this->assertSame(978, $refundCapturedReservationResponse->getRefundCurrency());
         $this->assertSame('Success', $refundCapturedReservationResponse->getRefundResult());
     }

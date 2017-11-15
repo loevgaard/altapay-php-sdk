@@ -2,6 +2,7 @@
 
 namespace Loevgaard\AltaPay\Callback;
 
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -22,7 +23,7 @@ final class FormTest extends TestCase
         $form = new Form($request);
 
         $this->assertSame('123456', $form->getShopOrderId());
-        $this->assertSame(100.5, $form->getAmount());
+        $this->assertEquals(new Money(10050, new \Money\Currency('DKK')), $form->getAmount());
         $this->assertSame(208, $form->getCurrency());
         $this->assertSame('da', $form->getLanguage());
         $this->assertFalse(false, $form->isEmbeddedWindow());

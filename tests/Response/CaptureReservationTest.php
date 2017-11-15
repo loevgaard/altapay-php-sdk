@@ -9,6 +9,8 @@ use Loevgaard\AltaPay\Entity\PaymentInfo;
 use Loevgaard\AltaPay\Entity\PaymentNatureService;
 use Loevgaard\AltaPay\Entity\ReconciliationIdentifier;
 use Loevgaard\AltaPay\Entity\Transaction;
+use Money\Currency;
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
@@ -25,7 +27,7 @@ final class CaptureReservationTest extends TestCase
 
         $this->assertInstanceOf(PsrResponseInterface::class, $captureReservationResponse->getResponse());
 
-        $this->assertSame(0.2, $captureReservationResponse->getCaptureAmount());
+        $this->assertEquals(new Money(20, new Currency('EUR')), $captureReservationResponse->getCaptureAmount());
         $this->assertSame(978, $captureReservationResponse->getCaptureCurrency());
         $this->assertSame('Success', $captureReservationResponse->getResult());
         $this->assertSame('Success', $captureReservationResponse->getCaptureResult());
@@ -56,10 +58,10 @@ final class CaptureReservationTest extends TestCase
         $this->assertSame('EUR', $transactionResponse->getMerchantCurrencyAlpha());
         $this->assertSame(978, $transactionResponse->getCardHolderCurrency());
         $this->assertSame('EUR', $transactionResponse->getCardHolderCurrencyAlpha());
-        $this->assertSame(1.00, $transactionResponse->getReservedAmount());
-        $this->assertSame(1.00, $transactionResponse->getCapturedAmount());
-        $this->assertSame(0.0, $transactionResponse->getRefundedAmount());
-        $this->assertSame(0.0, $transactionResponse->getRecurringDefaultAmount());
+        $this->assertEquals(new Money(100, new Currency('EUR')), $transactionResponse->getReservedAmount());
+        $this->assertEquals(new Money(100, new Currency('EUR')), $transactionResponse->getCapturedAmount());
+        $this->assertEquals(new Money(0, new Currency('EUR')), $transactionResponse->getRefundedAmount());
+        $this->assertEquals(new Money(0, new Currency('EUR')), $transactionResponse->getRecurringDefaultAmount());
         $this->assertInstanceOf('\DateTimeImmutable', $transactionResponse->getCreatedDate());
         $this->assertSame('2010-09-28 12:34:56', $transactionResponse->getCreatedDate()->format('Y-m-d H:i:s'));
         $this->assertInstanceOf('\DateTimeImmutable', $transactionResponse->getUpdatedDate());
@@ -128,7 +130,7 @@ final class CaptureReservationTest extends TestCase
         $reconciliationIdentifier = $transactionResponse->getReconciliationIdentifiers()[0];
         $this->assertInstanceOf(ReconciliationIdentifier::class, $reconciliationIdentifier);
         $this->assertSame('f4e2533e-c578-4383-b075-bc8a6866784a', $reconciliationIdentifier->getId());
-        $this->assertSame(1.00, $reconciliationIdentifier->getAmount());
+        $this->assertEquals(new Money(100, new Currency('EUR')), $reconciliationIdentifier->getAmount());
         $this->assertSame(978, $reconciliationIdentifier->getAmountCurrency());
         $this->assertSame('captured', $reconciliationIdentifier->getType());
         $this->assertInstanceOf('\DateTimeImmutable', $reconciliationIdentifier->getDate());

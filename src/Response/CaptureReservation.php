@@ -1,9 +1,11 @@
 <?php
 namespace Loevgaard\AltaPay\Response;
 
+use Loevgaard\AltaPay;
 use Loevgaard\AltaPay\Entity\ResultTrait;
 use Loevgaard\AltaPay\Entity\Transaction;
 use Loevgaard\AltaPay\Entity\TransactionsTrait;
+use Money\Money;
 
 class CaptureReservation extends Response
 {
@@ -11,7 +13,7 @@ class CaptureReservation extends Response
     use TransactionsTrait;
 
     /**
-     * @var float
+     * @var Money
      */
     protected $captureAmount;
 
@@ -31,9 +33,9 @@ class CaptureReservation extends Response
     protected $transactions;
 
     /**
-     * @return float
+     * @return Money
      */
-    public function getCaptureAmount() : float
+    public function getCaptureAmount() : Money
     {
         return $this->captureAmount;
     }
@@ -69,9 +71,12 @@ class CaptureReservation extends Response
         /** @var \SimpleXMLElement $body */
         $body = $this->xmlDoc->Body;
 
+        $currency = (int)$body->CaptureCurrency;
+        $alphaCurrency = AltaPay\alphaCurrencyFromNumeric($currency);
+
         $this->transactions     = [];
-        $this->captureAmount    = (float)$body->CaptureAmount;
-        $this->captureCurrency  = (int)$body->CaptureCurrency;
+        $this->captureAmount    = AltaPay\createMoneyFromFloat($alphaCurrency, (float)$body->CaptureAmount);
+        $this->captureCurrency  = $currency;
         $this->captureResult    = (string)$body->CaptureResult;
         $this->hydrateResult($body);
         $this->hydrateTransactions($body);
