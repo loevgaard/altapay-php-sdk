@@ -5,6 +5,7 @@ namespace Loevgaard\AltaPay\Callback;
 use Loevgaard\AltaPay\Entity\ResultTrait;
 use Loevgaard\AltaPay\Entity\TransactionsTrait;
 use Loevgaard\AltaPay\Exception\XmlException;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Xml extends Callback
 {
@@ -67,5 +68,12 @@ class Xml extends Callback
         $body = $this->xmlDoc->Body;
 
         $this->hydrateTransactions($body);
+    }
+
+    public static function initable(ServerRequestInterface $request): bool
+    {
+        $body = static::getBodyFromRequest($request);
+
+        return isset($body['xml']);
     }
 }

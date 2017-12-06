@@ -2,13 +2,38 @@
 
 namespace Loevgaard\AltaPay\Callback;
 
-use Loevgaard\AltaPay\Exception\XmlException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class XmlTest extends TestCase
+final class CallbackFactoryTest extends TestCase
 {
-    public function testHydrate1()
+    public function testCreate1()
+    {
+        $request = $this->getRequest([
+            'shop_orderid' => '123456',
+            'amount' => '100.50',
+            'currency' => '208',
+            'language' => 'da',
+            'embedded_window' => '0'
+        ]);
+        $factory = new CallbackFactory();
+        $callback = $factory->create($request);
+
+        $this->assertInstanceOf(Form::class, $callback);
+    }
+
+    public function testCreate2()
+    {
+        $request = $this->getRequest([
+            'language' => 'da',
+        ]);
+        $factory = new CallbackFactory();
+        $callback = $factory->create($request);
+
+        $this->assertInstanceOf(Redirect::class, $callback);
+    }
+
+    public function testCreate3()
     {
         $xml = <<<XML
 <?xml version="1.0"?>
@@ -45,42 +70,21 @@ XML;
             'xml' => $xml
         ]);
 
-        new Xml($request);
+        $factory = new CallbackFactory();
+        $callback = $factory->create($request);
 
-        $this->assertTrue(true);
+        $this->assertInstanceOf(Xml::class, $callback);
     }
 
-    public function testHydrate2()
+    public function testCreateExpectException()
     {
-        $xml = <<<XML
-<?xml version="1.0"?>
-<APIResponse version="20170228">
-    <Header>
-        <Date>2017-09-29T10:57:53+02:00invalid</Date>
-        <Path>API/reservationOfFixedAmount</Path>
-        <ErrorCode>0</ErrorCode>
-        <ErrorMessage/>
-    </Header>
-</APIResponse>
-XML;
+        $this->expectException(\InvalidArgumentException::class);
 
-        $request = $this->getRequest(['xml' => $xml]);
-
-        $this->expectException(XmlException::class);
-
-        new Xml($request);
-    }
-
-    public function testInitable1()
-    {
-        $request = $this->getRequest(['xml' => 'xml']);
-        $this->assertTrue(Xml::initable($request));
-    }
-
-    public function testInitable2()
-    {
-        $request = $this->getRequest(['notvalid' => 'da']);
-        $this->assertFalse(Xml::initable($request));
+        $request = $this->getRequest([
+            'notvalid' => 'da',
+        ]);
+        $factory = new CallbackFactory();
+        $factory->create($request);
     }
 
     /**

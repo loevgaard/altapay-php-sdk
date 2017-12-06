@@ -19,11 +19,20 @@ abstract class Callback implements CallbackInterface
     public function __construct(ServerRequestInterface $request)
     {
         $this->request = $request;
-
-        $body = $this->request->getParsedBody();
-        $body = is_array($body) ? $body : [];
-        $this->body = $body;
+        $this->body = static::getBodyFromRequest($request);
 
         $this->init();
+    }
+
+    /**
+     * Takes a ServerRequestInterface and returns the body as an array
+     *
+     * @param ServerRequestInterface $request
+     * @return array
+     */
+    public static function getBodyFromRequest(ServerRequestInterface $request) : array
+    {
+        $body = $request->getParsedBody();
+        return is_array($body) ? $body : [];
     }
 }

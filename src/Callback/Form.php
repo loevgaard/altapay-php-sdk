@@ -4,6 +4,7 @@ namespace Loevgaard\AltaPay\Callback;
 
 use Loevgaard\AltaPay;
 use Money\Money;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Form extends Callback
 {
@@ -46,6 +47,13 @@ class Form extends Callback
         $this->currency = $currency;
         $this->language = $this->body['language'];
         $this->embeddedWindow = (int)($this->body['embedded_window'] === 1);
+    }
+
+    public static function initable(ServerRequestInterface $request): bool
+    {
+        $body = static::getBodyFromRequest($request);
+
+        return isset($body['shop_orderid']) && isset($body['amount']) && isset($body['currency']) && isset($body['language']) && isset($body['embedded_window']);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Loevgaard\AltaPay;
+namespace Loevgaard\AltaPay\Client;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
@@ -35,7 +35,7 @@ final class ClientTest extends TestCase
 
     public function testCreatePaymentRequest()
     {
-        $xml = file_get_contents(__DIR__.'/data/PaymentRequestResponse.xml');
+        $xml = file_get_contents(__DIR__.'/../data/PaymentRequestResponse.xml');
 
         $mock = new MockHandler([
             new Response(200, [], $xml)
@@ -55,7 +55,7 @@ final class ClientTest extends TestCase
 
     public function testCaptureReservation()
     {
-        $xml = file_get_contents(__DIR__.'/data/CaptureReservationResponse.xml');
+        $xml = file_get_contents(__DIR__.'/../data/CaptureReservationResponse.xml');
 
         $mock = new MockHandler([
             new Response(200, [], $xml)
@@ -75,7 +75,7 @@ final class ClientTest extends TestCase
 
     public function testRefundCapturedReservation()
     {
-        $xml = file_get_contents(__DIR__.'/data/RefundCapturedReservationResponse.xml');
+        $xml = file_get_contents(__DIR__.'/../data/RefundCapturedReservationResponse.xml');
 
         $mock = new MockHandler([
             new Response(200, [], $xml)
@@ -93,7 +93,7 @@ final class ClientTest extends TestCase
 
     public function testGetTerminals()
     {
-        $xml = file_get_contents(__DIR__.'/data/GetTerminalsResponse.xml');
+        $xml = file_get_contents(__DIR__.'/../data/GetTerminalsResponse.xml');
 
         $mock = new MockHandler([
             new Response(200, [], $xml)

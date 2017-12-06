@@ -1,5 +1,5 @@
 <?php
-namespace Loevgaard\AltaPay;
+namespace Loevgaard\AltaPay\Client;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
